@@ -5,8 +5,9 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>se.su.it.cognos</groupId>
-    <artifactId>cognos-shib-auth</artifactId>
+    <artifactId>cognosshibauth</artifactId>
     <version>0.0.1</version>
+
     <dependencies>
         <dependency>
             <groupId>com.cognos.CAM_AAA</groupId>
