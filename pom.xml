@@ -7,6 +7,13 @@
     <groupId>se.su.it.cognos</groupId>
     <artifactId>cognos-shib-auth</artifactId>
     <version>0.0.1</version>
+    <dependencies>
+        <dependency>
+            <groupId>com.cognos.CAM_AAA</groupId>
+            <artifactId>authentication</artifactId>
+            <version>10.1.4707.507</version>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
 
-    
 </project>

@@ -1,0 +1,1 @@
+mvn install:install-file -Dfile=CAM_AAA_CustomIF.jar -DgroupId=com.cognos.CAM_AAA -DartifactId=authentication -Dversion=10.1.4707.507 -Dpackaging=jar
