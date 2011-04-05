@@ -2,6 +2,8 @@ package se.su.it.cognos.cognosshibauth;
 
 import com.cognos.CAM_AAA.authentication.*;
 
+import java.util.List;
+
 /**
  * Created by IntelliJ IDEA.
  * User: joakim
@@ -12,27 +14,61 @@ import com.cognos.CAM_AAA.authentication.*;
 
 public class CognosShibAuthVisa implements IVisa {
 
+    private ICredential credential;
+    private ITrustedCredential trustedCredential;
+    private IAccount account;
+    private IGroup[] groups;
+    private IRole[] roles;
+
+  public CognosShibAuthVisa(IAccount iAccount, IGroup iGroup, IRole iRole){
+
+
+  }
+
+
+
   public ITrustedCredential generateTrustedCredential(IBiBusHeader iBiBusHeader) throws UserRecoverableException, SystemRecoverableException, UnrecoverableException {
-    return null;  //To change body of implemented methods use File | Settings | File Templates.
+    return trustedCredential;  //To change body of implemented methods use File | Settings | File Templates.
   }
 
   public ICredential generateCredential(IBiBusHeader iBiBusHeader) throws UserRecoverableException, SystemRecoverableException, UnrecoverableException {
-    return null;  //To change body of implemented methods use File | Settings | File Templates.
+
+    return credential;  //To change body of implemented methods use File | Settings | File Templates.
   }
 
   public boolean isValid() {
-    return false;  //To change body of implemented methods use File | Settings | File Templates.
+    return true;  //To change body of implemented methods use File | Settings | File Templates.
   }
 
   public IAccount getAccount() {
-    return null;  //To change body of implemented methods use File | Settings | File Templates.
+    return account;  //To change body of implemented methods use File | Settings | File Templates.
   }
 
   public IGroup[] getGroups() {
-    return new IGroup[0];  //To change body of implemented methods use File | Settings | File Templates.
+    return groups;  //To change body of implemented methods use File | Settings | File Templates.
   }
 
   public IRole[] getRoles() {
-    return new IRole[0];  //To change body of implemented methods use File | Settings | File Templates.
+    return roles;  //To change body of implemented methods use File | Settings | File Templates.
+  }
+
+  public void setCredential(ICredential iCredential) {
+    this.credential = iCredential;
+  }
+
+  public void setTrustedCredential(ITrustedCredential iTrustedCredential) {
+    this.trustedCredential = iTrustedCredential;
+  }
+
+  public void setAccount(IAccount iAccount) {
+    this.account = iAccount;
+  }
+
+  public void setGroups(IGroup[] groups) {
+    this.groups = groups;
+  }
+
+  public void setRoles(IRole[] roles) {
+    this.roles = roles;
   }
 }
