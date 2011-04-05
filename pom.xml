@@ -8,6 +8,19 @@
     <artifactId>cognosshibauth</artifactId>
     <version>0.0.1</version>
 
+    <developers>
+        <developer>
+            <name>Joakim Lundin</name>
+            <email>joakim.lundin@it.su.se</email>
+            <organization>Stockholm University</organization>
+        </developer>
+        <developer>
+            <name>Henrik Dryselius</name>
+            <email>henrik.dryselius@it.su.se</email>
+            <organization>Stockholm University</organization>
+        </developer>
+    </developers>
+
     <dependencies>
         <dependency>
             <groupId>com.cognos.CAM_AAA</groupId>
