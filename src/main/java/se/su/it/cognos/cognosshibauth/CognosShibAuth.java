@@ -9,15 +9,14 @@ package se.su.it.cognos.cognosshibauth;
 
 import com.cognos.CAM_AAA.authentication.*;
 
-import com.cognos.CAM_AAA.authentication.INamespaceTrustedSignonProvider;
-import com.cognos.CAM_AAA.authentication.ITrustedSignonRequest;
 import com.cognos.CAM_AAA.authentication.SystemRecoverableException;
 import com.cognos.CAM_AAA.authentication.UnrecoverableException;
 import com.cognos.CAM_AAA.authentication.UserRecoverableException;
 
 import java.util.Locale;
 
-public class CognosShibAuth implements INamespaceAuthenticationProvider2, IVisa {
+public class CognosShibAuth implements INamespaceAuthenticationProvider2 {
+
 
     public IVisa logon(IBiBusHeader2 iBiBusHeader2) throws UserRecoverableException, SystemRecoverableException, UnrecoverableException {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
@@ -77,29 +76,5 @@ public class CognosShibAuth implements INamespaceAuthenticationProvider2, IVisa 
 
     public String getObjectID() {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    public ITrustedCredential generateTrustedCredential(IBiBusHeader iBiBusHeader) throws UserRecoverableException, SystemRecoverableException, UnrecoverableException {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    public ICredential generateCredential(IBiBusHeader iBiBusHeader) throws UserRecoverableException, SystemRecoverableException, UnrecoverableException {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    public boolean isValid() {
-        return false;  //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    public IAccount getAccount() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    public IGroup[] getGroups() {
-        return new IGroup[0];  //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    public IRole[] getRoles() {
-        return new IRole[0];  //To change body of implemented methods use File | Settings | File Templates.
     }
 }
