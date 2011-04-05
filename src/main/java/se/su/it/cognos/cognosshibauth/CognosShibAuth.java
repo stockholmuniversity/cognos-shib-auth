@@ -17,13 +17,19 @@ import java.util.Locale;
 
 public class CognosShibAuth implements INamespaceAuthenticationProvider2 {
 
+  String namespaceFormat = null;
+  String capabilities[] = new String[6];
+  String objectId = null;
 
   public IVisa logon(IBiBusHeader2 iBiBusHeader2) throws UserRecoverableException, SystemRecoverableException, UnrecoverableException {
-    return null;
+
+    CognosShibAuthVisa cognosShibAuthVisa = null;
+
+    return cognosShibAuthVisa;
   }
 
   public void logoff(IVisa iVisa, IBiBusHeader iBiBusHeader) {
-    //To change body of implemented methods use File | Settings | File Templates.
+    // TODO: Implement something smart.
   }
 
   public IQueryResult search(IVisa iVisa, IQuery iQuery) throws UnrecoverableException {
@@ -31,50 +37,61 @@ public class CognosShibAuth implements INamespaceAuthenticationProvider2 {
   }
 
   public void init(INamespaceConfiguration iNamespaceConfiguration) throws UnrecoverableException {
-    //To change body of implemented methods use File | Settings | File Templates.
+    objectId = iNamespaceConfiguration.getID();
+
+    capabilities = new String[6];
+    capabilities[0] = CapabilityCaseSensitive;
+    capabilities[1] = CapabilityContains;
+    capabilities[2] = CapabilityEquals;
+    capabilities[3] = CapabilitySort;
+    capabilities[4] = CapabilityStartsWith;
+    capabilities[5] = CapabilityEndsWith;
   }
 
-  public void destroy() {
-    //To change body of implemented methods use File | Settings | File Templates.
-  }
+  public void destroy() {}
 
   public String getNamespaceFormat() {
-    return null;  //To change body of implemented methods use File | Settings | File Templates.
+    return namespaceFormat;
   }
 
   public void setNamespaceFormat(String s) throws UnrecoverableException {
-    //To change body of implemented methods use File | Settings | File Templates.
+    namespaceFormat = s;
   }
 
   public String[] getCapabilities() {
-    return new String[0];  //To change body of implemented methods use File | Settings | File Templates.
+    return capabilities;
   }
 
   public String getDescription(Locale locale) {
-    return null;  //To change body of implemented methods use File | Settings | File Templates.
+    // TODO: Implement something smart.
+    return "";
   }
 
   public Locale[] getAvailableDescriptionLocales() {
-    return new Locale[0];  //To change body of implemented methods use File | Settings | File Templates.
+    // TODO: Implement something smart.
+    return new Locale[]{Locale.ENGLISH};
   }
 
   public IBaseClass[] getAncestors() {
-    return new IBaseClass[0];  //To change body of implemented methods use File | Settings | File Templates.
+    // TODO: Implement something smart.
+    return null;
   }
 
   public boolean getHasChildren() {
-    return false;  //To change body of implemented methods use File | Settings | File Templates.
+    return false;
   }
 
   public String getName(Locale locale) {
-    return null;  //To change body of implemented methods use File | Settings | File Templates.
+    // TODO: Implement something smart.
+    return "";
   }
 
   public Locale[] getAvailableNameLocales() {
-    return new Locale[0];  //To change body of implemented methods use File | Settings | File Templates.
+    // TODO: Implement something smart.
+    return new Locale[]{Locale.ENGLISH};
   }
 
   public String getObjectID() {
-    return null;  //To change body of implemented methods use File | Settings | File Templates.
+    return objectId;
   }
 }
