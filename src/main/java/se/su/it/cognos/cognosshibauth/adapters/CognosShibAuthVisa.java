@@ -56,9 +56,7 @@ public class CognosShibAuthVisa implements IVisa
     {
        theUsername = new String[]{account.getUserName()};
     }
-    else (theUsername != null && theUsername.length == 1
-            && theUsername[0].equals(account.getUserName()) && thePassword.length == 1)
-    {
+    else if (theUsername != null && theUsername.length == 1 && theUsername[0].equals(account.getUserName())){
       isValidCredentials = false; // nånBraKoll(theUsername[0]);
     }
 
