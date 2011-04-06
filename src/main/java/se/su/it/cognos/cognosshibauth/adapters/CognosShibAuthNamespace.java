@@ -20,12 +20,12 @@ import com.cognos.CAM_AAA.authentication.ISearchFilterRelationExpression;
 import com.cognos.CAM_AAA.authentication.UnrecoverableException;
 
 
-public class Namespace extends UiClass implements INamespace
+public class CognosShibAuthNamespace extends UiClass implements INamespace
 {
 	/**
 	 * 
 	 */
-	public Namespace()
+	public CognosShibAuthNamespace()
 	{
 		super(null);
 		capabilities = new String[6];
@@ -42,7 +42,7 @@ public class Namespace extends UiClass implements INamespace
 	/**
 	 * @param theObjectID
 	 */
-	public Namespace(String theObjectID)
+	public CognosShibAuthNamespace(String theObjectID)
 	{
 		super(theObjectID);
 		capabilities = new String[6];

@@ -12,12 +12,12 @@
 import com.cognos.CAM_AAA.authentication.INamespaceFolder;
 
 
-public class NamespaceFolder extends UiClass implements INamespaceFolder
+public class CognosShibAuthNamespaceFolder extends UiClass implements INamespaceFolder
 {
 	/**
 	 * @param theSearchPath
 	 */
-	public NamespaceFolder(String theSearchPath)
+	public CognosShibAuthNamespaceFolder(String theSearchPath)
 	{
 		super(theSearchPath);
 	}

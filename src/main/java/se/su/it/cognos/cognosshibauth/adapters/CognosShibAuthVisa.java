@@ -23,12 +23,12 @@ import com.cognos.CAM_AAA.authentication.UnrecoverableException;
 import com.cognos.CAM_AAA.authentication.UserRecoverableException;
 
 
-public class Visa implements IVisa
+public class CognosShibAuthVisa implements IVisa
 {
 	/**
 	 * 
 	 */
-	public Visa()
+	public CognosShibAuthVisa()
 	{
 		super();
 		roles = null;

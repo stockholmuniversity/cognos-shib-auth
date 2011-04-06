@@ -15,12 +15,12 @@ import com.cognos.CAM_AAA.authentication.IBaseClass;
 import com.cognos.CAM_AAA.authentication.IGroup;
 
 
-public class Group extends UiClass implements IGroup
+public class CognosShibAuthGroup extends UiClass implements IGroup
 {
 	/**
 	 * @param theObjectID
 	 */
-	public Group(String theObjectID)
+	public CognosShibAuthGroup(String theObjectID)
 	{
 		super(theObjectID);
 		members = null;

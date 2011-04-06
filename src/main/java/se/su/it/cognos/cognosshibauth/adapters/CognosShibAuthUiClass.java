@@ -18,12 +18,12 @@ import com.cognos.CAM_AAA.authentication.IBaseClass;
 import com.cognos.CAM_AAA.authentication.IUiClass;
 
 
-public class UiClass implements IUiClass
+public class CognosShibAuthUiClass implements IUiClass
 {
 	/**
 	 * @param theObjectID
 	 */
-	public UiClass(String theObjectID)
+	public CognosShibAuthUiClass(String theObjectID)
 	{
 		super();
 		names = null;

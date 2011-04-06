@@ -12,12 +12,12 @@
 import com.cognos.CAM_AAA.authentication.ITrustedCredential;
 
 
-public class TrustedCredential extends Credential implements ITrustedCredential
+public class CognosShibAuthTrustedCredential extends CognosShibAuthCredential implements ITrustedCredential
 {
 	/**
 	 * 
 	 */
-	public TrustedCredential()
+	public CognosShibAuthTrustedCredential()
 	{
 		super();
 	}

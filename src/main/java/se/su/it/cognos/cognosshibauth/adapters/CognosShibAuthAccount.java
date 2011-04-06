@@ -17,7 +17,7 @@ import java.util.Vector;
 import com.cognos.CAM_AAA.authentication.IAccount;
 
 
-public class Account extends UiClass implements IAccount
+public class CognosShibAuthAccount extends UiClass implements IAccount
 {
 	/**
 	 * Creates a IBM Cognos 8 Account
@@ -25,7 +25,7 @@ public class Account extends UiClass implements IAccount
 	 * @param theObjectID
 	 *            The unique identifier for the account.
 	 */
-	public Account(String theObjectID)
+	public CognosShibAuthAccount(String theObjectID)
 	{
 		super(theObjectID);
 		businessPhone = null;

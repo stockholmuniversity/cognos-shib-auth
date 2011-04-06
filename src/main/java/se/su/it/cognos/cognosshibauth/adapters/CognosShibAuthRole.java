@@ -15,12 +15,12 @@ import com.cognos.CAM_AAA.authentication.IBaseClass;
 import com.cognos.CAM_AAA.authentication.IRole;
 
 
-public class Role extends UiClass implements IRole
+public class CognosShibAuthRole extends UiClass implements IRole
 {
 	/**
 	 * @param theSearchPath
 	 */
-	public Role(String theSearchPath)
+	public CognosShibAuthRole(String theSearchPath)
 	{
 		super(theSearchPath);
 		members = null;

@@ -16,12 +16,12 @@ import java.util.Vector;
 import com.cognos.CAM_AAA.authentication.ICredential;
 
 
-public class Credential implements ICredential
+public class CognosShibAuthCredential implements ICredential
 {
 	/**
 	 * 
 	 */
-	public Credential()
+	public CognosShibAuthCredential()
 	{
 		super();
 		credentials = null;
