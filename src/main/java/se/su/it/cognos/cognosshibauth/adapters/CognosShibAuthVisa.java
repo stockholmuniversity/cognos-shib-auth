@@ -21,6 +21,8 @@ public class CognosShibAuthVisa implements IVisa
   private Vector		groups;
   private IAccount	account;
 
+
+
   public CognosShibAuthVisa()
   {
     super();
@@ -42,18 +44,52 @@ public class CognosShibAuthVisa implements IVisa
   }
 
 
-  public ITrustedCredential generateTrustedCredential(
+  public ITrustedCredential generateTrustedCredential(     // implementera ordentligt senare...
           IBiBusHeader theAuthRequest) throws UserRecoverableException,
           SystemRecoverableException, UnrecoverableException
   {
-    return null;
+    boolean isValidCredentials = true;
+    String[] theUsername = null;
+    String[] thePassword = null;
+    theUsername = theAuthRequest.getCredentialValue("username");
+    if (theUsername == null && thePassword == null)
+    {
+       theUsername = new String[]{account.getUserName()};
+    }
+    else (theUsername != null && theUsername.length == 1
+            && theUsername[0].equals(account.getUserName()) && thePassword.length == 1)
+    {
+      isValidCredentials = false; // nånBraKoll(theUsername[0]);
+    }
+
+    if (!isValidCredentials)
+    {
+      UserRecoverableException e = new UserRecoverableException(
+              "Please type your credentials for authentication.",
+              "The provided credentials are invalid.");
+      throw e;
+    }
+    CognosShibAuthTrustedCredential tc = new CognosShibAuthTrustedCredential();
+    tc.addCredentialValue("username", theUsername.toString());
+    return tc;
   }
 
   public ICredential generateCredential(IBiBusHeader theAuthRequest)
           throws UserRecoverableException, SystemRecoverableException,
           UnrecoverableException
   {
-    return null;
+    boolean validCredential = true; //nånBraKoll(account.getUserName());
+    if(! validCredential){
+      UnrecoverableException e = new UnrecoverableException(
+              "Could not generate credentials for the user.",
+              "Visa contains invalid credentials.");
+      throw e;
+    }
+    else{
+      CognosShibAuthCredential credentials = new CognosShibAuthCredential();
+      credentials.addCredentialValue("username", account.getUserName());
+      return credentials;
+    }
   }
 
   public boolean isValid()
