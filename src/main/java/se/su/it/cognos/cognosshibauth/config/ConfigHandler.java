@@ -7,6 +7,7 @@ import org.apache.commons.configuration.reloading.FileChangedReloadingStrategy;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+
 /**
  * Created by IntelliJ IDEA.
  * User: joakim
@@ -18,7 +19,7 @@ public class ConfigHandler {
 
   private static ConfigHandler _instance = null;
   private static String CONFIG_FILENAME = "shib_auth.xml";
-  private Logger LOG = new Logger.getLogger(ConfigHandler.class.getName());
+  private Logger LOG = Logger.getLogger(ConfigHandler.class.getName());
 
   private XMLConfiguration config = new XMLConfiguration();
 
