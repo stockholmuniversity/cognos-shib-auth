@@ -4,7 +4,6 @@ import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.XMLConfiguration;
 import org.apache.commons.configuration.reloading.FileChangedReloadingStrategy;
 
-import java.rmi.Remote;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -23,16 +22,16 @@ public class ConfigHandler {
 
   private XMLConfiguration config = new XMLConfiguration();
 
-  private String HEADER_REMOTE_USER = "REMOTE_USER";
-  private String HEADER_GIVEN_NAME = "";
-  private String HEADER_SURNAME = "";
-  private String HEADER_EMAIL = "";
-  private String HEADER_BUSINESS_PHONE = "";
-  private String HEADER_HOME_PHONE = "";
-  private String HEADER_MOBILE_PHONE = "";
-  private String HEADER_FAX_PHONE = "";
-  private String HEADER_PAGER_PHONE = "";
-  private String HEADER_POSTAL_ADDRESS = "";
+  private String headerRemoteUser = "REMOTE_USER";
+  private String headerGivenName = "";
+  private String headerSurname = "";
+  private String headerEmail = "";
+  private String headerBusinessPhone = "";
+  private String headerHomePhone = "";
+  private String headerMobilePhone = "";
+  private String headerFaxPhone = "";
+  private String headerPagerPhone = "";
+  private String headerPostalAddress = "";
 
   protected ConfigHandler() {
     config.setFileName(CONFIG_FILENAME);
@@ -43,16 +42,7 @@ public class ConfigHandler {
     }
     config.setReloadingStrategy(new FileChangedReloadingStrategy());
 
-    HEADER_REMOTE_USER = config.getString("headers.remote_user", HEADER_REMOTE_USER);
-    HEADER_GIVEN_NAME = config.getString("headers.given_name", HEADER_GIVEN_NAME);
-    HEADER_SURNAME = config.getString("headers.surname", HEADER_SURNAME);
-    HEADER_EMAIL = config.getString("headers.email", HEADER_EMAIL);
-    HEADER_BUSINESS_PHONE = config.getString("headers.business_phone", HEADER_BUSINESS_PHONE);
-    HEADER_HOME_PHONE = config.getString("headers.home_phone", HEADER_HOME_PHONE);
-    HEADER_MOBILE_PHONE = config.getString("headers.mobile_phone", HEADER_MOBILE_PHONE);
-    HEADER_FAX_PHONE = config.getString("headers.fax_phone", HEADER_FAX_PHONE);
-    HEADER_PAGER_PHONE = config.getString("headers.pager_phone", HEADER_PAGER_PHONE);
-    HEADER_POSTAL_ADDRESS = config.getString("headers.postal_address", HEADER_POSTAL_ADDRESS);
+    load_header_values();
   }
 
   public static ConfigHandler instance() {
@@ -60,5 +50,58 @@ public class ConfigHandler {
       _instance = new ConfigHandler();
     }
     return _instance;
+  }
+
+  private void load_header_values() {
+    headerRemoteUser =    config.getString("headers.remote_user", headerRemoteUser);
+    headerGivenName =     config.getString("headers.given_name", headerGivenName);
+    headerSurname =        config.getString("headers.surname", headerSurname);
+    headerEmail =          config.getString("headers.email", headerEmail);
+    headerBusinessPhone = config.getString("headers.business_phone", headerBusinessPhone);
+    headerHomePhone =     config.getString("headers.home_phone", headerHomePhone);
+    headerMobilePhone =   config.getString("headers.mobile_phone", headerMobilePhone);
+    headerFaxPhone =      config.getString("headers.fax_phone", headerFaxPhone);
+    headerPagerPhone =    config.getString("headers.pager_phone", headerPagerPhone);
+    headerPostalAddress = config.getString("headers.postal_address", headerPostalAddress);
+  }
+
+  public String getHeaderRemoteUser() {
+    return headerRemoteUser;
+  }
+
+  public String getHeaderGivenName() {
+    return headerGivenName;
+  }
+
+  public String getHeaderSurname() {
+    return headerSurname;
+  }
+
+  public String getHeaderEmail() {
+    return headerEmail;
+  }
+
+  public String getHeaderBusinessPhone() {
+    return headerBusinessPhone;
+  }
+
+  public String getHeaderHomePhone() {
+    return headerHomePhone;
+  }
+
+  public String getHeaderMobilePhone() {
+    return headerMobilePhone;
+  }
+
+  public String getHeaderFaxPhone() {
+    return headerFaxPhone;
+  }
+
+  public String getHeaderPagerPhone() {
+    return headerPagerPhone;
+  }
+
+  public String getHeaderPostalAddress() {
+    return headerPostalAddress;
   }
 }

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+
+<config>
+  <headers>
+    <remote_user>polopolysvc</remote_user>
+  </headers>
+</config>

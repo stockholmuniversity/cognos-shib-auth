@@ -12,20 +12,74 @@ import com.cognos.CAM_AAA.authentication.*;
 import com.cognos.CAM_AAA.authentication.SystemRecoverableException;
 import com.cognos.CAM_AAA.authentication.UnrecoverableException;
 import com.cognos.CAM_AAA.authentication.UserRecoverableException;
+import se.su.it.cognos.cognosshibauth.adapters.CognosShibAuthAccount;
+import se.su.it.cognos.cognosshibauth.adapters.CognosShibAuthVisa;
+import se.su.it.cognos.cognosshibauth.config.ConfigHandler;
 
 import java.util.Locale;
 
 public class CognosShibAuth implements INamespaceAuthenticationProvider2 {
 
   String namespaceFormat = null;
-  String capabilities[] = new String[6];
+  String capabilities[] = null;
   String objectId = null;
+
+  private ConfigHandler configHandler = null;
+
+  public CognosShibAuth() {
+    configHandler = ConfigHandler.instance();
+  }
 
   public IVisa logon(IBiBusHeader2 iBiBusHeader2) throws UserRecoverableException, SystemRecoverableException, UnrecoverableException {
 
-    CognosShibAuthVisa cognosShibAuthVisa = null;
+    CognosShibAuthVisa cognosShibAuthVisa = new CognosShibAuthVisa();
+    CognosShibAuthAccount cognosShibAuthAccount = new CognosShibAuthAccount(objectId);
+
+    // TODO: make the required part configurable.
+    String remoteUser = getHeaderValue(iBiBusHeader2, configHandler.getHeaderRemoteUser(), true);
+    cognosShibAuthAccount.setUserName(remoteUser);
+    String givenName = getHeaderValue(iBiBusHeader2, configHandler.getHeaderGivenName(), false);
+    cognosShibAuthAccount.setGivenName(givenName);
+    String surname = getHeaderValue(iBiBusHeader2, configHandler.getHeaderSurname(), false);
+    cognosShibAuthAccount.setSurname(surname);
+    String email = getHeaderValue(iBiBusHeader2, configHandler.getHeaderEmail(), false);
+    cognosShibAuthAccount.setEmail(email);
+    String businessPhone = getHeaderValue(iBiBusHeader2, configHandler.getHeaderBusinessPhone(), false);
+    cognosShibAuthAccount.setBusinessPhone(businessPhone);
+    String homePhone = getHeaderValue(iBiBusHeader2, configHandler.getHeaderHomePhone(), false);
+    cognosShibAuthAccount.setHomePhone(homePhone);
+    String mobilePhone = getHeaderValue(iBiBusHeader2, configHandler.getHeaderMobilePhone(), false);
+    cognosShibAuthAccount.setMobilePhone(mobilePhone);
+    String faxPhone = getHeaderValue(iBiBusHeader2, configHandler.getHeaderFaxPhone(), false);
+    cognosShibAuthAccount.setFaxPhone(faxPhone);
+    String pagerPhone = getHeaderValue(iBiBusHeader2, configHandler.getHeaderPagerPhone(), false);
+    cognosShibAuthAccount.setPagerPhone(pagerPhone);
+    String postalAddress = getHeaderValue(iBiBusHeader2, configHandler.getHeaderPostalAddress(), false);
+    cognosShibAuthAccount.setPostalAddress(postalAddress);
+
+    cognosShibAuthVisa.init(cognosShibAuthAccount);
 
     return cognosShibAuthVisa;
+  }
+
+  private String getHeaderValue(IBiBusHeader2 iBiBusHeader2, String header, boolean required) throws UnrecoverableException {
+    // 1 - Look for trusted credentials
+    String[] headerValue = iBiBusHeader2.getTrustedCredentialValue("header");
+
+    if (headerValue == null) { // 2 - Look for credentials coming from SDK request
+      headerValue = iBiBusHeader2.getCredentialValue("header");
+    }
+
+    if (headerValue == null) { // 3 - Look for credentials in environment
+      headerValue = iBiBusHeader2.getEnvVarValue("header");
+    }
+
+    if (headerValue == null && required) { // Value not found at all
+      throw new UnrecoverableException("Header \"" + header + "\" not found.",
+              "Missing required header \"" + header + "\".");
+    }
+
+    return headerValue.length > 0 ? headerValue[0] : null;
   }
 
   public void logoff(IVisa iVisa, IBiBusHeader iBiBusHeader) {
@@ -33,10 +87,12 @@ public class CognosShibAuth implements INamespaceAuthenticationProvider2 {
   }
 
   public IQueryResult search(IVisa iVisa, IQuery iQuery) throws UnrecoverableException {
-    return null;  //To change body of implemented methods use File | Settings | File Templates.
+    return null;
   }
 
   public void init(INamespaceConfiguration iNamespaceConfiguration) throws UnrecoverableException {
+
+
     objectId = iNamespaceConfiguration.getID();
 
     capabilities = new String[6];
