@@ -4,4 +4,26 @@
   <headers>
     <remote_user>polopolysvc</remote_user>
   </headers>
+  <names>
+    <name>
+      <locale>sv_SE</locale>
+      <text>Cognos Shib Authenticator</text>
+    </name>
+  </names>
+  <names>
+    <name>
+      <locale>en_US</locale>
+      <text>Cognos Shib Authenticator</text>
+    </name>
+  </names>
+  <descriptions>
+    <description>
+      <locale>sv_SE</locale>
+      <text>Blahonga</text>
+    </description>
+    <description>
+      <locale>en_US</locale>
+      <text>Foobar</text>
+    </description>
+  </descriptions>
 </config>
