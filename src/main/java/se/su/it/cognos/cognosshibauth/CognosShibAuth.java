@@ -93,6 +93,7 @@ public class CognosShibAuth implements INamespaceAuthenticationProvider2 {
   public void init(INamespaceConfiguration iNamespaceConfiguration) throws UnrecoverableException {
     objectId = iNamespaceConfiguration.getID();
 
+    //TODO: Make these configurable.
     capabilities = new String[6];
     capabilities[0] = CapabilityCaseSensitive;
     capabilities[1] = CapabilityContains;
