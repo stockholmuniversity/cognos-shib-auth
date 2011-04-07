@@ -17,12 +17,15 @@ import se.su.it.cognos.cognosshibauth.adapters.CognosShibAuthVisa;
 import se.su.it.cognos.cognosshibauth.config.ConfigHandler;
 
 import java.util.Locale;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class CognosShibAuth implements INamespaceAuthenticationProvider2 {
 
   String namespaceFormat = null;
   String capabilities[] = null;
   String objectId = null;
+  private Logger LOG = Logger.getLogger(ConfigHandler.class.getName());
 
   private ConfigHandler configHandler = null;
 
@@ -31,7 +34,7 @@ public class CognosShibAuth implements INamespaceAuthenticationProvider2 {
   }
 
   public IVisa logon(IBiBusHeader2 iBiBusHeader2) throws UserRecoverableException, SystemRecoverableException, UnrecoverableException {
-
+    LOG.log(Level.FINEST, "logon method reached");
     CognosShibAuthVisa cognosShibAuthVisa = new CognosShibAuthVisa();
     CognosShibAuthAccount cognosShibAuthAccount = new CognosShibAuthAccount(objectId);
 
@@ -112,6 +115,8 @@ public class CognosShibAuth implements INamespaceAuthenticationProvider2 {
   }
 
   public void init(INamespaceConfiguration iNamespaceConfiguration) throws UnrecoverableException {
+
+    LOG.log(Level.FINEST, "intit method reached");
     objectId = iNamespaceConfiguration.getID();
 
     capabilities = new String[6];
