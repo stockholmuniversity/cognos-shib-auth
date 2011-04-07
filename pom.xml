@@ -28,6 +28,23 @@
     </developer>
   </developers>
 
+  <organization>
+    <name>Stockholm University</name>
+    <url>http://www.su.se</url>
+  </organization>
+
+  <scm>
+    <connection>scm:git:ssh://git.it.su.se/git/cognos-shib-auth</connection>
+    <developerConnection>scm:git:ssh://git.it.su.se/git/cognos-shib-auth</developerConnection>
+  </scm>
+
+  <distributionManagement>
+    <repository>
+      <id>ssh-repository</id>
+      <url>scpexe://svn.it.su.se/afs/su.se/services/maven/it.su.se/maven2</url>
+    </repository>
+  </distributionManagement>
+
   <dependencies>
     <dependency>
       <groupId>com.cognos.CAM_AAA</groupId>
@@ -111,4 +128,11 @@
       </plugin>
     </plugins>
   </build>
+  <repositories>
+    <repository>
+      <id>su-mvn</id>
+      <name>SU Maven2</name>
+      <url>http://maven.it.su.se/it.su.se/maven2</url>
+    </repository>
+  </repositories>
 </project>
