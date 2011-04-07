@@ -18,12 +18,15 @@ import se.su.it.cognos.cognosshibauth.config.ConfigHandler;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class CognosShibAuth implements INamespaceAuthenticationProvider2 {
 
   String namespaceFormat = null;
   String capabilities[] = null;
   String objectId = null;
+  private Logger LOG = Logger.getLogger(ConfigHandler.class.getName());
 
   private ConfigHandler configHandler = null;
 
@@ -32,7 +35,7 @@ public class CognosShibAuth implements INamespaceAuthenticationProvider2 {
   }
 
   public IVisa logon(IBiBusHeader2 iBiBusHeader2) throws UserRecoverableException, SystemRecoverableException, UnrecoverableException {
-
+    LOG.log(Level.FINEST, "logon method reached");
     CognosShibAuthVisa cognosShibAuthVisa = new CognosShibAuthVisa();
     CognosShibAuthAccount cognosShibAuthAccount = new CognosShibAuthAccount(objectId);
 
@@ -88,10 +91,33 @@ public class CognosShibAuth implements INamespaceAuthenticationProvider2 {
   }
 
   public IQueryResult search(IVisa iVisa, IQuery iQuery) throws UnrecoverableException {
-    return null;
+    CognosShibAuthVisa visa = (CognosShibAuthVisa) iVisa;
+    QueryResult result = new QueryResult();
+    try{
+      ISearchExpression expression = iQuery.getSearchExpression();
+      String objectID = expression.getObjectID();
+      ISearchStep[] steps = expression.getSteps();
+      // It doesn't make sense to have multiple steps for this provider
+      // since the objects are not hierarchical.
+      if (steps.length != 1){
+        throw new UnrecoverableException(
+                "Internal Error",
+                "Invalid search expression. Multiple steps is not supported for this namespace.");
+      }
+
+
+
+    }
+    catch (Exception e){
+      e.printStackTrace();
+    }
+
+    return result;
   }
 
   public void init(INamespaceConfiguration iNamespaceConfiguration) throws UnrecoverableException {
+
+    LOG.log(Level.FINEST, "intit method reached");
     objectId = iNamespaceConfiguration.getID();
 
     //TODO: Make these configurable.
