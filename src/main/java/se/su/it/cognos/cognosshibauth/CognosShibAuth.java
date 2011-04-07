@@ -87,7 +87,28 @@ public class CognosShibAuth implements INamespaceAuthenticationProvider2 {
   }
 
   public IQueryResult search(IVisa iVisa, IQuery iQuery) throws UnrecoverableException {
-    return null;
+    CognosShibAuthVisa visa = (CognosShibAuthVisa) iVisa;
+    QueryResult result = new QueryResult();
+    try{
+      ISearchExpression expression = iQuery.getSearchExpression();
+      String objectID = expression.getObjectID();
+      ISearchStep[] steps = expression.getSteps();
+      // It doesn't make sense to have multiple steps for this provider
+      // since the objects are not hierarchical.
+      if (steps.length != 1){
+        throw new UnrecoverableException(
+                "Internal Error",
+                "Invalid search expression. Multiple steps is not supported for this namespace.");
+      }
+
+
+
+    }
+    catch (Exception e){
+      e.printStackTrace();
+    }
+
+    return result;
   }
 
   public void init(INamespaceConfiguration iNamespaceConfiguration) throws UnrecoverableException {
