@@ -14,11 +14,17 @@
       <name>Joakim Lundin</name>
       <email>joakim.lundin@it.su.se</email>
       <organization>Stockholm University</organization>
+      <roles>
+        <role>Developer</role>
+      </roles>
     </developer>
     <developer>
       <name>Henrik Dryselius</name>
       <email>henrik.dryselius@it.su.se</email>
       <organization>Stockholm University</organization>
+      <roles>
+        <role>Developer</role>
+      </roles>
     </developer>
   </developers>
 
