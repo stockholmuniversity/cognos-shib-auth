@@ -1,11 +1,26 @@
 package se.su.it.cognos.cognosshibauth;
 
-/**
- * Created by IntelliJ IDEA.
- * User: joakim
- * Date: 2011-04-04
- * Time: 13:00
- * To change this template use File | Settings | File Templates.
- */
+import com.cognos.CAM_AAA.authentication.INamespaceConfiguration;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.powermock.modules.junit4.PowerMockRunner;
+
+import static org.mockito.Mockito.*;
+import static org.junit.Assert.*;
+
+@RunWith(PowerMockRunner.class)
 public class CognosShibAuthTest {
+
+  @Test
+  public void testThatInitSetsObjectIdFromNamespaceConfiguration() throws Exception {
+    String objectId = "TestId";
+    CognosShibAuth cognosShibAuth = new CognosShibAuth();
+    INamespaceConfiguration iNamespaceConfiguration = mock(INamespaceConfiguration.class);
+
+    when(iNamespaceConfiguration.getID()).thenReturn(objectId);
+
+    cognosShibAuth.init(iNamespaceConfiguration);
+
+    assertEquals(objectId, cognosShibAuth.getObjectID());
+  }
 }
