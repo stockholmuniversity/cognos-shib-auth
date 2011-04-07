@@ -16,6 +16,7 @@ import se.su.it.cognos.cognosshibauth.adapters.CognosShibAuthAccount;
 import se.su.it.cognos.cognosshibauth.adapters.CognosShibAuthVisa;
 import se.su.it.cognos.cognosshibauth.config.ConfigHandler;
 
+import java.util.List;
 import java.util.Locale;
 
 public class CognosShibAuth implements INamespaceAuthenticationProvider2 {
@@ -118,13 +119,12 @@ public class CognosShibAuth implements INamespaceAuthenticationProvider2 {
   }
 
   public String getDescription(Locale locale) {
-    // TODO: Implement something smart.
-    return "";
+    return configHandler.getDescription(locale);
   }
 
   public Locale[] getAvailableDescriptionLocales() {
-    // TODO: Implement something smart.
-    return new Locale[]{Locale.ENGLISH};
+    List<Locale> locales = configHandler.getDescriptionLocales();
+    return locales.toArray(new Locale[locales.size()]);
   }
 
   public IBaseClass[] getAncestors() {
@@ -137,13 +137,12 @@ public class CognosShibAuth implements INamespaceAuthenticationProvider2 {
   }
 
   public String getName(Locale locale) {
-    // TODO: Implement something smart.
-    return "";
+    return configHandler.getName(locale);
   }
 
   public Locale[] getAvailableNameLocales() {
-    // TODO: Implement something smart.
-    return new Locale[]{Locale.ENGLISH};
+    List<Locale> locales = configHandler.getDescriptionLocales();
+    return locales.toArray(new Locale[locales.size()]);
   }
 
   public String getObjectID() {

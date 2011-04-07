@@ -1,9 +1,15 @@
 package se.su.it.cognos.cognosshibauth.config;
 
 import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.configuration.HierarchicalConfiguration;
+import org.apache.commons.configuration.SubnodeConfiguration;
 import org.apache.commons.configuration.XMLConfiguration;
 import org.apache.commons.configuration.reloading.FileChangedReloadingStrategy;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -64,6 +70,58 @@ public class ConfigHandler {
     headerFaxPhone =      config.getString("headers.fax_phone", headerFaxPhone);
     headerPagerPhone =    config.getString("headers.pager_phone", headerPagerPhone);
     headerPostalAddress = config.getString("headers.postal_address", headerPostalAddress);
+  }
+
+  public String getName(Locale locale) {
+    String description = null;
+    List<HierarchicalConfiguration> subnodeConfiguration =
+            (List<HierarchicalConfiguration>) config.configurationAt("names.name");
+
+    for(HierarchicalConfiguration node : subnodeConfiguration) {
+      Locale nodeLocale = new Locale(node.getString("locale"));
+      if(nodeLocale.equals(locale.toString())) {
+        description = node.getString("text");
+      }
+    }
+    return description;
+  }
+
+  public List<Locale> getNameLocales() {
+    List<Locale> descriptionLocales = new ArrayList<Locale>();
+    List<HierarchicalConfiguration> subnodeConfiguration =
+            (List<HierarchicalConfiguration>) config.configurationAt("names.name");
+
+    for(HierarchicalConfiguration node : subnodeConfiguration) {
+      Locale nodeLocale = new Locale(node.getString("locale"));
+      descriptionLocales.add(nodeLocale);
+    }
+    return descriptionLocales;
+  }
+
+  public String getDescription(Locale locale) {
+    String description = null;
+    List<HierarchicalConfiguration> subnodeConfiguration =
+            (List<HierarchicalConfiguration>) config.configurationAt("descriptions.description");
+
+    for(HierarchicalConfiguration node : subnodeConfiguration) {
+      Locale nodeLocale = new Locale(node.getString("locale"));
+      if(nodeLocale.equals(locale.toString())) {
+        description = node.getString("text");
+      }
+    }
+    return description;
+  }
+
+  public List<Locale> getDescriptionLocales() {
+    List<Locale> descriptionLocales = new ArrayList<Locale>();
+    List<HierarchicalConfiguration> subnodeConfiguration =
+            (List<HierarchicalConfiguration>) config.configurationAt("descriptions.description");
+
+    for(HierarchicalConfiguration node : subnodeConfiguration) {
+      Locale nodeLocale = new Locale(node.getString("locale"));
+      descriptionLocales.add(nodeLocale);
+    }
+    return descriptionLocales;
   }
 
   public String getHeaderRemoteUser() {
