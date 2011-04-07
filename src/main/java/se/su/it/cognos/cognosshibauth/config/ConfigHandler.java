@@ -56,8 +56,8 @@ public class ConfigHandler {
   private void load_header_values() {
     headerRemoteUser =    config.getString("headers.remote_user", headerRemoteUser);
     headerGivenName =     config.getString("headers.given_name", headerGivenName);
-    headerSurname =        config.getString("headers.surname", headerSurname);
-    headerEmail =          config.getString("headers.email", headerEmail);
+    headerSurname =       config.getString("headers.surname", headerSurname);
+    headerEmail =         config.getString("headers.email", headerEmail);
     headerBusinessPhone = config.getString("headers.business_phone", headerBusinessPhone);
     headerHomePhone =     config.getString("headers.home_phone", headerHomePhone);
     headerMobilePhone =   config.getString("headers.mobile_phone", headerMobilePhone);
