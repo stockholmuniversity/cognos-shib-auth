@@ -75,11 +75,11 @@ public class ConfigHandler {
   public String getName(Locale locale) {
     String description = null;
     List<HierarchicalConfiguration> subnodeConfiguration =
-            (List<HierarchicalConfiguration>) config.configurationAt("names.name");
+            (List<HierarchicalConfiguration>) config.configurationsAt("names.name");
 
     for(HierarchicalConfiguration node : subnodeConfiguration) {
       Locale nodeLocale = new Locale(node.getString("locale"));
-      if(nodeLocale.equals(locale.toString())) {
+      if(nodeLocale.equals(locale)) {
         description = node.getString("text");
       }
     }
@@ -89,7 +89,7 @@ public class ConfigHandler {
   public List<Locale> getNameLocales() {
     List<Locale> descriptionLocales = new ArrayList<Locale>();
     List<HierarchicalConfiguration> subnodeConfiguration =
-            (List<HierarchicalConfiguration>) config.configurationAt("names.name");
+            (List<HierarchicalConfiguration>) config.configurationsAt("names.name");
 
     for(HierarchicalConfiguration node : subnodeConfiguration) {
       Locale nodeLocale = new Locale(node.getString("locale"));
@@ -101,11 +101,11 @@ public class ConfigHandler {
   public String getDescription(Locale locale) {
     String description = null;
     List<HierarchicalConfiguration> subnodeConfiguration =
-            (List<HierarchicalConfiguration>) config.configurationAt("descriptions.description");
+            (List<HierarchicalConfiguration>) config.configurationsAt("descriptions.description");
 
     for(HierarchicalConfiguration node : subnodeConfiguration) {
       Locale nodeLocale = new Locale(node.getString("locale"));
-      if(nodeLocale.equals(locale.toString())) {
+      if(nodeLocale.equals(locale)) {
         description = node.getString("text");
       }
     }
@@ -115,7 +115,7 @@ public class ConfigHandler {
   public List<Locale> getDescriptionLocales() {
     List<Locale> descriptionLocales = new ArrayList<Locale>();
     List<HierarchicalConfiguration> subnodeConfiguration =
-            (List<HierarchicalConfiguration>) config.configurationAt("descriptions.description");
+            (List<HierarchicalConfiguration>) config.configurationsAt("descriptions.description");
 
     for(HierarchicalConfiguration node : subnodeConfiguration) {
       Locale nodeLocale = new Locale(node.getString("locale"));
