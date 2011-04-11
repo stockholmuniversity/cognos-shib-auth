@@ -44,8 +44,9 @@ public class ConfigHandler {
     config.setFileName(CONFIG_FILENAME);
     try {
       config.load();
+      LOG.log(Level.FINE, "Configuration loaded from '" +  config.getFileName() + "'.");
     } catch (ConfigurationException e) {
-      LOG.log(Level.SEVERE, "Failed to load configuration from file \"" +  config.getFileName() + "\".");
+      LOG.log(Level.SEVERE, "Failed to load configuration from file '" +  config.getFileName() + "'.");
     }
     config.setReloadingStrategy(new FileChangedReloadingStrategy());
 

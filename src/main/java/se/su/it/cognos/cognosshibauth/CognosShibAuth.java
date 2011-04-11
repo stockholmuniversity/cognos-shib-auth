@@ -12,10 +12,12 @@ import com.cognos.CAM_AAA.authentication.*;
 import com.cognos.CAM_AAA.authentication.SystemRecoverableException;
 import com.cognos.CAM_AAA.authentication.UnrecoverableException;
 import com.cognos.CAM_AAA.authentication.UserRecoverableException;
+import org.apache.commons.lang.ArrayUtils;
 import se.su.it.cognos.cognosshibauth.adapters.CognosShibAuthAccount;
 import se.su.it.cognos.cognosshibauth.adapters.CognosShibAuthVisa;
 import se.su.it.cognos.cognosshibauth.config.ConfigHandler;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.logging.Level;
@@ -77,14 +79,26 @@ public class CognosShibAuth implements INamespaceAuthenticationProvider2 {
   }
 
   private String getHeaderValue(IBiBusHeader2 iBiBusHeader2, String header, boolean required) throws SystemRecoverableException {
-    String[] headerValue = iBiBusHeader2.getTrustedEnvVarValue(header);
+    String[] headerValue = iBiBusHeader2.getEnvVarValue(header);
 
-    if (headerValue == null && required) { // Value not found in trusted environment variables.
-      LOG.log(Level.SEVERE, "Header '" + header + "' not found in TrustedEnvVar, throwing SystemRecoverableException");
-      throw new SystemRecoverableException("Missing required header '" + header + "'.", header);
+    if(headerValue == null) {
+      LOG.log(Level.INFO, "Header '" + header + "' not found.");
+      if(required) { // Value not found in trusted environment variables.
+        LOG.log(Level.SEVERE, "Header '" + header + "' required but not found, throwing SystemRecoverableException");
+        throw new SystemRecoverableException("Missing required header '" + header + "'.", header);
+      }
+    }
+    else {
+      String values = "";
+      for(String s : headerValue)
+        values += s + ", ";
+      LOG.log(Level.FINEST, "Values in '" + header + "': " + values);
+
+      if(headerValue.length < 1)
+        headerValue = null;
     }
 
-    return headerValue[0];
+    return headerValue == null ? null : headerValue[0];
   }
 
   public void logoff(IVisa iVisa, IBiBusHeader iBiBusHeader) {
