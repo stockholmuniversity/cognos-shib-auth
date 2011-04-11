@@ -34,30 +34,40 @@ public class CognosShibAuth implements INamespaceAuthenticationProvider2 {
     configHandler = ConfigHandler.instance();
   }
 
-  public IVisa logon(IBiBusHeader2 iBiBusHeader2) throws UserRecoverableException, SystemRecoverableException, UnrecoverableException {
-    LOG.log(Level.FINEST, "logon method reached");
+  public IVisa logon(IBiBusHeader2 iBiBusHeader2) throws UserRecoverableException, SystemRecoverableException,
+          UnrecoverableException {
     CognosShibAuthVisa cognosShibAuthVisa = new CognosShibAuthVisa();
-    CognosShibAuthAccount cognosShibAuthAccount = new CognosShibAuthAccount(objectId);
 
     // TODO: make the required part configurable.
     String remoteUser = getHeaderValue(iBiBusHeader2, configHandler.getHeaderRemoteUser(), true);
+    CognosShibAuthAccount cognosShibAuthAccount = new CognosShibAuthAccount("u:" + remoteUser);
     cognosShibAuthAccount.setUserName(remoteUser);
+    LOG.log(Level.FINE, "Username '" + remoteUser + "' set from " + configHandler.getHeaderRemoteUser());
+
     String givenName = getHeaderValue(iBiBusHeader2, configHandler.getHeaderGivenName(), false);
     cognosShibAuthAccount.setGivenName(givenName);
+
     String surname = getHeaderValue(iBiBusHeader2, configHandler.getHeaderSurname(), false);
     cognosShibAuthAccount.setSurname(surname);
+
     String email = getHeaderValue(iBiBusHeader2, configHandler.getHeaderEmail(), false);
     cognosShibAuthAccount.setEmail(email);
+
     String businessPhone = getHeaderValue(iBiBusHeader2, configHandler.getHeaderBusinessPhone(), false);
     cognosShibAuthAccount.setBusinessPhone(businessPhone);
+
     String homePhone = getHeaderValue(iBiBusHeader2, configHandler.getHeaderHomePhone(), false);
     cognosShibAuthAccount.setHomePhone(homePhone);
+
     String mobilePhone = getHeaderValue(iBiBusHeader2, configHandler.getHeaderMobilePhone(), false);
     cognosShibAuthAccount.setMobilePhone(mobilePhone);
+
     String faxPhone = getHeaderValue(iBiBusHeader2, configHandler.getHeaderFaxPhone(), false);
     cognosShibAuthAccount.setFaxPhone(faxPhone);
+
     String pagerPhone = getHeaderValue(iBiBusHeader2, configHandler.getHeaderPagerPhone(), false);
     cognosShibAuthAccount.setPagerPhone(pagerPhone);
+
     String postalAddress = getHeaderValue(iBiBusHeader2, configHandler.getHeaderPostalAddress(), false);
     cognosShibAuthAccount.setPostalAddress(postalAddress);
 
@@ -66,24 +76,15 @@ public class CognosShibAuth implements INamespaceAuthenticationProvider2 {
     return cognosShibAuthVisa;
   }
 
-  private String getHeaderValue(IBiBusHeader2 iBiBusHeader2, String header, boolean required) throws UnrecoverableException {
-    // 1 - Look for trusted credentials
-    String[] headerValue = iBiBusHeader2.getTrustedCredentialValue("header");
+  private String getHeaderValue(IBiBusHeader2 iBiBusHeader2, String header, boolean required) throws SystemRecoverableException {
+    String[] headerValue = iBiBusHeader2.getTrustedEnvVarValue(header);
 
-    if (headerValue == null) { // 2 - Look for credentials coming from SDK request
-      headerValue = iBiBusHeader2.getCredentialValue("header");
+    if (headerValue == null && required) { // Value not found in trusted environment variables.
+      LOG.log(Level.SEVERE, "Header '" + header + "' not found in TrustedEnvVar, throwing SystemRecoverableException");
+      throw new SystemRecoverableException("Missing required header '" + header + "'.", header);
     }
 
-    if (headerValue == null) { // 3 - Look for credentials in environment
-      headerValue = iBiBusHeader2.getEnvVarValue("header");
-    }
-
-    if (headerValue == null && required) { // Value not found at all
-      throw new UnrecoverableException("Header \"" + header + "\" not found.",
-              "Missing required header \"" + header + "\".");
-    }
-
-    return headerValue.length > 0 ? headerValue[0] : null;
+    return headerValue[0];
   }
 
   public void logoff(IVisa iVisa, IBiBusHeader iBiBusHeader) {
@@ -116,9 +117,11 @@ public class CognosShibAuth implements INamespaceAuthenticationProvider2 {
   }
 
   public void init(INamespaceConfiguration iNamespaceConfiguration) throws UnrecoverableException {
-
     LOG.log(Level.FINEST, "intit method reached");
+
     objectId = iNamespaceConfiguration.getID();
+    LOG.log(Level.FINE, "ObjectID set to '" + objectId + "'.");
+
 
     //TODO: Make these configurable.
     capabilities = new String[6];
