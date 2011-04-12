@@ -41,9 +41,12 @@ public class CognosShibAuth implements INamespaceAuthenticationProvider2 {
     CognosShibAuthVisa cognosShibAuthVisa = new CognosShibAuthVisa();
 
     // TODO: make the required part configurable.
-    String remoteUser = getHeaderValue(iBiBusHeader2, configHandler.getHeaderRemoteUser(), true);
+    String remoteUser = null; //getHeaderValue(iBiBusHeader2, configHandler.getHeaderRemoteUser(), true);
+    remoteUser = "hdrys";
     CognosShibAuthAccount cognosShibAuthAccount = new CognosShibAuthAccount("u:" + remoteUser);
     cognosShibAuthAccount.setUserName(remoteUser);
+    cognosShibAuthAccount.addName(new Locale("sv", "se"), "Henrik Dryselius");
+    cognosShibAuthAccount.addDescription(new Locale("sv", "se"), "Farbror");
     LOG.log(Level.FINE, "Username '" + remoteUser + "' set from " + configHandler.getHeaderRemoteUser());
 
     String givenName = getHeaderValue(iBiBusHeader2, configHandler.getHeaderGivenName(), false);
@@ -106,27 +109,76 @@ public class CognosShibAuth implements INamespaceAuthenticationProvider2 {
   }
 
   public IQueryResult search(IVisa iVisa, IQuery iQuery) throws UnrecoverableException {
+
+    // We can safely assume that we'll get back the same Visa that we issued.
     CognosShibAuthVisa visa = (CognosShibAuthVisa) iVisa;
-    QueryResult result = new QueryResult();
-    try{
+	QueryResult result = new QueryResult();
+
+    try {
       ISearchExpression expression = iQuery.getSearchExpression();
       String objectID = expression.getObjectID();
       ISearchStep[] steps = expression.getSteps();
+
       // It doesn't make sense to have multiple steps for this provider
       // since the objects are not hierarchical.
-      if (steps.length != 1){
+      if (steps.length != 1) {
         throw new UnrecoverableException(
                 "Internal Error",
                 "Invalid search expression. Multiple steps is not supported for this namespace.");
       }
 
+	  int searchType = steps[0].getAxis();
+	  ISearchFilter filter = steps[0].getPredicate();
+	  switch (searchType) {
+	    case ISearchStep.SearchAxis.Self :
+		case ISearchStep.SearchAxis.DescendentOrSelf :
+		  {
+		    if (objectID == null) {
+			  if (filter == null || true) {//this.matchesFilter(filter)) {
+                result.addObject(this);
+				// Add current namespace
+			  }
 
-
+              if (searchType == ISearchStep.SearchAxis.Self) {
+				return result;
+              }
+              else {
+                //sqlCondition.append(QueryUtil.getSqlCondition(filter));
+              }
+            }
+            else if (objectID.startsWith("u:") && objectID.equals(visa.getAccount().getObjectID())) {
+              if (filter == null || true) {//this.matchesFilter(filter)) {
+                result.addObject(visa.getAccount());
+                // Add current user
+              }
+              return result;
+            }
+            else if (objectID.startsWith("u:") || objectID.startsWith("r:")) {
+              //String sqlID = objectID.substring(2);
+              //sqlCondition.append(QueryUtil.getSqlCondition(filter));
+              //if (sqlCondition.length() > 0) {
+              //  sqlCondition.append(" AND ");
+              //}
+              //sqlCondition.append("uid = " + sqlID);
+            }
+          }
+        break;
+        default :
+        {
+          //sqlCondition.append(QueryUtil.getSqlCondition(filter));
+        }
+        break;
+      }
+      //QueryUtil.query(MS_JDBCDriver.driver, visa.getConnection(),
+      //        sqlCondition.toString(), theQuery.getQueryOption(),
+      //        theQuery.getProperties(), theQuery.getSortProperties(),
+      //        result, this);
     }
-    catch (Exception e){
+    catch (Exception e)
+    {
       e.printStackTrace();
     }
-
+    result.addObject(visa.getAccount());
     return result;
   }
 
