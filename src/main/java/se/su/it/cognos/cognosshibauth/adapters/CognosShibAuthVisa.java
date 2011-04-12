@@ -1,6 +1,9 @@
 
 package se.su.it.cognos.cognosshibauth.adapters;
+import java.util.Locale;
 import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.cognos.CAM_AAA.authentication.IAccount;
 import com.cognos.CAM_AAA.authentication.IBiBusHeader;
@@ -17,37 +20,35 @@ import com.cognos.CAM_AAA.authentication.UserRecoverableException;
 public class CognosShibAuthVisa implements IVisa
 {
 
+  private Logger LOG = Logger.getLogger(CognosShibAuthVisa.class.getName());
+
   private Vector		roles;
   private Vector		groups;
   private IAccount	account;
 
-
-
-  public CognosShibAuthVisa()
-  {
-    super();
+  public CognosShibAuthVisa() {
+    LOG.log(Level.FINEST, "Creating a Visa.");
     roles = null;
     groups = null;
   }
 
-  public void init(IAccount theAccount) throws UnrecoverableException
-  {
+  public void init(IAccount theAccount) throws UnrecoverableException {
     account = theAccount;
+    LOG.log(Level.FINEST, "Initing new account for '" + account.getUserName() + "'");
   }
 
-
-  public void destroy() throws UnrecoverableException
-  {
+  public void destroy() throws UnrecoverableException {
+    LOG.log(Level.FINEST, "Destroying Visa for '" + account.getUserName() + "'.");
     roles = null;
     groups = null;
     account = null;
   }
 
-
   public ITrustedCredential generateTrustedCredential(     // implementera ordentligt senare...
           IBiBusHeader theAuthRequest) throws UserRecoverableException,
           SystemRecoverableException, UnrecoverableException
   {
+    LOG.log(Level.FINEST, "Generating trusted credentials.");
     boolean isValidCredentials = true;
     String[] theUsername = null;
     String[] thePassword = null;
@@ -76,6 +77,7 @@ public class CognosShibAuthVisa implements IVisa
           throws UserRecoverableException, SystemRecoverableException,
           UnrecoverableException
   {
+    LOG.log(Level.FINEST, "Generating credentials.");
     boolean validCredential = true; //nånBraKoll(account.getUserName());
     if(! validCredential){
       UnrecoverableException e = new UnrecoverableException(
@@ -92,17 +94,18 @@ public class CognosShibAuthVisa implements IVisa
 
   public boolean isValid()
   {
+    LOG.log(Level.FINEST, "Checking isValid.");
     return true;
   }
 
-  public IAccount getAccount()
-  {
+  public IAccount getAccount() {
+    LOG.log(Level.FINEST, "Getting account for '" + account.getUserName() + "'.");
     return account;
   }
 
 
-  public void addGroup(IGroup theGroup)
-  {
+  public void addGroup(IGroup theGroup) {
+    LOG.log(Level.FINEST, "Adding group to Visa for '" + account.getUserName() + "'.");
     if (groups == null)
     {
       groups = new Vector();
@@ -111,8 +114,8 @@ public class CognosShibAuthVisa implements IVisa
   }
 
 
-  public IGroup[] getGroups()
-  {
+  public IGroup[] getGroups() {
+    LOG.log(Level.FINEST, "Getting groups from Visa for '" + account.getUserName() + "'.");
     if (groups != null)
     {
       IGroup[] array = new IGroup[groups.size()];
@@ -122,8 +125,8 @@ public class CognosShibAuthVisa implements IVisa
   }
 
 
-  public void addRole(IRole theRole)
-  {
+  public void addRole(IRole theRole) {
+    LOG.log(Level.FINEST, "Adding role to Visa for '" + account.getUserName() + "'.");
     if (roles == null)
     {
       roles = new Vector();
@@ -133,8 +136,8 @@ public class CognosShibAuthVisa implements IVisa
 
 
 
-  public IRole[] getRoles()
-  {
+  public IRole[] getRoles() {
+    LOG.log(Level.FINEST, "Getting roles from Visa for '" + account.getUserName() + "'.");
     if (roles != null)
     {
       IRole[] array = new IRole[roles.size()];
