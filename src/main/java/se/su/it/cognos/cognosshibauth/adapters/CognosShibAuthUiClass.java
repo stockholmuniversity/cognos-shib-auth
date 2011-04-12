@@ -4,20 +4,24 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Set;
 import java.util.Stack;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.cognos.CAM_AAA.authentication.IBaseClass;
 import com.cognos.CAM_AAA.authentication.IUiClass;
 
 
-public class CognosShibAuthUiClass implements IUiClass
-{
+public class CognosShibAuthUiClass implements IUiClass {
+
+  private Logger LOG = Logger.getLogger(CognosShibAuthUiClass.class.getName());
+
   private String	objectID;
   private HashMap	names;
   private HashMap	descriptions;
   private Stack	ancestors;
-  public CognosShibAuthUiClass(String theObjectID)
-  {
-    super();
+
+  public CognosShibAuthUiClass(String theObjectID) {
+    LOG.log(Level.FINEST, "Creating new UiClass with objectID '" + theObjectID + "'.");
     names = null;
     descriptions = null;
     ancestors = null;
@@ -113,14 +117,14 @@ public class CognosShibAuthUiClass implements IUiClass
     return null;
   }
 
-  public String getObjectID()
-  {
+  public String getObjectID() {
+    LOG.log(Level.FINEST, "Getting objectID '" + objectID + "'.");
     return objectID;
   }
 
 
-  protected void setObjectID(String theObjectID)
-  {
+  protected void setObjectID(String theObjectID) {
+    LOG.log(Level.FINEST, "Setting objectID '" + theObjectID + "'.");
     objectID = theObjectID;
   }
 
