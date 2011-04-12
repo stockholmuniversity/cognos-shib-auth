@@ -4,12 +4,16 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Set;
 import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.cognos.CAM_AAA.authentication.IAccount;
+import sun.util.LocaleServiceProviderPool;
 
 
-public class CognosShibAuthAccount extends CognosShibAuthUiClass implements IAccount
-{
+public class CognosShibAuthAccount extends CognosShibAuthUiClass implements IAccount {
+
+  private Logger LOG = Logger.getLogger(CognosShibAuthAccount.class.getName());
 
   private String	businessPhone;
   private String	email;
@@ -55,8 +59,8 @@ public class CognosShibAuthAccount extends CognosShibAuthUiClass implements IAcc
     return email;
   }
 
-  public Locale getContentLocale()
-  {
+  public Locale getContentLocale() {
+    LOG.log(Level.FINEST, "Getting content locale for '" + this.userName + "'.");
     return contentLocale;
   }
 
@@ -92,8 +96,8 @@ public class CognosShibAuthAccount extends CognosShibAuthUiClass implements IAcc
     return postalAddress;
   }
 
-  public Locale getProductLocale()
-  {
+  public Locale getProductLocale() {
+    LOG.log(Level.FINEST, "Getting content locale for '" + this.userName + "'.");
     return productLocale;
   }
 
