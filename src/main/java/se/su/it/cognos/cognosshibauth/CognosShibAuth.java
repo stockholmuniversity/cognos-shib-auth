@@ -79,7 +79,7 @@ public class CognosShibAuth implements INamespaceAuthenticationProvider2 {
   }
 
   private String getHeaderValue(IBiBusHeader2 iBiBusHeader2, String header, boolean required) throws SystemRecoverableException {
-    String[] headerValue = iBiBusHeader2.getEnvVarValue(header);
+    String[] headerValue = iBiBusHeader2.getEnvVarValue(header); //TODO: Use getTrustedEnvVarValue when releasing stable.
 
     if(headerValue == null) {
       LOG.log(Level.INFO, "Header '" + header + "' not found.");
