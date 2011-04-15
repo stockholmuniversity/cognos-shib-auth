@@ -43,17 +43,15 @@ public class CognosShibAuth implements INamespaceAuthenticationProvider2 {
     // TODO: make the required part configurable.
     String remoteUser = null; //getHeaderValue(iBiBusHeader2, configHandler.getHeaderRemoteUser(), true);
     remoteUser = "hdrys";
-    CognosShibAuthAccount cognosShibAuthAccount = new CognosShibAuthAccount("u:" + remoteUser);
-    cognosShibAuthAccount.setUserName(remoteUser);
-    cognosShibAuthAccount.addName(new Locale("sv", "se"), "Henrik Dryselius");
-    cognosShibAuthAccount.addDescription(new Locale("sv", "se"), "Farbror");
     LOG.log(Level.FINE, "Username '" + remoteUser + "' set from " + configHandler.getHeaderRemoteUser());
 
-    String givenName = getHeaderValue(iBiBusHeader2, configHandler.getHeaderGivenName(), false);
-    cognosShibAuthAccount.setGivenName(givenName);
+    Locale contentLocale = configHandler.getContentLocale();
 
-    String surname = getHeaderValue(iBiBusHeader2, configHandler.getHeaderSurname(), false);
-    cognosShibAuthAccount.setSurname(surname);
+    String givenName = getHeaderValue(iBiBusHeader2, configHandler.getHeaderGivenName(), true);
+    String surname = getHeaderValue(iBiBusHeader2, configHandler.getHeaderSurname(), true);
+
+    CognosShibAuthAccount cognosShibAuthAccount =
+            new CognosShibAuthAccount("u:" + remoteUser, remoteUser, givenName, surname, contentLocale);
 
     String email = getHeaderValue(iBiBusHeader2, configHandler.getHeaderEmail(), false);
     cognosShibAuthAccount.setEmail(email);

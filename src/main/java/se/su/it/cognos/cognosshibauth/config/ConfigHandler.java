@@ -40,6 +40,9 @@ public class ConfigHandler {
   private String headerPagerPhone = "";
   private String headerPostalAddress = "";
 
+  private Locale contentLocale = Locale.ENGLISH;
+  private Locale procuctLocale = Locale.ENGLISH;
+
   protected ConfigHandler() {
     config.setFileName(CONFIG_FILENAME);
     try {
@@ -51,6 +54,24 @@ public class ConfigHandler {
     config.setReloadingStrategy(new FileChangedReloadingStrategy());
 
     load_header_values();
+
+    contentLocale = load_locale("generic.content_locale", contentLocale);
+    procuctLocale = load_locale("generic.product_locale", procuctLocale);
+  }
+
+  private Locale load_locale(String s, Locale defaultLocale) {
+    String localeS = config.getString(s);
+    Locale retLocale = defaultLocale;
+
+    try {
+      retLocale = new Locale(localeS);
+      LOG.log(Level.FINEST, "Configured '" + s + "' = '" + retLocale + "'.");
+    }
+    catch(NullPointerException e) {
+      LOG.log(Level.WARNING, "'" + s + "' not configured, falling back on default '" + defaultLocale.toString() + "'.");
+    }
+
+    return retLocale;
   }
 
   public static ConfigHandler instance() {
@@ -163,5 +184,13 @@ public class ConfigHandler {
 
   public String getHeaderPostalAddress() {
     return headerPostalAddress;
+  }
+
+  public Locale getContentLocale() {
+    return contentLocale;
+  }
+
+  public Locale getProcuctLocale() {
+    return procuctLocale;
   }
 }
