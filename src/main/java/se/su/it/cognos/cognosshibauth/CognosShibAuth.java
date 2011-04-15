@@ -41,8 +41,7 @@ public class CognosShibAuth implements INamespaceAuthenticationProvider2 {
     CognosShibAuthVisa cognosShibAuthVisa = new CognosShibAuthVisa();
 
     // TODO: make the required part configurable.
-    String remoteUser = null; //getHeaderValue(iBiBusHeader2, configHandler.getHeaderRemoteUser(), true);
-    remoteUser = "hdrys";
+    String remoteUser = getHeaderValue(iBiBusHeader2, configHandler.getHeaderRemoteUser(), true);
     LOG.log(Level.FINE, "Username '" + remoteUser + "' set from " + configHandler.getHeaderRemoteUser());
 
     Locale contentLocale = configHandler.getContentLocale();
