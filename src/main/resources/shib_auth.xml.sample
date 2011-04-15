@@ -1,9 +1,14 @@
 <?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE config SYSTEM "../dtd/shib_auth.dtd">
 
 <config>
   <headers>
     <remote_user>REMOTE_USER</remote_user>
   </headers>
+  <generic>
+    <content_locale>sv_SE</content_locale>
+    <product_locale>sv_SE</product_locale>
+  </generic>
   <names>
     <name>
       <locale>sv_SE</locale>
