@@ -1,5 +1,6 @@
 package se.su.it.cognos.cognosshibauth.visa;
 
+import com.cognos.CAM_AAA.authentication.IAccount;
 import se.su.it.cognos.cognosshibauth.adapters.CognosShibAuthAccount;
 
 /**
@@ -11,7 +12,7 @@ import se.su.it.cognos.cognosshibauth.adapters.CognosShibAuthAccount;
  */
 public interface VisaValidator {
 
-  public void init(CognosShibAuthAccount cognosShibAuthAccount);
+  public void init(IAccount iAccount);
 
   public boolean isValid();
 

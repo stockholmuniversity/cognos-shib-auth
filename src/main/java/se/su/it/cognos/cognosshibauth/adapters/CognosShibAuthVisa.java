@@ -51,6 +51,8 @@ public class CognosShibAuthVisa implements IVisa
     } catch (Exception e) {
       throw new UnrecoverableException("Failed to load visa validator.", e.getMessage());
     }
+
+    visaValidator.init(account);
   }
 
   public void destroy() throws UnrecoverableException {
@@ -58,6 +60,7 @@ public class CognosShibAuthVisa implements IVisa
     roles = null;
     groups = null;
     account = null;
+    visaValidator.destroy();
   }
 
   public ITrustedCredential generateTrustedCredential(     // implementera ordentligt senare...
@@ -111,7 +114,7 @@ public class CognosShibAuthVisa implements IVisa
   public boolean isValid()
   {
     LOG.log(Level.FINEST, "Checking isValid.");
-    return true;
+    return visaValidator.isValid();
   }
 
   public IAccount getAccount() {

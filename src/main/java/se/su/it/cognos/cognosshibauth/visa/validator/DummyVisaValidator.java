@@ -1,5 +1,6 @@
 package se.su.it.cognos.cognosshibauth.visa.validator;
 
+import com.cognos.CAM_AAA.authentication.IAccount;
 import se.su.it.cognos.cognosshibauth.adapters.CognosShibAuthAccount;
 import se.su.it.cognos.cognosshibauth.visa.VisaValidator;
 
@@ -13,7 +14,7 @@ import se.su.it.cognos.cognosshibauth.visa.VisaValidator;
 public class DummyVisaValidator implements VisaValidator {
 
   @Override
-  public void init(CognosShibAuthAccount cognosShibAuthAccount) {
+  public void init(IAccount iAccount) {
   }
 
   @Override
