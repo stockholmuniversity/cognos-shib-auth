@@ -31,8 +31,10 @@ public class CognosShibAuthAccount extends CognosShibAuthUiClass implements IAcc
 
 
 
-  public CognosShibAuthAccount(String theObjectID, String userName, String givenName, String surname, Locale contentLocale) {
+  public CognosShibAuthAccount(String theObjectID, String userName, String givenName, String surname,
+                               Locale contentLocale) {
     super(theObjectID);
+
     businessPhone = null;
     email = null;
     this.contentLocale = contentLocale;
