@@ -8,6 +8,15 @@
   <capabilities>caseSensitive,contains,equals,sort,startsWith,endsWith</capabilities>
   <headers>
     <remote_user>REMOTE_USER</remote_user>
+    <given_name>givenName</given_name>
+    <surname>sn</surname>
+    <mail>mail</mail>
+    <business_phone>telephoneNumber</business_phone>
+    <home_phone></home_phone>
+    <mobile_phone></mobile_phone>
+    <fax_phone>facsimileTelephoneNumber</fax_phone>
+    <pager_phone></pager_phone>
+    <postal_address></postal_address>
   </headers>
   <names>
     <name>
