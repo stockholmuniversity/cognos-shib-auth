@@ -198,4 +198,8 @@ public class ConfigHandler {
   public Locale getProcuctLocale() {
     return procuctLocale;
   }
+
+  public String getVisaValidatorClass() {
+    return config.getString("visa_validator.class");
+  }
 }
