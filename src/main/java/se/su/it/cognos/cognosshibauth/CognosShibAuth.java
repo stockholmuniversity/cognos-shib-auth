@@ -40,14 +40,10 @@ public class CognosShibAuth implements INamespaceAuthenticationProvider2 {
           UnrecoverableException {
     CognosShibAuthVisa cognosShibAuthVisa = new CognosShibAuthVisa();
 
-    // TODO: make the required part configurable.
     String remoteUser = getHeaderValue(iBiBusHeader2, configHandler.getHeaderRemoteUser(), true);
-    LOG.log(Level.FINE, "Username '" + remoteUser + "' set from " + configHandler.getHeaderRemoteUser());
-
-    Locale contentLocale = configHandler.getContentLocale();
-
     String givenName = getHeaderValue(iBiBusHeader2, configHandler.getHeaderGivenName(), true);
     String surname = getHeaderValue(iBiBusHeader2, configHandler.getHeaderSurname(), true);
+    Locale contentLocale = configHandler.getContentLocale();
 
     CognosShibAuthAccount cognosShibAuthAccount =
             new CognosShibAuthAccount("u:" + remoteUser, remoteUser, givenName, surname, contentLocale);
@@ -102,7 +98,13 @@ public class CognosShibAuth implements INamespaceAuthenticationProvider2 {
   }
 
   public void logoff(IVisa iVisa, IBiBusHeader iBiBusHeader) {
-    // TODO: Implement something smart.
+    CognosShibAuthVisa cognosShibAuthVisa = (CognosShibAuthVisa) iVisa;
+    try {
+      cognosShibAuthVisa.destroy();
+    } catch (UnrecoverableException e) {
+      LOG.log(Level.SEVERE, "Failed to destroy visa '" + cognosShibAuthVisa + "' during logout.");
+      e.printStackTrace();
+    }
   }
 
   public IQueryResult search(IVisa iVisa, IQuery iQuery) throws UnrecoverableException {
