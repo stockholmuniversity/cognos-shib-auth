@@ -48,8 +48,8 @@ public class CognosShibAuth implements INamespaceAuthenticationProvider2 {
     CognosShibAuthAccount cognosShibAuthAccount =
             new CognosShibAuthAccount("u:" + remoteUser, remoteUser, givenName, surname, contentLocale);
 
-    String email = getHeaderValue(iBiBusHeader2, configHandler.getHeaderEmail(), false);
-    cognosShibAuthAccount.setEmail(email);
+    String mail = getHeaderValue(iBiBusHeader2, configHandler.getHeaderMail(), true);
+    cognosShibAuthAccount.setEmail(mail);
 
     String businessPhone = getHeaderValue(iBiBusHeader2, configHandler.getHeaderBusinessPhone(), false);
     cognosShibAuthAccount.setBusinessPhone(businessPhone);

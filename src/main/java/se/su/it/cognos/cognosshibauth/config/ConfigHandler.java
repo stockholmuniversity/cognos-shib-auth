@@ -32,7 +32,7 @@ public class ConfigHandler {
   private String headerRemoteUser = "REMOTE_USER";
   private String headerGivenName = "";
   private String headerSurname = "";
-  private String headerEmail = "";
+  private String headerMail = "";
   private String headerBusinessPhone = "";
   private String headerHomePhone = "";
   private String headerMobilePhone = "";
@@ -85,7 +85,7 @@ public class ConfigHandler {
     headerRemoteUser =    config.getString("headers.remote_user", headerRemoteUser);
     headerGivenName =     config.getString("headers.given_name", headerGivenName);
     headerSurname =       config.getString("headers.surname", headerSurname);
-    headerEmail =         config.getString("headers.email", headerEmail);
+    headerMail =          config.getString("headers.mail", headerMail);
     headerBusinessPhone = config.getString("headers.business_phone", headerBusinessPhone);
     headerHomePhone =     config.getString("headers.home_phone", headerHomePhone);
     headerMobilePhone =   config.getString("headers.mobile_phone", headerMobilePhone);
@@ -163,8 +163,8 @@ public class ConfigHandler {
     return headerSurname;
   }
 
-  public String getHeaderEmail() {
-    return headerEmail;
+  public String getHeaderMail() {
+    return headerMail;
   }
 
   public String getHeaderBusinessPhone() {
