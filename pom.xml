@@ -79,6 +79,11 @@
       <artifactId>junit</artifactId>
       <version>4.8.2</version>
     </dependency>
+    <dependency>
+      <groupId>se.su.it.sukat</groupId>
+      <artifactId>sukat-jndi-commons</artifactId>
+      <version>1.1</version>
+    </dependency>
   </dependencies>
   <build>
     <defaultGoal>install</defaultGoal>

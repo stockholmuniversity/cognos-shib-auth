@@ -235,4 +235,20 @@ public class CognosShibAuth implements INamespaceAuthenticationProvider2 {
   public String getObjectID() {
     return objectId;
   }
+
+  private String filterGmaiRole(String gmai){
+    // urn:mace:swami.se:gmai:su-ivs:analyst:departmentNumber=647
+    int startGmai = gmai.indexOf("su-ivs:") + 6;
+    int stopGmai = gmai.lastIndexOf(":");
+    String role = gmai.substring(startGmai, stopGmai);
+    return role;
+  }
+
+  private String filterGmaiDepartment(String gmai){
+    // urn:mace:swami.se:gmai:su-ivs:analyst:departmentNumber=647
+    int startGmai = gmai.indexOf("departmentNumber=") + 17;
+    String group = gmai.substring(startGmai);
+    return group;
+  }
+
 }
