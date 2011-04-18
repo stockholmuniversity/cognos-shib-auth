@@ -30,13 +30,13 @@ public class ConfigHandler {
   private XMLConfiguration config = new XMLConfiguration();
 
   private String headerRemoteUser = "REMOTE_USER";
-  private String headerGivenName = "";
-  private String headerSurname = "";
-  private String headerMail = "";
-  private String headerBusinessPhone = "";
+  private String headerGivenName = "givenName";
+  private String headerSurname = "sn";
+  private String headerMail = "mail";
+  private String headerBusinessPhone = "telephoneNumber";
   private String headerHomePhone = "";
   private String headerMobilePhone = "";
-  private String headerFaxPhone = "";
+  private String headerFaxPhone = "facsimileTelephoneNumber";
   private String headerPagerPhone = "";
   private String headerPostalAddress = "";
 
