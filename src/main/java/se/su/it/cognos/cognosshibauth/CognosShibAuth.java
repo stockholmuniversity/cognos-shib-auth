@@ -14,6 +14,8 @@ import com.cognos.CAM_AAA.authentication.UnrecoverableException;
 import com.cognos.CAM_AAA.authentication.UserRecoverableException;
 import org.apache.commons.lang.ArrayUtils;
 import se.su.it.cognos.cognosshibauth.adapters.CognosShibAuthAccount;
+import se.su.it.cognos.cognosshibauth.adapters.CognosShibAuthGroup;
+import se.su.it.cognos.cognosshibauth.adapters.CognosShibAuthRole;
 import se.su.it.cognos.cognosshibauth.adapters.CognosShibAuthVisa;
 import se.su.it.cognos.cognosshibauth.config.ConfigHandler;
 
@@ -45,6 +47,8 @@ public class CognosShibAuth implements INamespaceAuthenticationProvider2 {
     String surname = getHeaderValue(iBiBusHeader2, configHandler.getHeaderSurname(), true);
     Locale contentLocale = configHandler.getContentLocale();
 
+    String entitlement = getHeaderValue(iBiBusHeader2, configHandler.getHeaderEntitlement(), false);
+
     CognosShibAuthAccount cognosShibAuthAccount =
             new CognosShibAuthAccount("u:" + remoteUser, remoteUser, givenName, surname, contentLocale);
 
@@ -68,6 +72,16 @@ public class CognosShibAuth implements INamespaceAuthenticationProvider2 {
 
     String postalAddress = getHeaderValue(iBiBusHeader2, configHandler.getHeaderPostalAddress(), false);
     cognosShibAuthAccount.setPostalAddress(postalAddress);
+
+    String gmaiRole = filterGmaiRole(entitlement);
+    CognosShibAuthRole role = new CognosShibAuthRole("Cognos Shibb Authenticator:r:"+gmaiRole);
+    role.addName(contentLocale, gmaiRole);
+    cognosShibAuthVisa.addRole(role);
+
+    String gmaiGroup = filterGmaiDepartment(entitlement);
+    CognosShibAuthGroup group = new CognosShibAuthGroup("\"Cognos Shibb Authenticator:g:"+gmaiGroup);
+    group.addMember(cognosShibAuthAccount);
+    cognosShibAuthVisa.addGroup(group);
 
     cognosShibAuthVisa.init(cognosShibAuthAccount);
 
@@ -250,5 +264,7 @@ public class CognosShibAuth implements INamespaceAuthenticationProvider2 {
     String group = gmai.substring(startGmai);
     return group;
   }
+
+
 
 }

@@ -43,6 +43,8 @@ public class ConfigHandler {
   private Locale contentLocale = Locale.ENGLISH;
   private Locale procuctLocale = Locale.ENGLISH;
 
+  private String headerEntitlement = "entitlement";
+
   protected ConfigHandler() {
     config.setFileName(CONFIG_FILENAME);
     try {
@@ -92,6 +94,7 @@ public class ConfigHandler {
     headerFaxPhone =      config.getString("headers.fax_phone", headerFaxPhone);
     headerPagerPhone =    config.getString("headers.pager_phone", headerPagerPhone);
     headerPostalAddress = config.getString("headers.postal_address", headerPostalAddress);
+    headerEntitlement =   config.getString("headers.entitlement", headerEntitlement);
   }
 
   public List<String> getCapabilities() {
@@ -197,5 +200,9 @@ public class ConfigHandler {
 
   public Locale getProcuctLocale() {
     return procuctLocale;
+  }
+
+  public String getHeaderEntitlement() {
+    return headerEntitlement;
   }
 }
