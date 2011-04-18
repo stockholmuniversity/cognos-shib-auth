@@ -40,7 +40,7 @@ public class CognosShibAuth implements INamespaceAuthenticationProvider2 {
 
   public IVisa logon(IBiBusHeader2 iBiBusHeader2) throws UserRecoverableException, SystemRecoverableException,
           UnrecoverableException {
-    CognosShibAuthVisa cognosShibAuthVisa = new CognosShibAuthVisa();
+    CognosShibAuthVisa cognosShibAuthVisa = new CognosShibAuthVisa(configHandler);
 
     String remoteUser = getHeaderValue(iBiBusHeader2, configHandler.getHeaderRemoteUser(), true);
     String givenName = getHeaderValue(iBiBusHeader2, configHandler.getHeaderGivenName(), true);

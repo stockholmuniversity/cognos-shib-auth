@@ -205,4 +205,8 @@ public class ConfigHandler {
   public String getHeaderEntitlement() {
     return headerEntitlement;
   }
+
+  public String getVisaValidatorClass() {
+    return config.getString("visa_validator.class");
+  }
 }

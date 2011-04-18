@@ -38,4 +38,7 @@
       <text>Foobar</text>
     </description>
   </descriptions>
+  <visa_validator>
+    <class>se.su.it.cognos.cognosshibauth.visa.validator.DummyVisaValidator</class>
+  </visa_validator>
 </config>

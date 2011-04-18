@@ -15,6 +15,8 @@ import com.cognos.CAM_AAA.authentication.IVisa;
 import com.cognos.CAM_AAA.authentication.SystemRecoverableException;
 import com.cognos.CAM_AAA.authentication.UnrecoverableException;
 import com.cognos.CAM_AAA.authentication.UserRecoverableException;
+import se.su.it.cognos.cognosshibauth.config.ConfigHandler;
+import se.su.it.cognos.cognosshibauth.visa.VisaValidator;
 
 
 public class CognosShibAuthVisa implements IVisa
@@ -26,15 +28,31 @@ public class CognosShibAuthVisa implements IVisa
   private Vector		groups;
   private IAccount	account;
 
-  public CognosShibAuthVisa() {
+  private VisaValidator visaValidator = null;
+
+  private ConfigHandler configHandler = null;
+
+  public CognosShibAuthVisa(ConfigHandler configHandler) {
     LOG.log(Level.FINEST, "Creating a Visa.");
     roles = null;
     groups = null;
+    this.configHandler = configHandler;
   }
 
   public void init(IAccount theAccount) throws UnrecoverableException {
     account = theAccount;
+    
     LOG.log(Level.FINEST, "Initing new account for '" + account.getUserName() + "'");
+
+    String visaValidatorClassName = configHandler.getVisaValidatorClass();
+    ClassLoader classLoader = ClassLoader.getSystemClassLoader();
+    try {
+      visaValidator = (VisaValidator) classLoader.loadClass(visaValidatorClassName).newInstance();
+    } catch (Exception e) {
+      throw new UnrecoverableException("Failed to load visa validator.", e.getMessage());
+    }
+
+    visaValidator.init(account);
   }
 
   public void destroy() throws UnrecoverableException {
@@ -42,6 +60,7 @@ public class CognosShibAuthVisa implements IVisa
     roles = null;
     groups = null;
     account = null;
+    visaValidator.destroy();
   }
 
   public ITrustedCredential generateTrustedCredential(     // implementera ordentligt senare...
@@ -95,7 +114,7 @@ public class CognosShibAuthVisa implements IVisa
   public boolean isValid()
   {
     LOG.log(Level.FINEST, "Checking isValid.");
-    return true;
+    return visaValidator.isValid();
   }
 
   public IAccount getAccount() {
