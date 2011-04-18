@@ -94,6 +94,11 @@ public class ConfigHandler {
     headerPostalAddress = config.getString("headers.postal_address", headerPostalAddress);
   }
 
+  public List<String> getCapabilities() {
+    List<String> list = config.getList("capabilities");
+    return list;
+  }
+
   public String getName(Locale locale) {
     String description = null;
     List<HierarchicalConfiguration> subnodeConfiguration =

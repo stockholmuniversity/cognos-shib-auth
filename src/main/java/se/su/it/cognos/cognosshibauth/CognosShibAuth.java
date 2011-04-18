@@ -187,15 +187,8 @@ public class CognosShibAuth implements INamespaceAuthenticationProvider2 {
     objectId = iNamespaceConfiguration.getID();
     LOG.log(Level.FINE, "ObjectID set to '" + objectId + "'.");
 
-
-    //TODO: Make these configurable.
-    capabilities = new String[6];
-    capabilities[0] = CapabilityCaseSensitive;
-    capabilities[1] = CapabilityContains;
-    capabilities[2] = CapabilityEquals;
-    capabilities[3] = CapabilitySort;
-    capabilities[4] = CapabilityStartsWith;
-    capabilities[5] = CapabilityEndsWith;
+    List<String> capabilitiesList = configHandler.getCapabilities();
+    capabilities = capabilitiesList.toArray(new String[capabilitiesList.size()]);
   }
 
   public void destroy() {}

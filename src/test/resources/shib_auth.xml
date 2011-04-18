@@ -1,10 +1,11 @@
-<?xml version="1.0" encoding="ISO-8859-1" ?>
+<?xml version="1.0" encoding="UTF-8" ?>
 
 <config>
   <generic>
     <content_locale>sv_SE</content_locale>
     <product_locale>sv_SE</product_locale>
   </generic>
+  <capabilities>caseSensitive,contains,equals,sort,startsWith,endsWith</capabilities>
   <headers>
     <remote_user>REMOTE_USER</remote_user>
   </headers>
