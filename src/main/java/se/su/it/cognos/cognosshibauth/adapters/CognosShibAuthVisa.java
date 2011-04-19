@@ -1,5 +1,6 @@
 
 package se.su.it.cognos.cognosshibauth.adapters;
+import java.util.List;
 import java.util.Locale;
 import java.util.Vector;
 import java.util.logging.Level;
@@ -19,14 +20,13 @@ import se.su.it.cognos.cognosshibauth.config.ConfigHandler;
 import se.su.it.cognos.cognosshibauth.visa.VisaValidator;
 
 
-public class CognosShibAuthVisa implements IVisa
-{
+public class CognosShibAuthVisa implements IVisa {
 
   private Logger LOG = Logger.getLogger(CognosShibAuthVisa.class.getName());
 
-  private Vector		roles;
-  private Vector		groups;
-  private IAccount	account;
+  private List<IRole> roles;
+  private List<IGroup> groups;
+  private IAccount account;
 
   private VisaValidator visaValidator = null;
 
