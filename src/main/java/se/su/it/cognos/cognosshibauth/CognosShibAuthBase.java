@@ -1,8 +1,8 @@
 /**
  * Created by IntelliJ IDEA.
  * User: joakim
- * Date: 2011-04-04
- * Time: 12:54
+ * Date: 2011-04-19
+ * Time: 07:10
  * To change this template use File | Settings | File Templates.
  */
 package se.su.it.cognos.cognosshibauth;
@@ -25,17 +25,12 @@ import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class CognosShibAuthBase implements INamespaceAuthenticationProviderBase {
+public class CognosShibAuthBase extends CognosShibAuthNamespace implements INamespaceAuthenticationProviderBase {
 
-  String namespaceFormat = null;
-  String capabilities[] = null;
-  String objectId = null;
   private Logger LOG = Logger.getLogger(CognosShibAuthBase.class.getName());
 
-  protected ConfigHandler configHandler = null;
-
-  public CognosShibAuthBase(ConfigHandler configHandler) {
-    this.configHandler = configHandler;
+ public CognosShibAuthBase(ConfigHandler configHandler) {
+    super(configHandler);
   }
 
   public void logoff(IVisa iVisa, IBiBusHeader iBiBusHeader) {
@@ -121,60 +116,4 @@ public class CognosShibAuthBase implements INamespaceAuthenticationProviderBase 
     result.addObject(visa.getAccount());
     return result;
   }
-
-  public void init(INamespaceConfiguration iNamespaceConfiguration) throws UnrecoverableException {
-    LOG.log(Level.FINEST, "intit method reached");
-
-    objectId = iNamespaceConfiguration.getID();
-    LOG.log(Level.FINE, "ObjectID set to '" + objectId + "'.");
-
-    List<String> capabilitiesList = configHandler.getCapabilities();
-    capabilities = capabilitiesList.toArray(new String[capabilitiesList.size()]);
-  }
-
-  public void destroy() {}
-
-  public String getNamespaceFormat() {
-    return namespaceFormat;
-  }
-
-  public void setNamespaceFormat(String s) throws UnrecoverableException {
-    namespaceFormat = s;
-  }
-
-  public String[] getCapabilities() {
-    return capabilities;
-  }
-
-  public String getDescription(Locale locale) {
-    return configHandler.getDescription(locale);
-  }
-
-  public Locale[] getAvailableDescriptionLocales() {
-    List<Locale> locales = configHandler.getDescriptionLocales();
-    return locales.toArray(new Locale[locales.size()]);
-  }
-
-  public IBaseClass[] getAncestors() {
-    // TODO: Implement something smart.
-    return null;
-  }
-
-  public boolean getHasChildren() {
-    return false;
-  }
-
-  public String getName(Locale locale) {
-    return configHandler.getName(locale);
-  }
-
-  public Locale[] getAvailableNameLocales() {
-    List<Locale> locales = configHandler.getDescriptionLocales();
-    return locales.toArray(new Locale[locales.size()]);
-  }
-
-  public String getObjectID() {
-    return objectId;
-  }
 }
-
