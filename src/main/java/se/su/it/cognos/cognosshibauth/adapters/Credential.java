@@ -4,11 +4,11 @@ import java.util.*;
 
 import com.cognos.CAM_AAA.authentication.ICredential;
 
-public class CognosShibAuthCredential implements ICredential {
+public class Credential implements ICredential {
 
   private HashMap<String, List<String>> credentials = null;
 
-  public CognosShibAuthCredential() {
+  public Credential() {
     super();
     credentials = new HashMap<String, List<String>>();
   }

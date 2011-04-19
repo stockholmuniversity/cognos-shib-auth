@@ -2,7 +2,6 @@
 package se.su.it.cognos.cognosshibauth.adapters;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -86,7 +85,7 @@ public class Visa implements IVisa {
       throw e;
     }
 
-    CognosShibAuthTrustedCredential tc = new CognosShibAuthTrustedCredential();
+    TrustedCredential tc = new TrustedCredential();
     tc.addCredentialValue("username", theUsername.toString());
     return tc;
   }
@@ -103,7 +102,7 @@ public class Visa implements IVisa {
       throw e;
     }
     else {
-      CognosShibAuthCredential credentials = new CognosShibAuthCredential();
+      Credential credentials = new Credential();
       credentials.addCredentialValue("username", account.getUserName());
       return credentials;
     }
