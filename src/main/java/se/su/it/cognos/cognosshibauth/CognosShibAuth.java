@@ -13,7 +13,7 @@ import com.cognos.CAM_AAA.authentication.SystemRecoverableException;
 import com.cognos.CAM_AAA.authentication.UnrecoverableException;
 import com.cognos.CAM_AAA.authentication.UserRecoverableException;
 import se.su.it.cognos.cognosshibauth.adapters.Account;
-import se.su.it.cognos.cognosshibauth.adapters.CognosShibAuthGroup;
+import se.su.it.cognos.cognosshibauth.adapters.Group;
 import se.su.it.cognos.cognosshibauth.adapters.Role;
 import se.su.it.cognos.cognosshibauth.adapters.Visa;
 import se.su.it.cognos.cognosshibauth.config.ConfigHandler;
@@ -71,7 +71,7 @@ public class CognosShibAuth extends CognosShibAuthBase implements INamespaceAuth
     visa.addRole(role);
 
     String gmaiGroup = filterGmaiDepartment(entitlement);
-    CognosShibAuthGroup group = new CognosShibAuthGroup("\"Cognos Shibb Authenticator:g:"+gmaiGroup);
+    Group group = new Group("\"Cognos Shibb Authenticator:g:"+gmaiGroup);
     group.addMember(account);
     visa.addGroup(group);
 
