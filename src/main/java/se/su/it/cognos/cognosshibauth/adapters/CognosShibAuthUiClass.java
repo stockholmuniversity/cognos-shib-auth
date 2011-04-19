@@ -1,5 +1,5 @@
-
 package se.su.it.cognos.cognosshibauth.adapters;
+
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Set;
@@ -10,42 +10,33 @@ import java.util.logging.Logger;
 import com.cognos.CAM_AAA.authentication.IBaseClass;
 import com.cognos.CAM_AAA.authentication.IUiClass;
 
-
 public class CognosShibAuthUiClass implements IUiClass {
 
   private Logger LOG = Logger.getLogger(CognosShibAuthUiClass.class.getName());
 
-  private String	objectID;
-  private HashMap	names;
-  private HashMap	descriptions;
-  private Stack	ancestors;
+  private String objectID = null;
+  private Stack	ancestors = null;
+
+  private HashMap<Locale, String> names = null;
+  private HashMap<Locale, String> descriptions = null;
 
   public CognosShibAuthUiClass(String theObjectID) {
     LOG.log(Level.FINEST, "Creating new UiClass with objectID '" + theObjectID + "'.");
-    names = null;
-    descriptions = null;
-    ancestors = null;
+
+    names = new HashMap<Locale, String>();
+    descriptions = new HashMap<Locale, String>();
+
     objectID = theObjectID;
   }
 
 
-  public void addDescription(Locale theLocale, String theDescription)
-  {
-    if (descriptions == null)
-    {
-      descriptions = new HashMap();
-    }
+  public void addDescription(Locale theLocale, String theDescription) {
     descriptions.put(theLocale, theDescription);
   }
 
 
-  public String getDescription(Locale theLocale)
-  {
-    if (descriptions != null)
-    {
-      return (String) descriptions.get(theLocale);
-    }
-    return null;
+  public String getDescription(Locale theLocale) {
+    return descriptions.get(theLocale);
   }
 
 
@@ -82,12 +73,7 @@ public class CognosShibAuthUiClass implements IUiClass {
   }
 
 
-  public void addName(Locale theLocale, String theName)
-  {
-    if (names == null)
-    {
-      names = new HashMap();
-    }
+  public void addName(Locale theLocale, String theName) {
     names.put(theLocale, theName);
   }
 
@@ -98,11 +84,7 @@ public class CognosShibAuthUiClass implements IUiClass {
 
   public String getName(Locale theLocale)
   {
-    if (names != null)
-    {
-      return (String) names.get(theLocale);
-    }
-    return null;
+    return names.get(theLocale);
   }
 
 
