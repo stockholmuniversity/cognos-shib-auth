@@ -40,20 +40,13 @@ public class CognosShibAuthUiClass implements IUiClass {
   }
 
 
-  public Locale[] getAvailableDescriptionLocales()
-  {
-    if (descriptions != null)
-    {
-      Set keySet = descriptions.keySet();
-      Locale[] array = new Locale[keySet.size()];
-      return (Locale[]) keySet.toArray(array);
-    }
-    return null;
+  public Locale[] getAvailableDescriptionLocales() {
+    Set<Locale> keySet = descriptions.keySet();
+    return keySet.toArray(new Locale[keySet.size()]);
   }
 
 
-  public void addAncestors(IBaseClass theAncestor)
-  {
+  public void addAncestors(IBaseClass theAncestor) {
     if (ancestors == null)
     {
       ancestors = new Stack();
@@ -62,8 +55,7 @@ public class CognosShibAuthUiClass implements IUiClass {
   }
 
 
-  public IBaseClass[] getAncestors()
-  {
+  public IBaseClass[] getAncestors() {
     if (ancestors != null)
     {
       IBaseClass[] array = new IBaseClass[ancestors.size()];
@@ -77,26 +69,18 @@ public class CognosShibAuthUiClass implements IUiClass {
     names.put(theLocale, theName);
   }
 
-  public boolean getHasChildren()
-  {
+  public boolean getHasChildren() {
     return false;
   }
 
-  public String getName(Locale theLocale)
-  {
+  public String getName(Locale theLocale) {
     return names.get(theLocale);
   }
 
 
-  public Locale[] getAvailableNameLocales()
-  {
-    if (names != null)
-    {
-      Set keySet = names.keySet();
-      Locale[] array = new Locale[keySet.size()];
-      return (Locale[]) keySet.toArray(array);
-    }
-    return null;
+  public Locale[] getAvailableNameLocales() {
+    Set<Locale> keySet = names.keySet();
+    return keySet.toArray(new Locale[keySet.size()]);
   }
 
   public String getObjectID() {
@@ -109,5 +93,4 @@ public class CognosShibAuthUiClass implements IUiClass {
     LOG.log(Level.FINEST, "Setting objectID '" + theObjectID + "'.");
     objectID = theObjectID;
   }
-
 }
