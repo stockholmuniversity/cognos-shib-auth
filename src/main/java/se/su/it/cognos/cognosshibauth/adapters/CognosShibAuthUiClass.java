@@ -15,7 +15,8 @@ public class CognosShibAuthUiClass implements IUiClass {
   private Logger LOG = Logger.getLogger(CognosShibAuthUiClass.class.getName());
 
   private String objectID = null;
-  private Stack	ancestors = null;
+
+  private Stack<IBaseClass>	ancestors = null;
 
   private HashMap<Locale, String> names = null;
   private HashMap<Locale, String> descriptions = null;
@@ -26,44 +27,31 @@ public class CognosShibAuthUiClass implements IUiClass {
     names = new HashMap<Locale, String>();
     descriptions = new HashMap<Locale, String>();
 
+    ancestors = new Stack<IBaseClass>();
+
     objectID = theObjectID;
   }
-
 
   public void addDescription(Locale theLocale, String theDescription) {
     descriptions.put(theLocale, theDescription);
   }
 
-
   public String getDescription(Locale theLocale) {
     return descriptions.get(theLocale);
   }
-
 
   public Locale[] getAvailableDescriptionLocales() {
     Set<Locale> keySet = descriptions.keySet();
     return keySet.toArray(new Locale[keySet.size()]);
   }
 
-
   public void addAncestors(IBaseClass theAncestor) {
-    if (ancestors == null)
-    {
-      ancestors = new Stack();
-    }
     ancestors.push(theAncestor);
   }
 
-
   public IBaseClass[] getAncestors() {
-    if (ancestors != null)
-    {
-      IBaseClass[] array = new IBaseClass[ancestors.size()];
-      return (IBaseClass[]) ancestors.toArray(array);
-    }
-    return null;
+    return ancestors.toArray(new IBaseClass[ancestors.size()]);
   }
-
 
   public void addName(Locale theLocale, String theName) {
     names.put(theLocale, theName);
@@ -77,7 +65,6 @@ public class CognosShibAuthUiClass implements IUiClass {
     return names.get(theLocale);
   }
 
-
   public Locale[] getAvailableNameLocales() {
     Set<Locale> keySet = names.keySet();
     return keySet.toArray(new Locale[keySet.size()]);
@@ -87,7 +74,6 @@ public class CognosShibAuthUiClass implements IUiClass {
     LOG.log(Level.FINEST, "Getting objectID '" + objectID + "'.");
     return objectID;
   }
-
 
   protected void setObjectID(String theObjectID) {
     LOG.log(Level.FINEST, "Setting objectID '" + theObjectID + "'.");
