@@ -74,7 +74,8 @@ public class CognosShibAuth implements INamespaceAuthenticationProvider2 {
     return cognosShibAuthVisa;
   }
 
-  private String getHeaderValue(IBiBusHeader2 iBiBusHeader2, String header, boolean required) throws SystemRecoverableException {
+  private String getHeaderValue(IBiBusHeader2 iBiBusHeader2, String header, boolean required)
+          throws SystemRecoverableException {
     String[] headerValue = iBiBusHeader2.getEnvVarValue(header); //TODO: Use getTrustedEnvVarValue when releasing stable.
 
     if(headerValue == null) {
