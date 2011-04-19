@@ -6,7 +6,7 @@ import java.util.List;
 import com.cognos.CAM_AAA.authentication.IBaseClass;
 import com.cognos.CAM_AAA.authentication.IGroup;
 
-public class Group extends CognosShibAuthUiClass implements IGroup {
+public class Group extends UiClass implements IGroup {
   private List<IBaseClass> members = null;
 
   public Group(String theObjectID) {

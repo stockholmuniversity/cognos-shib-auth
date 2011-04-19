@@ -6,7 +6,7 @@ import java.util.logging.Logger;
 
 import com.cognos.CAM_AAA.authentication.IAccount;
 
-public class Account extends CognosShibAuthUiClass implements IAccount {
+public class Account extends UiClass implements IAccount {
 
   private Logger LOG = Logger.getLogger(Account.class.getName());
 

@@ -11,13 +11,13 @@ import com.cognos.CAM_AAA.authentication.ISearchFilterRelationExpression;
 import com.cognos.CAM_AAA.authentication.UnrecoverableException;
 
 
-public class CognosShibAuthNamespace extends CognosShibAuthUiClass implements INamespace
+public class Namespace extends UiClass implements INamespace
 {
 
   private String[]	capabilities;
   private String		namespaceFormat;
 
-  public CognosShibAuthNamespace()
+  public Namespace()
   {
     super(null);
     capabilities = new String[6];
@@ -30,7 +30,7 @@ public class CognosShibAuthNamespace extends CognosShibAuthUiClass implements IN
     namespaceFormat = "http://developer.cognos.com/schemas/CAM/AAANamespaceFormat/2/";
   }
 
-  public CognosShibAuthNamespace(String theObjectID)
+  public Namespace(String theObjectID)
   {
     super(theObjectID);
     capabilities = new String[6];

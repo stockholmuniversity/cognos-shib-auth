@@ -1,12 +1,11 @@
 package se.su.it.cognos.cognosshibauth.adapters;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 
 import com.cognos.CAM_AAA.authentication.IBaseClass;
 import com.cognos.CAM_AAA.authentication.IRole;
 
-public class Role extends CognosShibAuthUiClass implements IRole {
+public class Role extends UiClass implements IRole {
 
   private List<IBaseClass> members = null;
 

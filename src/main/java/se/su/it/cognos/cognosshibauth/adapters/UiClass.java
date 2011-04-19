@@ -10,9 +10,9 @@ import java.util.logging.Logger;
 import com.cognos.CAM_AAA.authentication.IBaseClass;
 import com.cognos.CAM_AAA.authentication.IUiClass;
 
-public class CognosShibAuthUiClass implements IUiClass {
+public class UiClass implements IUiClass {
 
-  private Logger LOG = Logger.getLogger(CognosShibAuthUiClass.class.getName());
+  private Logger LOG = Logger.getLogger(UiClass.class.getName());
 
   private String objectID = null;
 
@@ -21,7 +21,7 @@ public class CognosShibAuthUiClass implements IUiClass {
   private HashMap<Locale, String> names = null;
   private HashMap<Locale, String> descriptions = null;
 
-  public CognosShibAuthUiClass(String theObjectID) {
+  public UiClass(String theObjectID) {
     LOG.log(Level.FINEST, "Creating new UiClass with objectID '" + theObjectID + "'.");
 
     names = new HashMap<Locale, String>();
