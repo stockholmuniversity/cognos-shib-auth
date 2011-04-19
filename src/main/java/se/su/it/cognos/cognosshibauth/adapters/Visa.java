@@ -1,5 +1,6 @@
 
 package se.su.it.cognos.cognosshibauth.adapters;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 import java.util.logging.Level;
@@ -45,6 +46,7 @@ public class Visa implements IVisa {
 
     String visaValidatorClassName = configHandler.getVisaValidatorClass();
     ClassLoader classLoader = ClassLoader.getSystemClassLoader();
+
     try {
       visaValidator = (VisaValidator) classLoader.loadClass(visaValidatorClassName).newInstance();
     } catch (Exception e) {
@@ -64,28 +66,26 @@ public class Visa implements IVisa {
 
   public ITrustedCredential generateTrustedCredential(     // implementera ordentligt senare...
           IBiBusHeader theAuthRequest) throws UserRecoverableException,
-          SystemRecoverableException, UnrecoverableException
-  {
+          SystemRecoverableException, UnrecoverableException {
+
     LOG.log(Level.FINEST, "Generating trusted credentials.");
     boolean isValidCredentials = true;
     String[] theUsername = null;
     String[] thePassword = null;
     theUsername = theAuthRequest.getCredentialValue("username");
-    if (theUsername == null && thePassword == null)
-    {
-       theUsername = new String[]{account.getUserName()};
-    }
-    else if (theUsername != null && theUsername.length == 1 && theUsername[0].equals(account.getUserName())){
-      isValidCredentials = false; // nånBraKoll(theUsername[0]);
-    }
 
-    if (!isValidCredentials)
-    {
+    if (theUsername == null && thePassword == null)
+       theUsername = new String[]{account.getUserName()};
+    else if (theUsername != null && theUsername.length == 1 && theUsername[0].equals(account.getUserName()))
+      isValidCredentials = false; // nånBraKoll(theUsername[0]);
+
+    if (!isValidCredentials) {
       UserRecoverableException e = new UserRecoverableException(
               "Please type your credentials for authentication.",
               "The provided credentials are invalid.");
       throw e;
     }
+
     CognosShibAuthTrustedCredential tc = new CognosShibAuthTrustedCredential();
     tc.addCredentialValue("username", theUsername.toString());
     return tc;
@@ -93,8 +93,7 @@ public class Visa implements IVisa {
 
   public ICredential generateCredential(IBiBusHeader theAuthRequest)
           throws UserRecoverableException, SystemRecoverableException,
-          UnrecoverableException
-  {
+          UnrecoverableException {
     LOG.log(Level.FINEST, "Generating credentials.");
     boolean validCredential = true; //nånBraKoll(account.getUserName());
     if(! validCredential){
@@ -103,15 +102,14 @@ public class Visa implements IVisa {
               "Visa contains invalid credentials.");
       throw e;
     }
-    else{
+    else {
       CognosShibAuthCredential credentials = new CognosShibAuthCredential();
       credentials.addCredentialValue("username", account.getUserName());
       return credentials;
     }
   }
 
-  public boolean isValid()
-  {
+  public boolean isValid() {
     LOG.log(Level.FINEST, "Checking isValid.");
     return visaValidator.isValid();
   }
@@ -125,9 +123,7 @@ public class Visa implements IVisa {
   public void addGroup(IGroup theGroup) {
     LOG.log(Level.FINEST, "Adding group to Visa for '" + account.getUserName() + "'.");
     if (groups == null)
-    {
-      groups = new Vector();
-    }
+      groups = new ArrayList<IGroup>();
     groups.add(theGroup);
   }
 
@@ -135,10 +131,7 @@ public class Visa implements IVisa {
   public IGroup[] getGroups() {
     LOG.log(Level.FINEST, "Getting groups from Visa for '" + account.getUserName() + "'.");
     if (groups != null)
-    {
-      IGroup[] array = new IGroup[groups.size()];
-      return (IGroup[]) groups.toArray(array);
-    }
+      return groups.toArray(new IGroup[groups.size()]);
     return null;
   }
 
@@ -146,9 +139,7 @@ public class Visa implements IVisa {
   public void addRole(IRole theRole) {
     LOG.log(Level.FINEST, "Adding role to Visa for '" + account.getUserName() + "'.");
     if (roles == null)
-    {
-      roles = new Vector();
-    }
+      roles = new ArrayList<IRole>();
     roles.add(theRole);
   }
 
@@ -157,10 +148,7 @@ public class Visa implements IVisa {
   public IRole[] getRoles() {
     LOG.log(Level.FINEST, "Getting roles from Visa for '" + account.getUserName() + "'.");
     if (roles != null)
-    {
-      IRole[] array = new IRole[roles.size()];
-      return (IRole[]) roles.toArray(array);
-    }
+      return roles.toArray(new IRole[roles.size()]);
     return null;
   }
 
