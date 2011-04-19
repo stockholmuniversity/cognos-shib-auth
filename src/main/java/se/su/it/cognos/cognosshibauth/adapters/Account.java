@@ -49,13 +49,11 @@ public class Account extends CognosShibAuthUiClass implements IAccount {
     addDescription(contentLocale, "");
   }
 
-  public String getBusinessPhone()
-  {
+  public String getBusinessPhone() {
     return businessPhone;
   }
 
-  public String getEmail()
-  {
+  public String getEmail() {
     return email;
   }
 
@@ -65,34 +63,28 @@ public class Account extends CognosShibAuthUiClass implements IAccount {
   }
 
 
-  public String getFaxPhone()
-  {
+  public String getFaxPhone() {
     return faxPhone;
   }
 
-  public String getGivenName()
-  {
+  public String getGivenName() {
     return givenName;
   }
 
-  public String getHomePhone()
-  {
+  public String getHomePhone() {
     return homePhone;
   }
 
 
-  public String getMobilePhone()
-  {
+  public String getMobilePhone() {
     return mobilePhone;
   }
 
-  public String getPagerPhone()
-  {
+  public String getPagerPhone() {
     return pagerPhone;
   }
 
-  public String getPostalAddress()
-  {
+  public String getPostalAddress() {
     return postalAddress;
   }
 
@@ -102,58 +94,48 @@ public class Account extends CognosShibAuthUiClass implements IAccount {
   }
 
 
-  public String getSurname()
-  {
+  public String getSurname() {
     return surname;
   }
 
-  public String getUserName()
-  {
+  public String getUserName() {
     return userName;
   }
 
-  public void setBusinessPhone(String theBusinessPhone)
-  {
+  public void setBusinessPhone(String theBusinessPhone) {
     businessPhone = theBusinessPhone;
   }
 
 
-  public void setContentLocale(Locale theContentLocale)
-  {
+  public void setContentLocale(Locale theContentLocale) {
     contentLocale = theContentLocale;
   }
 
 
-  public void setEmail(String theEmail)
-  {
+  public void setEmail(String theEmail) {
     email = theEmail;
   }
 
-  public void setFaxPhone(String theFaxPhone)
-  {
+  public void setFaxPhone(String theFaxPhone) {
     faxPhone = theFaxPhone;
   }
 
 
-  public void setGivenName(String theGivenName)
-  {
+  public void setGivenName(String theGivenName) {
     givenName = theGivenName;
   }
 
 
-  public void setHomePhone(String theHomephone)
-  {
+  public void setHomePhone(String theHomephone) {
     homePhone = theHomephone;
   }
 
 
-  public void setMobilePhone(String theMobilePhone)
-  {
+  public void setMobilePhone(String theMobilePhone) {
     mobilePhone = theMobilePhone;
   }
 
-  public void setPagerPhone(String thePagerPhone)
-  {
+  public void setPagerPhone(String thePagerPhone) {
     pagerPhone = thePagerPhone;
   }
 
@@ -163,23 +145,19 @@ public class Account extends CognosShibAuthUiClass implements IAccount {
   }
 
 
-  public void setProductLocale(Locale theProductLocale)
-  {
+  public void setProductLocale(Locale theProductLocale) {
     productLocale = theProductLocale;
   }
 
-  public void setSurname(String theSurname)
-  {
+  public void setSurname(String theSurname) {
     surname = theSurname;
   }
 
-  public void setUserName(String theUsername)
-  {
+  public void setUserName(String theUsername) {
     userName = theUsername;
   }
 
-  public String[] getCustomPropertyNames()
-  {
+  public String[] getCustomPropertyNames() {
     if (customProperties != null)
     {
       Set keySet = this.customProperties.keySet();
@@ -188,8 +166,7 @@ public class Account extends CognosShibAuthUiClass implements IAccount {
     return null;
   }
 
-  public String[] getCustomPropertyValue(String theName)
-  {
+  public String[] getCustomPropertyValue(String theName) {
     if (customProperties != null)
     {
       Vector v = (Vector) this.customProperties.get(theName);
@@ -202,20 +179,18 @@ public class Account extends CognosShibAuthUiClass implements IAccount {
   }
 
 
-  public void addCustomProperty(String theName, String theValue)
-  {
-    if (customProperties == null)
-    {
+  public void addCustomProperty(String theName, String theValue) {
+    if (customProperties == null) {
       customProperties = new HashMap();
     }
+
     Vector v = (Vector) this.customProperties.get(theName);
-    if (v == null)
-    {
+
+    if (v == null) {
       v = new Vector();
       this.customProperties.put(theName, v);
     }
+
     v.add(theValue);
   }
-
-
 }
