@@ -10,37 +10,32 @@ public class Account extends CognosShibAuthUiClass implements IAccount {
 
   private Logger LOG = Logger.getLogger(Account.class.getName());
 
-  private String	businessPhone;
-  private String	email;
+  private String businessPhone = null;
+  private String email = null;
+  private String faxPhone = null;
+  private String givenName = null;
+  private String homePhone = null;
+  private String mobilePhone = null;
+  private String pagerPhone = null;
+  private String postalAddress = null;
+  private String surname = null;
+  private String userName = null;
+
   private Locale	contentLocale;
   private Locale	productLocale;
-  private String	faxPhone;
-  private String	givenName;
-  private String	homePhone;
-  private String	mobilePhone;
-  private String	pagerPhone;
-  private String	postalAddress;
-  private String	surname;
-  private String	userName;
-  private HashMap<String, List<String>> customProperties = new HashMap<String, List<String>>();
+
+  private HashMap<String, List<String>> customProperties = null;
 
   public Account(String theObjectID, String userName, String givenName, String surname,
                  Locale contentLocale) {
     super(theObjectID);
 
-    businessPhone = null;
-    email = null;
     this.contentLocale = contentLocale;
-    productLocale = null;
-    faxPhone = null;
     this.givenName = givenName;
-    homePhone = null;
-    mobilePhone = null;
-    pagerPhone = null;
-    postalAddress = null;
     this.surname = surname;
     this.userName = userName;
-    customProperties = null;
+
+    customProperties = new HashMap<String, List<String>>();
 
     addName(contentLocale, givenName + " " + surname);
     addDescription(contentLocale, "");
@@ -59,7 +54,6 @@ public class Account extends CognosShibAuthUiClass implements IAccount {
     return contentLocale;
   }
 
-
   public String getFaxPhone() {
     return faxPhone;
   }
@@ -71,7 +65,6 @@ public class Account extends CognosShibAuthUiClass implements IAccount {
   public String getHomePhone() {
     return homePhone;
   }
-
 
   public String getMobilePhone() {
     return mobilePhone;
@@ -90,7 +83,6 @@ public class Account extends CognosShibAuthUiClass implements IAccount {
     return productLocale;
   }
 
-
   public String getSurname() {
     return surname;
   }
@@ -103,11 +95,9 @@ public class Account extends CognosShibAuthUiClass implements IAccount {
     businessPhone = theBusinessPhone;
   }
 
-
   public void setContentLocale(Locale theContentLocale) {
     contentLocale = theContentLocale;
   }
-
 
   public void setEmail(String theEmail) {
     email = theEmail;
@@ -117,16 +107,13 @@ public class Account extends CognosShibAuthUiClass implements IAccount {
     faxPhone = theFaxPhone;
   }
 
-
   public void setGivenName(String theGivenName) {
     givenName = theGivenName;
   }
 
-
   public void setHomePhone(String theHomephone) {
     homePhone = theHomephone;
   }
-
 
   public void setMobilePhone(String theMobilePhone) {
     mobilePhone = theMobilePhone;
@@ -139,7 +126,6 @@ public class Account extends CognosShibAuthUiClass implements IAccount {
   public void setPostalAddress(String thePostalAddress) {
     postalAddress = thePostalAddress;
   }
-
 
   public void setProductLocale(Locale theProductLocale) {
     productLocale = theProductLocale;
@@ -168,7 +154,6 @@ public class Account extends CognosShibAuthUiClass implements IAccount {
         return (String[]) list.toArray(new String[list.size()]);
     return null;
   }
-
 
   public void addCustomProperty(String theName, String theValue) {
     List<String> list = customProperties.get(theName);
