@@ -1,9 +1,6 @@
 
 package se.su.it.cognos.cognosshibauth.adapters;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Set;
-import java.util.Vector;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -25,7 +22,7 @@ public class Account extends CognosShibAuthUiClass implements IAccount {
   private String	postalAddress;
   private String	surname;
   private String	userName;
-  private HashMap	customProperties;
+  private HashMap<String, List<String>> customProperties = new HashMap<String, List<String>>();
 
   public Account(String theObjectID, String userName, String givenName, String surname,
                  Locale contentLocale) {
@@ -139,8 +136,7 @@ public class Account extends CognosShibAuthUiClass implements IAccount {
     pagerPhone = thePagerPhone;
   }
 
-  public void setPostalAddress(String thePostalAddress)
-  {
+  public void setPostalAddress(String thePostalAddress) {
     postalAddress = thePostalAddress;
   }
 
@@ -167,30 +163,21 @@ public class Account extends CognosShibAuthUiClass implements IAccount {
   }
 
   public String[] getCustomPropertyValue(String theName) {
-    if (customProperties != null)
-    {
-      Vector v = (Vector) this.customProperties.get(theName);
-      if (v != null)
-      {
-        return (String[]) v.toArray(new String[v.size()]);
-      }
-    }
+    List<String> list = customProperties.get(theName);
+      if (list != null)
+        return (String[]) list.toArray(new String[list.size()]);
     return null;
   }
 
 
   public void addCustomProperty(String theName, String theValue) {
-    if (customProperties == null) {
-      customProperties = new HashMap();
+    List<String> list = customProperties.get(theName);
+
+    if (list == null) {
+      list = new ArrayList<String>();
+      customProperties.put(theName, list);
     }
 
-    Vector v = (Vector) this.customProperties.get(theName);
-
-    if (v == null) {
-      v = new Vector();
-      this.customProperties.put(theName, v);
-    }
-
-    v.add(theValue);
+    list.add(theValue);
   }
 }
