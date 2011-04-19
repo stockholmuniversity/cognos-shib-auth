@@ -9,17 +9,9 @@ package se.su.it.cognos.cognosshibauth;
 
 import com.cognos.CAM_AAA.authentication.*;
 
-import com.cognos.CAM_AAA.authentication.SystemRecoverableException;
 import com.cognos.CAM_AAA.authentication.UnrecoverableException;
-import com.cognos.CAM_AAA.authentication.UserRecoverableException;
-import org.apache.commons.lang.ArrayUtils;
-import se.su.it.cognos.cognosshibauth.adapters.CognosShibAuthAccount;
-import se.su.it.cognos.cognosshibauth.adapters.CognosShibAuthGroup;
-import se.su.it.cognos.cognosshibauth.adapters.CognosShibAuthRole;
-import se.su.it.cognos.cognosshibauth.adapters.CognosShibAuthVisa;
 import se.su.it.cognos.cognosshibauth.config.ConfigHandler;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.logging.Level;

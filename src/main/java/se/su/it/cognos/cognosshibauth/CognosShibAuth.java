@@ -12,15 +12,12 @@ import com.cognos.CAM_AAA.authentication.*;
 import com.cognos.CAM_AAA.authentication.SystemRecoverableException;
 import com.cognos.CAM_AAA.authentication.UnrecoverableException;
 import com.cognos.CAM_AAA.authentication.UserRecoverableException;
-import org.apache.commons.lang.ArrayUtils;
 import se.su.it.cognos.cognosshibauth.adapters.CognosShibAuthAccount;
 import se.su.it.cognos.cognosshibauth.adapters.CognosShibAuthGroup;
 import se.su.it.cognos.cognosshibauth.adapters.CognosShibAuthRole;
-import se.su.it.cognos.cognosshibauth.adapters.CognosShibAuthVisa;
+import se.su.it.cognos.cognosshibauth.adapters.Visa;
 import se.su.it.cognos.cognosshibauth.config.ConfigHandler;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -35,7 +32,7 @@ public class CognosShibAuth extends CognosShibAuthBase implements INamespaceAuth
 
   public IVisa logon(IBiBusHeader2 iBiBusHeader2) throws UserRecoverableException, SystemRecoverableException,
           UnrecoverableException {
-    CognosShibAuthVisa cognosShibAuthVisa = new CognosShibAuthVisa(configHandler);
+    Visa visa = new Visa(configHandler);
 
     String remoteUser = getHeaderValue(iBiBusHeader2, configHandler.getHeaderRemoteUser(), true);
     String givenName = getHeaderValue(iBiBusHeader2, configHandler.getHeaderGivenName(), true);
@@ -71,16 +68,16 @@ public class CognosShibAuth extends CognosShibAuthBase implements INamespaceAuth
     String gmaiRole = filterGmaiRole(entitlement);
     CognosShibAuthRole role = new CognosShibAuthRole("Cognos Shibb Authenticator:r:"+gmaiRole);
     role.addName(contentLocale, gmaiRole);
-    cognosShibAuthVisa.addRole(role);
+    visa.addRole(role);
 
     String gmaiGroup = filterGmaiDepartment(entitlement);
     CognosShibAuthGroup group = new CognosShibAuthGroup("\"Cognos Shibb Authenticator:g:"+gmaiGroup);
     group.addMember(cognosShibAuthAccount);
-    cognosShibAuthVisa.addGroup(group);
+    visa.addGroup(group);
 
-    cognosShibAuthVisa.init(cognosShibAuthAccount);
+    visa.init(cognosShibAuthAccount);
 
-    return cognosShibAuthVisa;
+    return visa;
   }
 
   private String getHeaderValue(IBiBusHeader2 iBiBusHeader2, String header, boolean required)

@@ -9,19 +9,10 @@ package se.su.it.cognos.cognosshibauth;
 
 import com.cognos.CAM_AAA.authentication.*;
 
-import com.cognos.CAM_AAA.authentication.SystemRecoverableException;
 import com.cognos.CAM_AAA.authentication.UnrecoverableException;
-import com.cognos.CAM_AAA.authentication.UserRecoverableException;
-import org.apache.commons.lang.ArrayUtils;
-import se.su.it.cognos.cognosshibauth.adapters.CognosShibAuthAccount;
-import se.su.it.cognos.cognosshibauth.adapters.CognosShibAuthGroup;
-import se.su.it.cognos.cognosshibauth.adapters.CognosShibAuthRole;
-import se.su.it.cognos.cognosshibauth.adapters.CognosShibAuthVisa;
+import se.su.it.cognos.cognosshibauth.adapters.Visa;
 import se.su.it.cognos.cognosshibauth.config.ConfigHandler;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -34,11 +25,11 @@ public class CognosShibAuthBase extends CognosShibAuthNamespace implements IName
   }
 
   public void logoff(IVisa iVisa, IBiBusHeader iBiBusHeader) {
-    CognosShibAuthVisa cognosShibAuthVisa = (CognosShibAuthVisa) iVisa;
+    Visa visa = (Visa) iVisa;
     try {
-      cognosShibAuthVisa.destroy();
+      visa.destroy();
     } catch (UnrecoverableException e) {
-      LOG.log(Level.SEVERE, "Failed to destroy visa '" + cognosShibAuthVisa + "' during logout.");
+      LOG.log(Level.SEVERE, "Failed to destroy visa '" + visa + "' during logout.");
       e.printStackTrace();
     }
   }
@@ -46,7 +37,7 @@ public class CognosShibAuthBase extends CognosShibAuthNamespace implements IName
   public IQueryResult search(IVisa iVisa, IQuery iQuery) throws UnrecoverableException {
 
     // We can safely assume that we'll get back the same Visa that we issued.
-    CognosShibAuthVisa visa = (CognosShibAuthVisa) iVisa;
+    Visa visa = (Visa) iVisa;
 	QueryResult result = new QueryResult();
 
     try {

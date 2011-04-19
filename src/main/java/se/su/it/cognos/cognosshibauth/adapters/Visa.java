@@ -1,7 +1,6 @@
 
 package se.su.it.cognos.cognosshibauth.adapters;
 import java.util.List;
-import java.util.Locale;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -20,9 +19,9 @@ import se.su.it.cognos.cognosshibauth.config.ConfigHandler;
 import se.su.it.cognos.cognosshibauth.visa.VisaValidator;
 
 
-public class CognosShibAuthVisa implements IVisa {
+public class Visa implements IVisa {
 
-  private Logger LOG = Logger.getLogger(CognosShibAuthVisa.class.getName());
+  private Logger LOG = Logger.getLogger(Visa.class.getName());
 
   private List<IRole> roles;
   private List<IGroup> groups;
@@ -32,7 +31,7 @@ public class CognosShibAuthVisa implements IVisa {
 
   private ConfigHandler configHandler = null;
 
-  public CognosShibAuthVisa(ConfigHandler configHandler) {
+  public Visa(ConfigHandler configHandler) {
     LOG.log(Level.FINEST, "Creating a Visa.");
     roles = null;
     groups = null;
