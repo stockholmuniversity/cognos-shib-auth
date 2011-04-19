@@ -12,7 +12,7 @@ import com.cognos.CAM_AAA.authentication.*;
 import com.cognos.CAM_AAA.authentication.SystemRecoverableException;
 import com.cognos.CAM_AAA.authentication.UnrecoverableException;
 import com.cognos.CAM_AAA.authentication.UserRecoverableException;
-import se.su.it.cognos.cognosshibauth.adapters.CognosShibAuthAccount;
+import se.su.it.cognos.cognosshibauth.adapters.Account;
 import se.su.it.cognos.cognosshibauth.adapters.CognosShibAuthGroup;
 import se.su.it.cognos.cognosshibauth.adapters.CognosShibAuthRole;
 import se.su.it.cognos.cognosshibauth.adapters.Visa;
@@ -41,29 +41,29 @@ public class CognosShibAuth extends CognosShibAuthBase implements INamespaceAuth
 
     String entitlement = getHeaderValue(iBiBusHeader2, configHandler.getHeaderEntitlement(), false);
 
-    CognosShibAuthAccount cognosShibAuthAccount =
-            new CognosShibAuthAccount("u:" + remoteUser, remoteUser, givenName, surname, contentLocale);
+    Account account =
+            new Account("u:" + remoteUser, remoteUser, givenName, surname, contentLocale);
 
     String mail = getHeaderValue(iBiBusHeader2, configHandler.getHeaderMail(), true);
-    cognosShibAuthAccount.setEmail(mail);
+    account.setEmail(mail);
 
     String businessPhone = getHeaderValue(iBiBusHeader2, configHandler.getHeaderBusinessPhone(), false);
-    cognosShibAuthAccount.setBusinessPhone(businessPhone);
+    account.setBusinessPhone(businessPhone);
 
     String homePhone = getHeaderValue(iBiBusHeader2, configHandler.getHeaderHomePhone(), false);
-    cognosShibAuthAccount.setHomePhone(homePhone);
+    account.setHomePhone(homePhone);
 
     String mobilePhone = getHeaderValue(iBiBusHeader2, configHandler.getHeaderMobilePhone(), false);
-    cognosShibAuthAccount.setMobilePhone(mobilePhone);
+    account.setMobilePhone(mobilePhone);
 
     String faxPhone = getHeaderValue(iBiBusHeader2, configHandler.getHeaderFaxPhone(), false);
-    cognosShibAuthAccount.setFaxPhone(faxPhone);
+    account.setFaxPhone(faxPhone);
 
     String pagerPhone = getHeaderValue(iBiBusHeader2, configHandler.getHeaderPagerPhone(), false);
-    cognosShibAuthAccount.setPagerPhone(pagerPhone);
+    account.setPagerPhone(pagerPhone);
 
     String postalAddress = getHeaderValue(iBiBusHeader2, configHandler.getHeaderPostalAddress(), false);
-    cognosShibAuthAccount.setPostalAddress(postalAddress);
+    account.setPostalAddress(postalAddress);
 
     String gmaiRole = filterGmaiRole(entitlement);
     CognosShibAuthRole role = new CognosShibAuthRole("Cognos Shibb Authenticator:r:"+gmaiRole);
@@ -72,10 +72,10 @@ public class CognosShibAuth extends CognosShibAuthBase implements INamespaceAuth
 
     String gmaiGroup = filterGmaiDepartment(entitlement);
     CognosShibAuthGroup group = new CognosShibAuthGroup("\"Cognos Shibb Authenticator:g:"+gmaiGroup);
-    group.addMember(cognosShibAuthAccount);
+    group.addMember(account);
     visa.addGroup(group);
 
-    visa.init(cognosShibAuthAccount);
+    visa.init(account);
 
     return visa;
   }

@@ -8,12 +8,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.cognos.CAM_AAA.authentication.IAccount;
-import sun.util.LocaleServiceProviderPool;
 
+public class Account extends CognosShibAuthUiClass implements IAccount {
 
-public class CognosShibAuthAccount extends CognosShibAuthUiClass implements IAccount {
-
-  private Logger LOG = Logger.getLogger(CognosShibAuthAccount.class.getName());
+  private Logger LOG = Logger.getLogger(Account.class.getName());
 
   private String	businessPhone;
   private String	email;
@@ -29,10 +27,8 @@ public class CognosShibAuthAccount extends CognosShibAuthUiClass implements IAcc
   private String	userName;
   private HashMap	customProperties;
 
-
-
-  public CognosShibAuthAccount(String theObjectID, String userName, String givenName, String surname,
-                               Locale contentLocale) {
+  public Account(String theObjectID, String userName, String givenName, String surname,
+                 Locale contentLocale) {
     super(theObjectID);
 
     businessPhone = null;

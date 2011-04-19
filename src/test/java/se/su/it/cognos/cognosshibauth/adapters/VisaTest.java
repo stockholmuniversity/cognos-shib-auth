@@ -22,7 +22,7 @@ import java.lang.reflect.Field;
 @RunWith(PowerMockRunner.class)
 public class VisaTest {
   @Mock
-  CognosShibAuthAccount account;
+  Account account;
 
   @Test
   public void testThatInitLoadsVisaValidatorFromConf() throws Exception {

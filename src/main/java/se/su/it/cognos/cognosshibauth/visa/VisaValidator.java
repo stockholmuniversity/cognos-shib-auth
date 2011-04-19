@@ -1,7 +1,6 @@
 package se.su.it.cognos.cognosshibauth.visa;
 
 import com.cognos.CAM_AAA.authentication.IAccount;
-import se.su.it.cognos.cognosshibauth.adapters.CognosShibAuthAccount;
 
 /**
  * Created by IntelliJ IDEA.
