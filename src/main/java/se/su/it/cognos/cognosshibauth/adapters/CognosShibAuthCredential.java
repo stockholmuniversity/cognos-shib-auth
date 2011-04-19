@@ -1,61 +1,38 @@
-
 package se.su.it.cognos.cognosshibauth.adapters;
-import java.util.HashMap;
-import java.util.Set;
-import java.util.Vector;
+
+import java.util.*;
 
 import com.cognos.CAM_AAA.authentication.ICredential;
 
+public class CognosShibAuthCredential implements ICredential {
 
-public class CognosShibAuthCredential implements ICredential
-{
-  private HashMap	credentials;
+  private HashMap<String, List<String>> credentials = null;
 
-  public CognosShibAuthCredential()
-  {
+  public CognosShibAuthCredential() {
     super();
-    credentials = null;
+    credentials = new HashMap<String, List<String>>();
   }
 
-  public String[] getCredentialNames()
-  {
-    if (credentials != null)
-    {
-      Set keySet = credentials.keySet();
-      String[] array = new String[keySet.size()];
-      return (String[]) keySet.toArray(array);
+  public String[] getCredentialNames() {
+    Set<String> keySet = credentials.keySet();
+    return keySet.toArray(new String[keySet.size()]);
+  }
+
+  public void addCredentialValue(String theName, String theValue) {
+    List<String> list = credentials.get(theName);
+
+    if (list == null) {
+      list = new ArrayList<String>();
+      credentials.put(theName, list);
     }
+
+    list.add(theValue);
+  }
+
+  public String[] getCredentialValue(String theName) {
+    List<String> list = credentials.get(theName);
+    if (list != null)
+      return (String[]) list.toArray(new String[list.size()]);
     return null;
   }
-
-
-  public void addCredentialValue(String theName, String theValue)
-  {
-    if (credentials == null)
-    {
-      credentials = new HashMap();
-    }
-    Vector v = (Vector) this.credentials.get(theName);
-    if (v == null)
-    {
-      v = new Vector();
-      this.credentials.put(theName, v);
-    }
-    v.add(theValue);
-  }
-
-
-  public String[] getCredentialValue(String theName)
-  {
-    if (credentials != null)
-    {
-      Vector v = (Vector) this.credentials.get(theName);
-      if (v != null)
-      {
-        return (String[]) v.toArray(new String[v.size()]);
-      }
-    }
-    return null;
-  }
-
 }
