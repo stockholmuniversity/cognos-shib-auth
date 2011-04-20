@@ -15,7 +15,7 @@ import com.cognos.CAM_AAA.authentication.UserRecoverableException;
 import se.su.it.cognos.cognosshibauth.adapters.Account;
 import se.su.it.cognos.cognosshibauth.adapters.Group;
 import se.su.it.cognos.cognosshibauth.adapters.Role;
-import se.su.it.cognos.cognosshibauth.adapters.Visa;
+import se.su.it.cognos.cognosshibauth.visa.Visa;
 import se.su.it.cognos.cognosshibauth.config.ConfigHandler;
 
 import java.util.Locale;

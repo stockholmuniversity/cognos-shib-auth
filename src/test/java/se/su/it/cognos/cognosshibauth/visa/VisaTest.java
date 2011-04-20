@@ -1,4 +1,4 @@
-package se.su.it.cognos.cognosshibauth.adapters;
+package se.su.it.cognos.cognosshibauth.visa;
 /**
  * Created by IntelliJ IDEA.
  * User: joakim
@@ -14,7 +14,9 @@ import org.mockito.Mock;
 
 import static org.mockito.Mockito.*;
 import org.powermock.modules.junit4.PowerMockRunner;
+import se.su.it.cognos.cognosshibauth.adapters.Account;
 import se.su.it.cognos.cognosshibauth.config.ConfigHandler;
+import se.su.it.cognos.cognosshibauth.visa.Visa;
 import se.su.it.cognos.cognosshibauth.visa.validator.DummyVisaValidator;
 
 import java.lang.reflect.Field;

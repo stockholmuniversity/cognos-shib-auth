@@ -10,7 +10,7 @@ package se.su.it.cognos.cognosshibauth;
 import com.cognos.CAM_AAA.authentication.*;
 
 import com.cognos.CAM_AAA.authentication.UnrecoverableException;
-import se.su.it.cognos.cognosshibauth.adapters.Visa;
+import se.su.it.cognos.cognosshibauth.visa.Visa;
 import se.su.it.cognos.cognosshibauth.config.ConfigHandler;
 
 import java.util.logging.Level;
