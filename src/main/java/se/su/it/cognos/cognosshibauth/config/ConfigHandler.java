@@ -8,7 +8,6 @@ import org.apache.commons.configuration.reloading.FileChangedReloadingStrategy;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -49,9 +48,10 @@ public class ConfigHandler {
     config.setFileName(CONFIG_FILENAME);
     try {
       config.load();
-      LOG.log(Level.FINE, "Configuration loaded from '" +  config.getFileName() + "'.");
+      LOG.log(Level.FINE, "Configuration loaded from '" + config.getFileName() + "'.");
     } catch (ConfigurationException e) {
-      LOG.log(Level.SEVERE, "Failed to load configuration from file '" +  config.getFileName() + "'.");
+      LOG.log(Level.SEVERE, "Failed to load configuration from file '" +  config.getFileName() + "': " + e.getMessage());
+      e.printStackTrace();
     }
     config.setReloadingStrategy(new FileChangedReloadingStrategy());
 
