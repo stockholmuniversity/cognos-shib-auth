@@ -98,7 +98,7 @@ public class ConfigHandler {
   }
 
   public List<String> getCapabilities() {
-    List<String> list = config.getList("capabilities");
+    List<String> list = config.getList("capabilities", new ArrayList<String>(0));
     return list;
   }
 
