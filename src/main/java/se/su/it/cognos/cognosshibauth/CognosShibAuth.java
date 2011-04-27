@@ -64,18 +64,7 @@ public class CognosShibAuth extends CognosShibAuthBase implements INamespaceAuth
 
     String postalAddress = getHeaderValue(iBiBusHeader2, configHandler.getHeaderPostalAddress(), false);
     account.setPostalAddress(postalAddress);
-/*
-    String gmaiRole = filterGmaiRole(entitlement);
-    Role role = new Role("Cognos Shibb Authenticator:r:"+gmaiRole);
-    role.addName(contentLocale, gmaiRole);
-    visa.addRole(role);
 
-    String gmaiGroup = filterGmaiDepartment(entitlement);
-    Group group = new Group("\"Cognos Shibb Authenticator:g:"+gmaiGroup);
-    group.addMember(account);
-    visa.addGroup(group);
-
-*/
     visa.init(account);
 
     for(String entitlement : entitlements) {
