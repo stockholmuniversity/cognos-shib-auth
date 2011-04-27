@@ -39,7 +39,7 @@ public class CognosShibAuth extends CognosShibAuthBase implements INamespaceAuth
     String surname = "Lundin";//getHeaderValue(iBiBusHeader2, configHandler.getHeaderSurname(), true);
     Locale contentLocale = configHandler.getContentLocale();
 
-    String entitlement = getHeaderValue(iBiBusHeader2, configHandler.getHeaderEntitlement(), false);
+    String[] entitlement = getHeaderValues(iBiBusHeader2, configHandler.getHeaderEntitlement(), false);
 
     Account account =
             new Account(objectId + ":" + "u:" + remoteUser, remoteUser, givenName, surname, contentLocale);
@@ -85,7 +85,7 @@ public class CognosShibAuth extends CognosShibAuthBase implements INamespaceAuth
     return visa;
   }
 
-  private String getHeaderValue(IBiBusHeader2 iBiBusHeader2, String header, boolean required)
+  private String[] getHeaderValues(IBiBusHeader2 iBiBusHeader2, String header, boolean required)
           throws SystemRecoverableException {
     
     if(header == null || header.trim().length() == 0)
@@ -110,7 +110,20 @@ public class CognosShibAuth extends CognosShibAuthBase implements INamespaceAuth
         headerValue = null;
     }
 
-    return headerValue == null ? null : headerValue[0];
+    if(headerValue != null)
+      return headerValue;
+    return null;
+  }
+
+
+
+  private String getHeaderValue(IBiBusHeader2 iBiBusHeader2, String header, boolean required)
+          throws SystemRecoverableException {
+    String[] headerValues = getHeaderValues(iBiBusHeader2, header, required);
+
+    if(headerValues != null && headerValues.length > 0)
+      return headerValues[0];
+    return null;
   }
 
   private String filterGmaiRole(String gmai){
