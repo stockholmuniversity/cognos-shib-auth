@@ -34,17 +34,17 @@ public class CognosShibAuth extends CognosShibAuthBase implements INamespaceAuth
           UnrecoverableException {
     Visa visa = new Visa(configHandler);
 
-    String remoteUser = getHeaderValue(iBiBusHeader2, configHandler.getHeaderRemoteUser(), true);
-    String givenName = getHeaderValue(iBiBusHeader2, configHandler.getHeaderGivenName(), true);
-    String surname = getHeaderValue(iBiBusHeader2, configHandler.getHeaderSurname(), true);
+    String remoteUser = "jolu";//getHeaderValue(iBiBusHeader2, configHandler.getHeaderRemoteUser(), true);
+    String givenName = "Joakim";//getHeaderValue(iBiBusHeader2, configHandler.getHeaderGivenName(), true);
+    String surname = "Lundin";//getHeaderValue(iBiBusHeader2, configHandler.getHeaderSurname(), true);
     Locale contentLocale = configHandler.getContentLocale();
 
     String entitlement = getHeaderValue(iBiBusHeader2, configHandler.getHeaderEntitlement(), false);
 
     Account account =
-            new Account("u:" + remoteUser, remoteUser, givenName, surname, contentLocale);
+            new Account(objectId + ":" + "u:" + remoteUser, remoteUser, givenName, surname, contentLocale);
 
-    String mail = getHeaderValue(iBiBusHeader2, configHandler.getHeaderMail(), true);
+    String mail = "foo@su.se";//getHeaderValue(iBiBusHeader2, configHandler.getHeaderMail(), true);
     account.setEmail(mail);
 
     String businessPhone = getHeaderValue(iBiBusHeader2, configHandler.getHeaderBusinessPhone(), false);
@@ -64,7 +64,7 @@ public class CognosShibAuth extends CognosShibAuthBase implements INamespaceAuth
 
     String postalAddress = getHeaderValue(iBiBusHeader2, configHandler.getHeaderPostalAddress(), false);
     account.setPostalAddress(postalAddress);
-
+/*
     String gmaiRole = filterGmaiRole(entitlement);
     Role role = new Role("Cognos Shibb Authenticator:r:"+gmaiRole);
     role.addName(contentLocale, gmaiRole);
@@ -75,7 +75,12 @@ public class CognosShibAuth extends CognosShibAuthBase implements INamespaceAuth
     group.addMember(account);
     visa.addGroup(group);
 
+*/
     visa.init(account);
+
+    visa.addGroup(new Group(objectId + ":" + "g:FooGroup", "Foo Group", contentLocale));
+
+    visa.addRole(new Role(objectId + ":" + "r:FooRole", "Foo Role", contentLocale));
 
     return visa;
   }

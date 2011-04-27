@@ -10,9 +10,13 @@ package se.su.it.cognos.cognosshibauth;
 import com.cognos.CAM_AAA.authentication.*;
 
 import com.cognos.CAM_AAA.authentication.UnrecoverableException;
+import se.su.it.cognos.cognosshibauth.adapters.Group;
+import se.su.it.cognos.cognosshibauth.adapters.NamespaceFolder;
+import se.su.it.cognos.cognosshibauth.adapters.Role;
 import se.su.it.cognos.cognosshibauth.visa.Visa;
 import se.su.it.cognos.cognosshibauth.config.ConfigHandler;
 
+import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -72,23 +76,32 @@ public class CognosShibAuthBase extends CognosShibAuthNamespace implements IName
                 //sqlCondition.append(QueryUtil.getSqlCondition(filter));
               }
             }
-            else if (objectID.startsWith("u:") && objectID.equals(visa.getAccount().getObjectID())) {
+            else if (objectID.equals("u:") && filter == null) {
+              result.addObject(visa.getAccount());
+            }
+            else if (objectID.startsWith(objectId + ":u:") && objectID.equals(visa.getAccount().getObjectID())) {
               if (filter == null || true) {//this.matchesFilter(filter)) {
                 result.addObject(visa.getAccount());
                 // Add current user
               }
               return result;
             }
-            else if (objectID.startsWith("u:") || objectID.startsWith("r:")) {
-              //String sqlID = objectID.substring(2);
-              //sqlCondition.append(QueryUtil.getSqlCondition(filter));
-              //if (sqlCondition.length() > 0) {
-              //  sqlCondition.append(" AND ");
-              //}
-              //sqlCondition.append("uid = " + sqlID);
+            else if (objectID.startsWith(objectId + ":u:") || objectID.startsWith(objectId + ":r:")) {
+              result.addObject(visa.getRoles()[0]);
+            }
+            else if (objectID.startsWith(objectId + ":u:") || objectID.startsWith(objectId + ":g:")) {
+              result.addObject(visa.getGroups()[0]);
             }
           }
-        break;
+          break;
+        case ISearchStep.SearchAxis.Child :
+          if(objectID == null) {
+            result.addObject(new NamespaceFolder(objectId + ":f:FooFolder", "Foo Folder", Locale.ENGLISH));
+            result.addObject(visa.getAccount());
+            result.addObject(visa.getRoles()[0]);
+            result.addObject(visa.getGroups()[0]);
+          }
+          break;
         default :
         {
           //sqlCondition.append(QueryUtil.getSqlCondition(filter));
@@ -104,7 +117,6 @@ public class CognosShibAuthBase extends CognosShibAuthNamespace implements IName
     {
       e.printStackTrace();
     }
-    result.addObject(visa.getAccount());
     return result;
   }
 }

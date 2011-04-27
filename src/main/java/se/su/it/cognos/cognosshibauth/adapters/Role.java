@@ -1,6 +1,7 @@
 package se.su.it.cognos.cognosshibauth.adapters;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import com.cognos.CAM_AAA.authentication.IBaseClass;
 import com.cognos.CAM_AAA.authentication.IRole;
@@ -9,9 +10,16 @@ public class Role extends UiClass implements IRole {
 
   private List<IBaseClass> members = null;
 
-  public Role(String theSearchPath) {
+  private Locale defaultLocale = null;
+
+  public Role(String theSearchPath, String name, Locale defaultLocale) {
     super(theSearchPath);
+    
     members = new ArrayList<IBaseClass>();
+
+    this.defaultLocale = defaultLocale;
+
+    addName(defaultLocale, name);
   }
 
   public void addMember(IBaseClass theMember) {
