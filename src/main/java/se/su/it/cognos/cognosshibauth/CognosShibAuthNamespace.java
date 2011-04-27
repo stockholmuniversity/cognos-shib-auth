@@ -21,7 +21,7 @@ public class CognosShibAuthNamespace implements INamespace {
 
   String namespaceFormat = null;
   String capabilities[] = null;
-  String objectId = null;
+  String namespaceId = null;
   private Logger LOG = Logger.getLogger(CognosShibAuthNamespace.class.getName());
 
   protected ConfigHandler configHandler = null;
@@ -33,8 +33,8 @@ public class CognosShibAuthNamespace implements INamespace {
   public void init(INamespaceConfiguration iNamespaceConfiguration) throws UnrecoverableException {
     LOG.log(Level.FINEST, "intit method reached");
 
-    objectId = iNamespaceConfiguration.getID();
-    LOG.log(Level.FINE, "ObjectID set to '" + objectId + "'.");
+    namespaceId = iNamespaceConfiguration.getID();
+    LOG.log(Level.FINE, "ObjectID set to '" + namespaceId + "'.");
 
     List<String> capabilitiesList = configHandler.getCapabilities();
     capabilities = capabilitiesList.toArray(new String[capabilitiesList.size()]);
@@ -82,7 +82,7 @@ public class CognosShibAuthNamespace implements INamespace {
   }
 
   public String getObjectID() {
-    return objectId;
+    return namespaceId;
   }
 }
 

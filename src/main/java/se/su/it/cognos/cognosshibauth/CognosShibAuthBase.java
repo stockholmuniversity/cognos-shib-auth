@@ -10,9 +10,7 @@ package se.su.it.cognos.cognosshibauth;
 import com.cognos.CAM_AAA.authentication.*;
 
 import com.cognos.CAM_AAA.authentication.UnrecoverableException;
-import se.su.it.cognos.cognosshibauth.adapters.Group;
 import se.su.it.cognos.cognosshibauth.adapters.NamespaceFolder;
-import se.su.it.cognos.cognosshibauth.adapters.Role;
 import se.su.it.cognos.cognosshibauth.visa.Visa;
 import se.su.it.cognos.cognosshibauth.config.ConfigHandler;
 
@@ -79,24 +77,24 @@ public class CognosShibAuthBase extends CognosShibAuthNamespace implements IName
             else if (objectID.equals("u:") && filter == null) {
               result.addObject(visa.getAccount());
             }
-            else if (objectID.startsWith(objectId + ":u:") && objectID.equals(visa.getAccount().getObjectID())) {
+            else if (objectID.startsWith(namespaceId + ":u:") && objectID.equals(visa.getAccount().getObjectID())) {
               if (filter == null || true) {//this.matchesFilter(filter)) {
                 result.addObject(visa.getAccount());
                 // Add current user
               }
               return result;
             }
-            else if (objectID.startsWith(objectId + ":u:") || objectID.startsWith(objectId + ":r:")) {
+            else if (objectID.startsWith(namespaceId + ":u:") || objectID.startsWith(namespaceId + ":r:")) {
               result.addObject(visa.getRoles()[0]);
             }
-            else if (objectID.startsWith(objectId + ":u:") || objectID.startsWith(objectId + ":g:")) {
+            else if (objectID.startsWith(namespaceId + ":u:") || objectID.startsWith(namespaceId + ":g:")) {
               result.addObject(visa.getGroups()[0]);
             }
           }
           break;
         case ISearchStep.SearchAxis.Child :
           if(objectID == null) {
-            result.addObject(new NamespaceFolder(objectId + ":f:FooFolder", "Foo Folder", Locale.ENGLISH));
+            result.addObject(new NamespaceFolder(namespaceId + ":f:FooFolder", "Foo Folder", Locale.ENGLISH));
             result.addObject(visa.getAccount());
             result.addObject(visa.getRoles()[0]);
             result.addObject(visa.getGroups()[0]);

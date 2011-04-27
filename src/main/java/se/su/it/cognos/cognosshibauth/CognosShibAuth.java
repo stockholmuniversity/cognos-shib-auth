@@ -13,7 +13,6 @@ import com.cognos.CAM_AAA.authentication.SystemRecoverableException;
 import com.cognos.CAM_AAA.authentication.UnrecoverableException;
 import com.cognos.CAM_AAA.authentication.UserRecoverableException;
 import se.su.it.cognos.cognosshibauth.adapters.Account;
-import se.su.it.cognos.cognosshibauth.adapters.Group;
 import se.su.it.cognos.cognosshibauth.adapters.Role;
 import se.su.it.cognos.cognosshibauth.visa.Visa;
 import se.su.it.cognos.cognosshibauth.config.ConfigHandler;
@@ -42,7 +41,7 @@ public class CognosShibAuth extends CognosShibAuthBase implements INamespaceAuth
     String[] entitlements = getHeaderValues(iBiBusHeader2, configHandler.getHeaderEntitlement(), false);
 
     Account account =
-            new Account(objectId + ":" + "u:" + remoteUser, remoteUser, givenName, surname, contentLocale);
+            new Account(namespaceId + ":" + "u:" + remoteUser, remoteUser, givenName, surname, contentLocale);
 
     String mail = "foo@su.se";//getHeaderValue(iBiBusHeader2, configHandler.getHeaderMail(), true);
     account.setEmail(mail);
@@ -69,7 +68,7 @@ public class CognosShibAuth extends CognosShibAuthBase implements INamespaceAuth
 
     for(String entitlement : entitlements) {
       String roleName = parseRoleFromEntitlementUri(entitlement);
-      Role role = new Role(objectId + ":r:" + roleName, roleName, contentLocale);
+      Role role = new Role(namespaceId + ":r:" + roleName, roleName, contentLocale);
       visa.addRole(role);
     }
 
