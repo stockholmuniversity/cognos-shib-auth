@@ -209,4 +209,8 @@ public class ConfigHandler {
   public String getVisaValidatorClass() {
     return config.getString("visa_validator.class");
   }
+
+  public String getStringEntry(String string) {
+    return config.getString(string);
+  }
 }
