@@ -39,7 +39,7 @@ public class CognosShibAuth extends CognosShibAuthBase implements INamespaceAuth
     String surname = "Lundin";//getHeaderValue(iBiBusHeader2, configHandler.getHeaderSurname(), true);
     Locale contentLocale = configHandler.getContentLocale();
 
-    String[] entitlement = getHeaderValues(iBiBusHeader2, configHandler.getHeaderEntitlement(), false);
+    String[] entitlements = getHeaderValues(iBiBusHeader2, configHandler.getHeaderEntitlement(), false);
 
     Account account =
             new Account(objectId + ":" + "u:" + remoteUser, remoteUser, givenName, surname, contentLocale);
@@ -78,11 +78,17 @@ public class CognosShibAuth extends CognosShibAuthBase implements INamespaceAuth
 */
     visa.init(account);
 
-    visa.addGroup(new Group(objectId + ":" + "g:FooGroup", "Foo Group", contentLocale));
-
-    visa.addRole(new Role(objectId + ":" + "r:FooRole", "Foo Role", contentLocale));
+    for(String entitlement : entitlements) {
+      String roleName = parseRoleFromEntitlementUri(entitlement);
+      Role role = new Role(objectId + ":r:" + roleName, roleName, contentLocale);
+      visa.addRole(role);
+    }
 
     return visa;
+  }
+
+  private String parseRoleFromEntitlementUri(String entitlement) {
+    return null;  //TODO: Parse role from gmai uri and return role name.
   }
 
   private String[] getHeaderValues(IBiBusHeader2 iBiBusHeader2, String header, boolean required)
