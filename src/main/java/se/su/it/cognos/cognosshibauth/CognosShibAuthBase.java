@@ -31,13 +31,15 @@ public class CognosShibAuthBase extends CognosShibAuthNamespace implements IName
 
   public CognosShibAuthBase(ConfigHandler configHandler) {
     super(configHandler);
+
+    folders = new HashMap<String,NamespaceFolder>();
   }
 
   @Override
   public void init(INamespaceConfiguration iNamespaceConfiguration) throws UnrecoverableException {
     super.init(iNamespaceConfiguration);
     
-    folders = loadFolders();
+    loadFolders();
   }
 
   public void logoff(IVisa iVisa, IBiBusHeader iBiBusHeader) {
@@ -115,8 +117,10 @@ public class CognosShibAuthBase extends CognosShibAuthNamespace implements IName
           break;
         case ISearchStep.SearchAxis.Child :
           if(objectID == null) {
-            for(NamespaceFolder folder : folders.values())
-              result.addObject(folder);
+            for(NamespaceFolder folder : folders.values()) {
+              if(folder.getAncestors().length <= 0)
+                result.addObject(folder);
+            }
           }
           else if(isFolder(objectID) && folders.containsKey(objectID)) {
             NamespaceFolder folder = folders.get(objectID);
@@ -166,9 +170,7 @@ public class CognosShibAuthBase extends CognosShibAuthNamespace implements IName
     return objectId.startsWith(namespaceId + ":" + UiClass.PREFIX_USER);
   }
 
-  private HashMap<String,NamespaceFolder> loadFolders() {
-    HashMap<String,NamespaceFolder> folders = new HashMap<String,NamespaceFolder>();
-
+  private void loadFolders() {
     List<HierarchicalConfiguration> foldersConfiguration = configHandler.getFoldersConfig();
 
     for(HierarchicalConfiguration folderConfiguration : foldersConfiguration) {
@@ -176,14 +178,13 @@ public class CognosShibAuthBase extends CognosShibAuthNamespace implements IName
 
       folders.put(namespaceFolder.getObjectID(), namespaceFolder);
     }
-
-    return folders;
   }
 
   private NamespaceFolder configEntryToFolder(HierarchicalConfiguration folderEntry) {
     String name = folderEntry.getString("name");
     String description = folderEntry.getString("description");
 
+    //TODO: Handle CAMID conflicts
     NamespaceFolder folder = new NamespaceFolder(namespaceId, name);
     folder.addDescription(description);
 
@@ -198,6 +199,7 @@ public class CognosShibAuthBase extends CognosShibAuthNamespace implements IName
       NamespaceFolder childFolder = configEntryToFolder(folderConfig);
       if(childFolder != null) {
         folder.addChild(childFolder);
+        childFolder.addAncestors(folder);
         folders.put(childFolder.getObjectID(), childFolder);
       }
     }
