@@ -28,7 +28,7 @@ public class Account extends UiClass implements IAccount {
   private HashMap<String, List<String>> customProperties = null;
 
   public Account(String namespaceId, String userName, String givenName, String surname) {
-    super(namespaceId + ":u:" + userName);
+    super(namespaceId + ":" + PREFIX_USER + userName);
 
     ConfigHandler configHandler = ConfigHandler.instance();
     contentLocale = configHandler.getContentLocale();

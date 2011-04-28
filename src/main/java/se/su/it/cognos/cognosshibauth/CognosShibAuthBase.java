@@ -11,6 +11,7 @@ import com.cognos.CAM_AAA.authentication.*;
 
 import com.cognos.CAM_AAA.authentication.UnrecoverableException;
 import se.su.it.cognos.cognosshibauth.adapters.NamespaceFolder;
+import se.su.it.cognos.cognosshibauth.adapters.UiClass;
 import se.su.it.cognos.cognosshibauth.visa.Visa;
 import se.su.it.cognos.cognosshibauth.config.ConfigHandler;
 
@@ -57,6 +58,7 @@ public class CognosShibAuthBase extends CognosShibAuthNamespace implements IName
 
 	  int searchType = steps[0].getAxis();
 	  ISearchFilter filter = steps[0].getPredicate();
+
 	  switch (searchType) {
 	    case ISearchStep.SearchAxis.Self :
 		case ISearchStep.SearchAxis.DescendentOrSelf :
@@ -74,20 +76,20 @@ public class CognosShibAuthBase extends CognosShibAuthNamespace implements IName
                 //sqlCondition.append(QueryUtil.getSqlCondition(filter));
               }
             }
-            else if (objectID.equals("u:") && filter == null) {
+            else if (isUser(objectID) && filter == null) {
               result.addObject(visa.getAccount());
             }
-            else if (objectID.startsWith(namespaceId + ":u:") && objectID.equals(visa.getAccount().getObjectID())) {
+            else if (isUser(objectID) && objectID.equals(visa.getAccount().getObjectID())) {
               if (filter == null || true) {//this.matchesFilter(filter)) {
                 result.addObject(visa.getAccount());
                 // Add current user
               }
               return result;
             }
-            else if (objectID.startsWith(namespaceId + ":u:") || objectID.startsWith(namespaceId + ":r:")) {
+            else if (isUser(objectID) || isRole(objectID)) {
               result.addObject(visa.getRoles()[0]);
             }
-            else if (objectID.startsWith(namespaceId + ":u:") || objectID.startsWith(namespaceId + ":g:")) {
+            else if (isUser(objectID) || isGroup(objectID)) {
               result.addObject(visa.getGroups()[0]);
             }
           }
@@ -116,5 +118,29 @@ public class CognosShibAuthBase extends CognosShibAuthNamespace implements IName
       e.printStackTrace();
     }
     return result;
+  }
+
+  private boolean isFolder(String objectId) {
+    if(objectId == null)
+      return false;
+    return objectId.startsWith(namespaceId + ":" + UiClass.PREFIX_FOLDER);
+  }
+
+  private boolean isGroup(String objectId) {
+    if(objectId == null)
+      return false;
+    return objectId.startsWith(namespaceId + ":" + UiClass.PREFIX_GROUP);
+  }
+
+  private boolean isRole(String objectId) {
+    if(objectId == null)
+      return false;
+    return objectId.startsWith(namespaceId + ":" + UiClass.PREFIX_ROLE);
+  }
+
+  private boolean isUser(String objectId) {
+    if(objectId == null)
+      return false;
+    return objectId.startsWith(namespaceId + ":" + UiClass.PREFIX_USER);
   }
 }

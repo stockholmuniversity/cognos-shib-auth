@@ -13,8 +13,8 @@ public class Group extends UiClass implements IGroup {
 
   private Locale defaultLocale = null;
 
-  public Group(String theObjectID, String name) {
-    super(theObjectID);
+  public Group(String namespaceId, String name) {
+    super(namespaceId + ":" + PREFIX_GROUP + name);
 
     members = new ArrayList<IBaseClass>();
 

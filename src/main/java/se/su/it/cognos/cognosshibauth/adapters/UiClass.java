@@ -11,6 +11,10 @@ import com.cognos.CAM_AAA.authentication.IBaseClass;
 import com.cognos.CAM_AAA.authentication.IUiClass;
 
 public class UiClass implements IUiClass {
+  public static final String PREFIX_FOLDER = "f:";
+  public static final String PREFIX_GROUP = "g:";
+  public static final String PREFIX_ROLE = "r:";
+  public static final String PREFIX_USER = "u:";
 
   private Logger LOG = Logger.getLogger(UiClass.class.getName());
 
