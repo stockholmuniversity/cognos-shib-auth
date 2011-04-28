@@ -45,4 +45,48 @@
   <visa_validator>
     <class>se.su.it.cognos.cognosshibauth.visa.validator.DummyVisaValidator</class>
   </visa_validator>
+  <folders>
+    <folder>
+      <name>Users</name>
+      <description>User folder</description>
+      <children>
+        <folder>
+          <name>Employee</name>
+          <description>Employees</description>
+          <children>
+            <users>
+              <ldap_filter><![CDATA[(&(eduPersonEntitlement=urn:mace:swami.se:gmai:su-ivs:*)(eduPersonPrimaryAffiliation=employee))]]></ldap_filter>
+            </users>
+          </children>
+        </folder>
+        <folder>
+          <name>Member</name>
+          <description>Members</description>
+          <children>
+            <users>
+              <ldap_filter><![CDATA[(&(eduPersonEntitlement=urn:mace:swami.se:gmai:su-ivs:*)(eduPersonPrimaryAffiliation=member))]]></ldap_filter>
+            </users>
+          </children>
+        </folder>
+        <folder>
+          <name>Other</name>
+          <description>Others</description>
+          <children>
+            <users>
+              <ldap_filter><![CDATA[(&(eduPersonEntitlement=urn:mace:swami.se:gmai:su-ivs:*)(eduPersonPrimaryAffiliation=other))]]></ldap_filter>
+            </users>
+          </children>
+        </folder>
+      </children>
+    </folder>
+    <folder>
+      <name>Roles</name>
+      <description>Roles folder</description>
+      <children>
+        <roles>
+          <ldap_filter>eduPersonEntitlement=urn:mace:swami.se:gmai:su-ivs:*</ldap_filter>
+        </roles>
+      </children>
+    </folder>
+  </folders>
 </config>

@@ -12,6 +12,7 @@
     <fax_phone>facsimileTelephoneNumber</fax_phone>
     <pager_phone></pager_phone>
     <postal_address></postal_address>
+    <entitlement>eduPersonEntitlement</entitlement>
   </headers>
   <generic>
     <content_locale>sv_SE</content_locale>
@@ -21,7 +22,7 @@
   <names>
     <name>
       <locale>sv_SE</locale>
-      <text>Cognos Shib AP</text>
+      <text>Swedish Name</text>
     </name>
     <name>
       <locale>en_US</locale>
@@ -31,17 +32,58 @@
   <descriptions>
     <description>
       <locale>sv_SE</locale>
-      <text>Etiam at tellus ante. Cras feugiat volutpat accumsan. Pellentesque habitant morbi tristique senectus et
-        netus et malesuada fames ac turpis egestas. Ut laoreet placerat mattis.</text>
+      <text>Blahonga</text>
     </description>
     <description>
       <locale>en_US</locale>
-      <text>Duis eu ipsum arcu. Suspendisse vitae consectetur est. Vestibulum sagittis, justo eget sodales rhoncus,
-        velit nibh blandit sem, nec euismod risus diam vel sapien. Morbi porttitor, augue vel cursus dictum, elit dui
-        volutpat lacus, a euismod sapien metus id lectus.</text>
+      <text>Foobar</text>
     </description>
   </descriptions>
   <visa_validator>
     <class>se.su.it.cognos.cognosshibauth.visa.validator.DummyVisaValidator</class>
   </visa_validator>
+  <folders>
+    <folder>
+      <name>Users</name>
+      <description>User folder</description>
+      <children>
+        <folder>
+          <name>Employee</name>
+          <description>Employees</description>
+          <children>
+            <users>
+              <ldap_filter><![CDATA[(&(eduPersonEntitlement=urn:mace:swami.se:gmai:su-ivs:*)(eduPersonPrimaryAffiliation=employee))]]></ldap_filter>
+            </users>
+          </children>
+        </folder>
+        <folder>
+          <name>Member</name>
+          <description>Members</description>
+          <children>
+            <users>
+              <ldap_filter><![CDATA[(&(eduPersonEntitlement=urn:mace:swami.se:gmai:su-ivs:*)(eduPersonPrimaryAffiliation=member))]]></ldap_filter>
+            </users>
+          </children>
+        </folder>
+        <folder>
+          <name>Other</name>
+          <description>Others</description>
+          <children>
+            <users>
+              <ldap_filter><![CDATA[(&(eduPersonEntitlement=urn:mace:swami.se:gmai:su-ivs:*)(eduPersonPrimaryAffiliation=other))]]></ldap_filter>
+            </users>
+          </children>
+        </folder>
+      </children>
+    </folder>
+    <folder>
+      <name>Roles</name>
+      <description>Roles folder</description>
+      <children>
+        <roles>
+          <ldap_filter>eduPersonEntitlement=urn:mace:swami.se:gmai:su-ivs:*</ldap_filter>
+        </roles>
+      </children>
+    </folder>
+  </folders>
 </config>

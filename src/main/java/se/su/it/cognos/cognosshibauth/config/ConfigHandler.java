@@ -154,6 +154,13 @@ public class ConfigHandler {
     return descriptionLocales;
   }
 
+  public List<HierarchicalConfiguration> getFoldersConfig() {
+    List<HierarchicalConfiguration> folderConfiguration =
+            (List<HierarchicalConfiguration>) config.configurationsAt("folders.folder");
+
+    return folderConfiguration;
+  }
+
   public String getHeaderRemoteUser() {
     return headerRemoteUser;
   }
