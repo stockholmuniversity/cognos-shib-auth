@@ -41,7 +41,7 @@ public class CognosShibAuth extends CognosShibAuthBase implements INamespaceAuth
     String[] entitlements = getHeaderValues(iBiBusHeader2, configHandler.getHeaderEntitlement(), false);
 
     Account account =
-            new Account(namespaceId + ":" + "u:" + remoteUser, remoteUser, givenName, surname, contentLocale);
+            new Account(namespaceId, remoteUser, givenName, surname, contentLocale);
 
     String mail = "foo@su.se";//getHeaderValue(iBiBusHeader2, configHandler.getHeaderMail(), true);
     account.setEmail(mail);

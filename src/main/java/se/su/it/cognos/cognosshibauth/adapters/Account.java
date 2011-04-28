@@ -26,9 +26,9 @@ public class Account extends UiClass implements IAccount {
 
   private HashMap<String, List<String>> customProperties = null;
 
-  public Account(String theObjectID, String userName, String givenName, String surname,
+  public Account(String namespaceId, String userName, String givenName, String surname,
                  Locale contentLocale) {
-    super(theObjectID);
+    super(namespaceId + ":u:" + userName);
 
     this.contentLocale = contentLocale;
     this.givenName = givenName;
