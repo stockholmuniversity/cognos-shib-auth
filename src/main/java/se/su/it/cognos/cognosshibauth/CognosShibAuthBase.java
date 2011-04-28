@@ -17,6 +17,7 @@ import se.su.it.cognos.cognosshibauth.visa.Visa;
 import se.su.it.cognos.cognosshibauth.config.ConfigHandler;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.logging.Level;
@@ -26,11 +27,16 @@ public class CognosShibAuthBase extends CognosShibAuthNamespace implements IName
 
   private Logger LOG = Logger.getLogger(CognosShibAuthBase.class.getName());
 
-  List<NamespaceFolder> folders = null;
+  HashMap<String,NamespaceFolder> folders = null;
 
   public CognosShibAuthBase(ConfigHandler configHandler) {
     super(configHandler);
+  }
 
+  @Override
+  public void init(INamespaceConfiguration iNamespaceConfiguration) throws UnrecoverableException {
+    super.init(iNamespaceConfiguration);
+    
     folders = loadFolders();
   }
 
@@ -102,12 +108,20 @@ public class CognosShibAuthBase extends CognosShibAuthNamespace implements IName
             else if (isUser(objectID) || isGroup(objectID)) {
               result.addObject(visa.getGroups()[0]);
             }
+            else if(isFolder(objectID)) {
+              result.addObject(folders.get(objectID));
+            }
           }
           break;
         case ISearchStep.SearchAxis.Child :
           if(objectID == null) {
-            for(NamespaceFolder folder : folders)
+            for(NamespaceFolder folder : folders.values())
               result.addObject(folder);
+          }
+          else if(isFolder(objectID) && folders.containsKey(objectID)) {
+            NamespaceFolder folder = folders.get(objectID);
+            for(IUiClass child : folder.getChildren())
+              result.addObject(child);
           }
           break;
         default :
@@ -152,15 +166,15 @@ public class CognosShibAuthBase extends CognosShibAuthNamespace implements IName
     return objectId.startsWith(namespaceId + ":" + UiClass.PREFIX_USER);
   }
 
-  private List<NamespaceFolder> loadFolders() {
-    ArrayList<NamespaceFolder> folders = new ArrayList<NamespaceFolder>();
+  private HashMap<String,NamespaceFolder> loadFolders() {
+    HashMap<String,NamespaceFolder> folders = new HashMap<String,NamespaceFolder>();
 
     List<HierarchicalConfiguration> foldersConfiguration = configHandler.getFoldersConfig();
 
     for(HierarchicalConfiguration folderConfiguration : foldersConfiguration) {
       NamespaceFolder namespaceFolder = configEntryToFolder(folderConfiguration);
 
-      folders.add(namespaceFolder);
+      folders.put(namespaceFolder.getObjectID(), namespaceFolder);
     }
 
     return folders;
@@ -182,8 +196,10 @@ public class CognosShibAuthBase extends CognosShibAuthNamespace implements IName
     List<HierarchicalConfiguration> foldersConfig = folderEntry.configurationsAt("children.folder");
     for(HierarchicalConfiguration folderConfig : foldersConfig) {
       NamespaceFolder childFolder = configEntryToFolder(folderConfig);
-      if(childFolder != null)
+      if(childFolder != null) {
         folder.addChild(childFolder);
+        folders.put(childFolder.getObjectID(), childFolder);
+      }
     }
 
     return folder;
