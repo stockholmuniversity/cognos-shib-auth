@@ -1,16 +1,19 @@
 package se.su.it.cognos.cognosshibauth.adapters;
 
 import com.cognos.CAM_AAA.authentication.INamespaceFolder;
+import se.su.it.cognos.cognosshibauth.config.ConfigHandler;
+
 import java.util.Locale;
 
 public class NamespaceFolder extends UiClass implements INamespaceFolder {
 
   private Locale defaultLocale = null;
 
-  public NamespaceFolder(String theSearchPath, String name, Locale defaultLocale) {
+  public NamespaceFolder(String theSearchPath, String name) {
     super(theSearchPath);
 
-    this.defaultLocale = defaultLocale;
+    ConfigHandler configHandler = ConfigHandler.instance();
+    defaultLocale = configHandler.getContentLocale();
 
     addName(defaultLocale, name);
   }
