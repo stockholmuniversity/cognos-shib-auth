@@ -96,10 +96,8 @@ public class CognosShibAuthBase extends CognosShibAuthNamespace implements IName
           break;
         case ISearchStep.SearchAxis.Child :
           if(objectID == null) {
-            result.addObject(new NamespaceFolder(namespaceId, "Foo Folder"));
-            result.addObject(visa.getAccount());
-            result.addObject(visa.getRoles()[0]);
-            result.addObject(visa.getGroups()[0]);
+            result.addObject(new NamespaceFolder(namespaceId, "Users"));
+            result.addObject(new NamespaceFolder(namespaceId, "Roles"));
           }
           break;
         default :
