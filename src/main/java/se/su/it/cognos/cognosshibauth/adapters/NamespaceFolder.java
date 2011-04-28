@@ -10,7 +10,7 @@ public class NamespaceFolder extends UiClass implements INamespaceFolder {
   private Locale defaultLocale = null;
 
   public NamespaceFolder(String theSearchPath, String name) {
-    super(theSearchPath);
+    super(theSearchPath + ":f:" + name);
 
     ConfigHandler configHandler = ConfigHandler.instance();
     defaultLocale = configHandler.getContentLocale();
