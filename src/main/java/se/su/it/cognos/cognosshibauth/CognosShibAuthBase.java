@@ -10,11 +10,14 @@ package se.su.it.cognos.cognosshibauth;
 import com.cognos.CAM_AAA.authentication.*;
 
 import com.cognos.CAM_AAA.authentication.UnrecoverableException;
+import org.apache.commons.configuration.HierarchicalConfiguration;
 import se.su.it.cognos.cognosshibauth.adapters.NamespaceFolder;
 import se.su.it.cognos.cognosshibauth.adapters.UiClass;
 import se.su.it.cognos.cognosshibauth.visa.Visa;
 import se.su.it.cognos.cognosshibauth.config.ConfigHandler;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -23,8 +26,12 @@ public class CognosShibAuthBase extends CognosShibAuthNamespace implements IName
 
   private Logger LOG = Logger.getLogger(CognosShibAuthBase.class.getName());
 
- public CognosShibAuthBase(ConfigHandler configHandler) {
+  List<NamespaceFolder> folders = null;
+
+  public CognosShibAuthBase(ConfigHandler configHandler) {
     super(configHandler);
+
+    folders = loadFolders();
   }
 
   public void logoff(IVisa iVisa, IBiBusHeader iBiBusHeader) {
@@ -61,6 +68,9 @@ public class CognosShibAuthBase extends CognosShibAuthNamespace implements IName
 
 	  switch (searchType) {
 	    case ISearchStep.SearchAxis.Self :
+          if(isFolder(objectID)) {
+            
+          }
 		case ISearchStep.SearchAxis.DescendentOrSelf :
 		  {
 		    if (objectID == null) {
@@ -96,8 +106,8 @@ public class CognosShibAuthBase extends CognosShibAuthNamespace implements IName
           break;
         case ISearchStep.SearchAxis.Child :
           if(objectID == null) {
-            result.addObject(new NamespaceFolder(namespaceId, "Users"));
-            result.addObject(new NamespaceFolder(namespaceId, "Roles"));
+            for(NamespaceFolder folder : folders)
+              result.addObject(folder);
           }
           break;
         default :
@@ -140,5 +150,42 @@ public class CognosShibAuthBase extends CognosShibAuthNamespace implements IName
     if(objectId == null)
       return false;
     return objectId.startsWith(namespaceId + ":" + UiClass.PREFIX_USER);
+  }
+
+  private List<NamespaceFolder> loadFolders() {
+    ArrayList<NamespaceFolder> folders = new ArrayList<NamespaceFolder>();
+
+    List<HierarchicalConfiguration> foldersConfiguration = configHandler.getFoldersConfig();
+
+    for(HierarchicalConfiguration folderConfiguration : foldersConfiguration) {
+      NamespaceFolder namespaceFolder = configEntryToFolder(folderConfiguration);
+
+      folders.add(namespaceFolder);
+    }
+
+    return folders;
+  }
+
+  private NamespaceFolder configEntryToFolder(HierarchicalConfiguration folderEntry) {
+    String name = folderEntry.getString("name");
+    String description = folderEntry.getString("description");
+
+    NamespaceFolder folder = new NamespaceFolder(namespaceId, name);
+    folder.addDescription(description);
+
+    //TODO: Do something with the users
+    List<HierarchicalConfiguration> users = folderEntry.configurationsAt("children.user");
+
+    //TODO: Do something with the roles
+    List<HierarchicalConfiguration> roles = folderEntry.configurationsAt("children.role");
+
+    List<HierarchicalConfiguration> foldersConfig = folderEntry.configurationsAt("children.folder");
+    for(HierarchicalConfiguration folderConfig : foldersConfig) {
+      NamespaceFolder childFolder = configEntryToFolder(folderConfig);
+      if(childFolder != null)
+        folder.addChild(childFolder);
+    }
+
+    return folder;
   }
 }
