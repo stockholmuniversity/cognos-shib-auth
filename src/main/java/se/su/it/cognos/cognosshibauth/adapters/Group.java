@@ -6,18 +6,20 @@ import java.util.Locale;
 
 import com.cognos.CAM_AAA.authentication.IBaseClass;
 import com.cognos.CAM_AAA.authentication.IGroup;
+import se.su.it.cognos.cognosshibauth.config.ConfigHandler;
 
 public class Group extends UiClass implements IGroup {
   private List<IBaseClass> members = null;
 
   private Locale defaultLocale = null;
 
-  public Group(String theObjectID, String name, Locale defaultLocale) {
+  public Group(String theObjectID, String name) {
     super(theObjectID);
 
     members = new ArrayList<IBaseClass>();
-    
-    this.defaultLocale = defaultLocale;
+
+    ConfigHandler configHandler = ConfigHandler.instance();
+    defaultLocale = configHandler.getContentLocale();
 
     addName(defaultLocale, name);
   }

@@ -5,6 +5,7 @@ import java.util.Locale;
 
 import com.cognos.CAM_AAA.authentication.IBaseClass;
 import com.cognos.CAM_AAA.authentication.IRole;
+import se.su.it.cognos.cognosshibauth.config.ConfigHandler;
 
 public class Role extends UiClass implements IRole {
 
@@ -12,12 +13,13 @@ public class Role extends UiClass implements IRole {
 
   private Locale defaultLocale = null;
 
-  public Role(String namespaceId, String name, Locale defaultLocale) {
+  public Role(String namespaceId, String name) {
     super(namespaceId + ":r:" + name);
     
     members = new ArrayList<IBaseClass>();
 
-    this.defaultLocale = defaultLocale;
+    ConfigHandler configHandler = ConfigHandler.instance();
+    defaultLocale = configHandler.getContentLocale();
 
     addName(defaultLocale, name);
   }

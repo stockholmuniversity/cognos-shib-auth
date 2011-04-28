@@ -5,6 +5,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.cognos.CAM_AAA.authentication.IAccount;
+import se.su.it.cognos.cognosshibauth.config.ConfigHandler;
 
 public class Account extends UiClass implements IAccount {
 
@@ -26,11 +27,12 @@ public class Account extends UiClass implements IAccount {
 
   private HashMap<String, List<String>> customProperties = null;
 
-  public Account(String namespaceId, String userName, String givenName, String surname,
-                 Locale contentLocale) {
+  public Account(String namespaceId, String userName, String givenName, String surname) {
     super(namespaceId + ":u:" + userName);
 
-    this.contentLocale = contentLocale;
+    ConfigHandler configHandler = ConfigHandler.instance();
+    contentLocale = configHandler.getContentLocale();
+
     this.givenName = givenName;
     this.surname = surname;
     this.userName = userName;

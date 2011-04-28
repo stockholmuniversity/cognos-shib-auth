@@ -36,12 +36,11 @@ public class CognosShibAuth extends CognosShibAuthBase implements INamespaceAuth
     String remoteUser = "jolu";//getHeaderValue(iBiBusHeader2, configHandler.getHeaderRemoteUser(), true);
     String givenName = "Joakim";//getHeaderValue(iBiBusHeader2, configHandler.getHeaderGivenName(), true);
     String surname = "Lundin";//getHeaderValue(iBiBusHeader2, configHandler.getHeaderSurname(), true);
-    Locale contentLocale = configHandler.getContentLocale();
 
     String[] entitlements = getHeaderValues(iBiBusHeader2, configHandler.getHeaderEntitlement(), false);
 
     Account account =
-            new Account(namespaceId, remoteUser, givenName, surname, contentLocale);
+            new Account(namespaceId, remoteUser, givenName, surname);
 
     String mail = "foo@su.se";//getHeaderValue(iBiBusHeader2, configHandler.getHeaderMail(), true);
     account.setEmail(mail);
@@ -68,7 +67,7 @@ public class CognosShibAuth extends CognosShibAuthBase implements INamespaceAuth
 
     for(String entitlement : entitlements) {
       String roleName = parseRoleFromEntitlementUri(entitlement);
-      Role role = new Role(namespaceId, roleName, contentLocale);
+      Role role = new Role(namespaceId, roleName);
       visa.addRole(role);
     }
 
