@@ -68,7 +68,7 @@ public class CognosShibAuth extends CognosShibAuthBase implements INamespaceAuth
 
     for(String entitlement : entitlements) {
       String roleName = parseRoleFromEntitlementUri(entitlement);
-      Role role = new Role(namespaceId + ":r:" + roleName, roleName, contentLocale);
+      Role role = new Role(namespaceId, roleName, contentLocale);
       visa.addRole(role);
     }
 

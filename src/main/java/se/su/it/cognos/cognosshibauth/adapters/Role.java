@@ -12,8 +12,8 @@ public class Role extends UiClass implements IRole {
 
   private Locale defaultLocale = null;
 
-  public Role(String theSearchPath, String name, Locale defaultLocale) {
-    super(theSearchPath);
+  public Role(String namespaceId, String name, Locale defaultLocale) {
+    super(namespaceId + ":r:" + name);
     
     members = new ArrayList<IBaseClass>();
 
