@@ -2,7 +2,6 @@ package se.su.it.cognos.cognosshibauth.config;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.HierarchicalConfiguration;
-import org.apache.commons.configuration.SubnodeConfiguration;
 import org.apache.commons.configuration.XMLConfiguration;
 import org.apache.commons.configuration.reloading.FileChangedReloadingStrategy;
 
@@ -40,7 +39,7 @@ public class ConfigHandler {
   private String headerPostalAddress = "";
 
   private Locale contentLocale = Locale.ENGLISH;
-  private Locale procuctLocale = Locale.ENGLISH;
+  private Locale productLocale = Locale.ENGLISH;
 
   private String headerEntitlement = "entitlement";
 
@@ -58,7 +57,7 @@ public class ConfigHandler {
     load_header_values();
 
     contentLocale = load_locale("generic.content_locale", contentLocale);
-    procuctLocale = load_locale("generic.product_locale", procuctLocale);
+    productLocale = load_locale("generic.product_locale", productLocale);
   }
 
   private Locale load_locale(String s, Locale defaultLocale) {
@@ -205,8 +204,8 @@ public class ConfigHandler {
     return contentLocale;
   }
 
-  public Locale getProcuctLocale() {
-    return procuctLocale;
+  public Locale getProductLocale() {
+    return productLocale;
   }
 
   public String getHeaderEntitlement() {
