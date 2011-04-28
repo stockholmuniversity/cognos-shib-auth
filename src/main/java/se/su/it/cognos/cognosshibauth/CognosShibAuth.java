@@ -39,6 +39,8 @@ public class CognosShibAuth extends CognosShibAuthBase implements INamespaceAuth
 
     String[] entitlements = getHeaderValues(iBiBusHeader2, configHandler.getHeaderEntitlement(), false);
 
+    entitlements = new String[]{"urn:mace:swami.se:gmai:su-ivs:analyst"};
+
     Account account =
             new Account(namespaceId, remoteUser, givenName, surname);
 
@@ -75,14 +77,22 @@ public class CognosShibAuth extends CognosShibAuthBase implements INamespaceAuth
   }
 
   private String parseRoleFromEntitlementUri(String entitlement) {
-    return null;  //TODO: Parse role from gmai uri and return role name.
+    String gmaiPrefix = configHandler.getStringEntry("gmai.prefix");
+    String gmaiApplication = configHandler.getStringEntry("gmai.application");
+
+    if(entitlement != null && entitlement.startsWith(gmaiPrefix + ":" + gmaiApplication + ":")) {
+      String subS = entitlement.substring((gmaiPrefix + ":" + gmaiApplication + ":").length());
+      subS.indexOf(":");
+      return subS;
+    }
+    return null;
   }
 
   private String[] getHeaderValues(IBiBusHeader2 iBiBusHeader2, String header, boolean required)
           throws SystemRecoverableException {
     
     if(header == null || header.trim().length() == 0)
-      return null;
+      return new String[0];
 
     String[] headerValue = iBiBusHeader2.getEnvVarValue(header); //TODO: Use getTrustedEnvVarValue when releasing stable.
 
@@ -105,7 +115,7 @@ public class CognosShibAuth extends CognosShibAuthBase implements INamespaceAuth
 
     if(headerValue != null)
       return headerValue;
-    return null;
+    return new String[0];
   }
 
 
