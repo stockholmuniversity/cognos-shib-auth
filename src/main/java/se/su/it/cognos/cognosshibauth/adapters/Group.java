@@ -23,7 +23,6 @@ public class Group extends UiClass implements IGroup {
 
     members = new ArrayList<IBaseClass>();
 
-    ConfigHandler configHandler = ConfigHandler.instance();
     defaultLocale = configHandler.getContentLocale();
 
     addName(defaultLocale, name);

@@ -24,7 +24,6 @@ public class Role extends UiClass implements IRole {
     
     members = new ArrayList<IBaseClass>();
 
-    ConfigHandler configHandler = ConfigHandler.instance();
     defaultLocale = configHandler.getContentLocale();
 
     addName(defaultLocale, name);

@@ -9,6 +9,7 @@ import java.util.logging.Logger;
 
 import com.cognos.CAM_AAA.authentication.IBaseClass;
 import com.cognos.CAM_AAA.authentication.IUiClass;
+import se.su.it.cognos.cognosshibauth.config.ConfigHandler;
 
 public class UiClass implements IUiClass {
   public static final String PREFIX_FOLDER = "f:";
@@ -25,6 +26,8 @@ public class UiClass implements IUiClass {
   private HashMap<Locale, String> names = null;
   private HashMap<Locale, String> descriptions = null;
 
+  protected ConfigHandler configHandler = null;
+
   public UiClass(String theObjectID) {
     LOG.log(Level.FINEST, "Creating new UiClass with objectID '" + theObjectID + "'.");
 
@@ -34,6 +37,8 @@ public class UiClass implements IUiClass {
     ancestors = new Stack<IBaseClass>();
 
     objectID = theObjectID;
+
+    configHandler = ConfigHandler.instance();
   }
 
   public void addDescription(Locale theLocale, String theDescription) {

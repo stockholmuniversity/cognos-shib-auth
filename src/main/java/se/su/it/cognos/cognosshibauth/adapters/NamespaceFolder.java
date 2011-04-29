@@ -31,8 +31,6 @@ public class NamespaceFolder extends UiClass implements INamespaceFolder {
   public NamespaceFolder(String theSearchPath, String name) {
     super(theSearchPath + ":" + PREFIX_FOLDER + name);
 
-    ConfigHandler configHandler = ConfigHandler.instance();
-
     children = new ArrayList<IUiClass>();
 
     userLdapFilters = new ArrayList<String>();
@@ -67,7 +65,6 @@ public class NamespaceFolder extends UiClass implements INamespaceFolder {
   public List<IUiClass> loadLdapGroups() {
     List<IUiClass> groups = new ArrayList<IUiClass>();
 
-    ConfigHandler configHandler = ConfigHandler.instance();
     String ldapURL = configHandler.getStringEntry("ldap.url");
     ldapBaseDn = configHandler.getStringEntry("ldap.base_dn", "");
     SUKAT sukat = null;
@@ -96,7 +93,6 @@ public class NamespaceFolder extends UiClass implements INamespaceFolder {
   public List<IUiClass> loadLdapRoles() {
     List<IUiClass> roles = new ArrayList<IUiClass>();
 
-    ConfigHandler configHandler = ConfigHandler.instance();
     String ldapURL = configHandler.getStringEntry("ldap.url");
     ldapBaseDn = configHandler.getStringEntry("ldap.base_dn", "");
     SUKAT sukat = null;
@@ -125,7 +121,6 @@ public class NamespaceFolder extends UiClass implements INamespaceFolder {
   public List<IUiClass> loadLdapUsers() {
     List<IUiClass> accounts = new ArrayList<IUiClass>();
 
-    ConfigHandler configHandler = ConfigHandler.instance();
     String ldapURL = configHandler.getStringEntry("ldap.url");
     ldapBaseDn = configHandler.getStringEntry("ldap.base_dn", "");
     SUKAT sukat = null;

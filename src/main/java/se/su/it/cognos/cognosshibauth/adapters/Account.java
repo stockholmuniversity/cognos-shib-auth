@@ -36,7 +36,6 @@ public class Account extends UiClass implements IAccount {
   public Account(String namespaceId, String userName, String givenName, String surname) {
     super(namespaceId + ":" + PREFIX_USER + userName);
 
-    ConfigHandler configHandler = ConfigHandler.instance();
     contentLocale = configHandler.getContentLocale();
 
     this.givenName = givenName;
@@ -133,10 +132,6 @@ public class Account extends UiClass implements IAccount {
 
   public void setPostalAddress(String thePostalAddress) {
     postalAddress = thePostalAddress;
-  }
-
-  public void setProductLocale(Locale theProductLocale) {
-    productLocale = theProductLocale;
   }
 
   public void setSurname(String theSurname) {
