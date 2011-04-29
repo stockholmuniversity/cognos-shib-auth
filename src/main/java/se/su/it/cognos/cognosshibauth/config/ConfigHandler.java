@@ -217,6 +217,10 @@ public class ConfigHandler {
   }
 
   public String getStringEntry(String string) {
-    return config.getString(string);
+    return getStringEntry(string, null);
+  }
+
+  public String getStringEntry(String string, String defaultValue) {
+    return config.getString(string, defaultValue);
   }
 }
