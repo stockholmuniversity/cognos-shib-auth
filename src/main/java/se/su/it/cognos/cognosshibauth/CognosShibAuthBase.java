@@ -28,6 +28,8 @@ import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import static se.su.it.cognos.cognosshibauth.adapters.UiClass.*;
+
 public class CognosShibAuthBase extends CognosShibAuthNamespace implements INamespaceAuthenticationProviderBase {
 
   private Logger LOG = Logger.getLogger(CognosShibAuthBase.class.getName());
@@ -137,30 +139,6 @@ public class CognosShibAuthBase extends CognosShibAuthNamespace implements IName
       e.printStackTrace();
     }
     return result;
-  }
-
-  private boolean isFolder(String objectId) {
-    if(objectId == null)
-      return false;
-    return objectId.startsWith(namespaceId + ":" + UiClass.PREFIX_FOLDER + ":");
-  }
-
-  private boolean isGroup(String objectId) {
-    if(objectId == null)
-      return false;
-    return objectId.startsWith(namespaceId + ":" + UiClass.PREFIX_GROUP + ":");
-  }
-
-  private boolean isRole(String objectId) {
-    if(objectId == null)
-      return false;
-    return objectId.startsWith(namespaceId + ":" + UiClass.PREFIX_ROLE + ":");
-  }
-
-  private boolean isUser(String objectId) {
-    if(objectId == null)
-      return false;
-    return objectId.startsWith(namespaceId + ":" + UiClass.PREFIX_USER + ":");
   }
 
   private void loadFolders() {

@@ -91,4 +91,31 @@ public class UiClass implements IUiClass {
     LOG.log(Level.FINEST, "Setting objectID '" + theObjectID + "'.");
     objectID = theObjectID;
   }
+
+  public static boolean isFolder(String objectId) {
+    return isType(objectId, PREFIX_FOLDER);
+  }
+
+  public static boolean isGroup(String objectId) {
+    return isType(objectId, PREFIX_GROUP);
+  }
+
+  public static boolean isRole(String objectId) {
+    return isType(objectId, PREFIX_ROLE);
+  }
+
+  public static boolean isUser(String objectId) {
+    return isType(objectId, PREFIX_USER);
+  }
+
+  private static boolean isType(String objectId, String type) {
+    try {
+      int index = objectId.lastIndexOf(":");
+      char typeC = objectId.charAt(index-1);
+      return type.equals(String.valueOf(typeC));
+    } catch (Throwable t){
+      //Swallow error and return false.
+    }
+    return false;
+  }
 }
