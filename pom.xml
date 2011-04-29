@@ -82,7 +82,7 @@
     <dependency>
       <groupId>se.su.it.sukat</groupId>
       <artifactId>sukat-jndi-commons</artifactId>
-      <version>1.1</version>
+      <version>1.2</version>
     </dependency>
   </dependencies>
   <build>
