@@ -17,7 +17,7 @@ public class Group extends UiClass implements IGroup {
   private List<IBaseClass> members = null;
 
   public Group(String namespaceId, String name) {
-    super(namespaceId + ":" + PREFIX_GROUP + name);
+    super(namespaceId + ":" + PREFIX_GROUP + ":" + name);
 
     members = new ArrayList<IBaseClass>();
 

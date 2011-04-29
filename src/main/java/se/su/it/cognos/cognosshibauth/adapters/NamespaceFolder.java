@@ -29,7 +29,7 @@ public class NamespaceFolder extends UiClass implements INamespaceFolder {
   private String ldapBaseDn = "";
 
   public NamespaceFolder(String theSearchPath, String name) {
-    super(theSearchPath + ":" + PREFIX_FOLDER + name);
+    super(theSearchPath + ":" + PREFIX_FOLDER + ":" + name);
 
     children = new ArrayList<IUiClass>();
 

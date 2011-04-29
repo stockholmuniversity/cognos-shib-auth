@@ -87,25 +87,20 @@ public class CognosShibAuthBase extends CognosShibAuthNamespace implements IName
 		case ISearchStep.SearchAxis.DescendentOrSelf :
 		  {
 		    if (objectID == null) {
-			  if (filter == null || true) {//this.matchesFilter(filter)) {
+			  if (filter == null || true) {
                 result.addObject(this);
-				// Add current namespace
 			  }
 
               if (searchType == ISearchStep.SearchAxis.Self) {
 				return result;
-              }
-              else {
-                //sqlCondition.append(QueryUtil.getSqlCondition(filter));
               }
             }
             else if (isUser(objectID) && filter == null) {
               result.addObject(visa.getAccount());
             }
             else if (isUser(objectID) && objectID.equals(visa.getAccount().getObjectID())) {
-              if (filter == null || true) {//this.matchesFilter(filter)) {
+              if (filter == null || true) {
                 result.addObject(visa.getAccount());
-                // Add current user
               }
               return result;
             }
@@ -134,15 +129,8 @@ public class CognosShibAuthBase extends CognosShibAuthNamespace implements IName
           }
           break;
         default :
-        {
-          //sqlCondition.append(QueryUtil.getSqlCondition(filter));
-        }
         break;
       }
-      //QueryUtil.query(MS_JDBCDriver.driver, visa.getConnection(),
-      //        sqlCondition.toString(), theQuery.getQueryOption(),
-      //        theQuery.getProperties(), theQuery.getSortProperties(),
-      //        result, this);
     }
     catch (Exception e)
     {
@@ -154,25 +142,25 @@ public class CognosShibAuthBase extends CognosShibAuthNamespace implements IName
   private boolean isFolder(String objectId) {
     if(objectId == null)
       return false;
-    return objectId.startsWith(namespaceId + ":" + UiClass.PREFIX_FOLDER);
+    return objectId.startsWith(namespaceId + ":" + UiClass.PREFIX_FOLDER + ":");
   }
 
   private boolean isGroup(String objectId) {
     if(objectId == null)
       return false;
-    return objectId.startsWith(namespaceId + ":" + UiClass.PREFIX_GROUP);
+    return objectId.startsWith(namespaceId + ":" + UiClass.PREFIX_GROUP + ":");
   }
 
   private boolean isRole(String objectId) {
     if(objectId == null)
       return false;
-    return objectId.startsWith(namespaceId + ":" + UiClass.PREFIX_ROLE);
+    return objectId.startsWith(namespaceId + ":" + UiClass.PREFIX_ROLE + ":");
   }
 
   private boolean isUser(String objectId) {
     if(objectId == null)
       return false;
-    return objectId.startsWith(namespaceId + ":" + UiClass.PREFIX_USER);
+    return objectId.startsWith(namespaceId + ":" + UiClass.PREFIX_USER + ":");
   }
 
   private void loadFolders() {
