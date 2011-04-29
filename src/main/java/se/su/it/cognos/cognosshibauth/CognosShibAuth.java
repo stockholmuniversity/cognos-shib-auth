@@ -68,24 +68,12 @@ public class CognosShibAuth extends CognosShibAuthBase implements INamespaceAuth
     visa.init(account);
 
     for(String entitlement : entitlements) {
-      String roleName = parseRoleFromEntitlementUri(entitlement);
+      String roleName = Role.parseRoleFromEntitlementUri(entitlement);
       Role role = new Role(namespaceId, roleName);
       visa.addRole(role);
     }
 
     return visa;
-  }
-
-  private String parseRoleFromEntitlementUri(String entitlement) {
-    String gmaiPrefix = configHandler.getStringEntry("gmai.prefix");
-    String gmaiApplication = configHandler.getStringEntry("gmai.application");
-
-    if(entitlement != null && entitlement.startsWith(gmaiPrefix + ":" + gmaiApplication + ":")) {
-      String subS = entitlement.substring((gmaiPrefix + ":" + gmaiApplication + ":").length());
-      subS.indexOf(":");
-      return subS;
-    }
-    return null;
   }
 
   private String[] getHeaderValues(IBiBusHeader2 iBiBusHeader2, String header, boolean required)

@@ -11,11 +11,16 @@ import com.cognos.CAM_AAA.authentication.*;
 
 import com.cognos.CAM_AAA.authentication.UnrecoverableException;
 import org.apache.commons.configuration.HierarchicalConfiguration;
+import se.su.it.cognos.cognosshibauth.adapters.Account;
 import se.su.it.cognos.cognosshibauth.adapters.NamespaceFolder;
 import se.su.it.cognos.cognosshibauth.adapters.UiClass;
 import se.su.it.cognos.cognosshibauth.visa.Visa;
 import se.su.it.cognos.cognosshibauth.config.ConfigHandler;
+import se.su.it.sukat.EnterpriseDirectory;
+import se.su.it.sukat.SUKAT;
 
+import javax.naming.NamingEnumeration;
+import javax.naming.directory.SearchResult;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -188,11 +193,23 @@ public class CognosShibAuthBase extends CognosShibAuthNamespace implements IName
     NamespaceFolder folder = new NamespaceFolder(namespaceId, name);
     folder.addDescription(description);
 
+    //TODO: Do something with the groups
+    List<HierarchicalConfiguration> groups = folderEntry.configurationsAt("children.groups");
+    for(HierarchicalConfiguration group : groups) {
+      folder.addGroupLdapFilter(group.getString("ldap_filter"));
+    }
+
     //TODO: Do something with the users
-    List<HierarchicalConfiguration> users = folderEntry.configurationsAt("children.user");
+    List<HierarchicalConfiguration> users = folderEntry.configurationsAt("children.users");
+    for(HierarchicalConfiguration user : users) {
+      folder.addUserLdapFilter(user.getString("ldap_filter"));
+    }
 
     //TODO: Do something with the roles
-    List<HierarchicalConfiguration> roles = folderEntry.configurationsAt("children.role");
+    List<HierarchicalConfiguration> roles = folderEntry.configurationsAt("children.roles");
+    for(HierarchicalConfiguration role : roles) {
+      folder.addRoleLdapFilter(role.getString("ldap_filter"));
+    }
 
     List<HierarchicalConfiguration> foldersConfig = folderEntry.configurationsAt("children.folder");
     for(HierarchicalConfiguration folderConfig : foldersConfig) {

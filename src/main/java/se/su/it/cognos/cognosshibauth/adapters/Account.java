@@ -6,6 +6,12 @@ import java.util.logging.Logger;
 
 import com.cognos.CAM_AAA.authentication.IAccount;
 import se.su.it.cognos.cognosshibauth.config.ConfigHandler;
+import se.su.it.sukat.SUKAT;
+
+import javax.naming.NamingException;
+import javax.naming.directory.Attribute;
+import javax.naming.directory.Attributes;
+import javax.naming.directory.SearchResult;
 
 public class Account extends UiClass implements IAccount {
 
@@ -166,5 +172,19 @@ public class Account extends UiClass implements IAccount {
     }
 
     list.add(theValue);
+  }
+
+  public static Account fromSearchResult(String namespaceId, SearchResult result) {
+    Attributes attributes = result.getAttributes();
+    Attribute uid = attributes.get("uid");
+    Attribute givenName = attributes.get("givenName");
+    Attribute sn = attributes.get("sn");
+    try {
+      Account account = new Account(namespaceId, (String) uid.get(0), (String) givenName.get(0), (String) sn.get(0));
+      return account;
+    } catch (NamingException e) {
+      e.printStackTrace();
+    }
+    return null;
   }
 }

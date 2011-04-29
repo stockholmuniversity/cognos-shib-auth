@@ -9,6 +9,10 @@
     <prefix>urn:mace:swami.se:gmai</prefix>
     <application>su-ivs</application>
   </gmai>
+  <ldap>
+    <url>ldap://sukat-ldap.it.su.se</url>
+    <base_dn>dc=su\,dc=se</base_dn>
+  </ldap>
   <capabilities>caseSensitive,contains,equals,sort,startsWith,endsWith</capabilities>
   <headers>
     <remote_user>REMOTE_USER</remote_user>

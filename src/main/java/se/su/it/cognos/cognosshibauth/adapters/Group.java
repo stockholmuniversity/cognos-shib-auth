@@ -8,6 +8,11 @@ import com.cognos.CAM_AAA.authentication.IBaseClass;
 import com.cognos.CAM_AAA.authentication.IGroup;
 import se.su.it.cognos.cognosshibauth.config.ConfigHandler;
 
+import javax.naming.NamingException;
+import javax.naming.directory.Attribute;
+import javax.naming.directory.Attributes;
+import javax.naming.directory.SearchResult;
+
 public class Group extends UiClass implements IGroup {
   private List<IBaseClass> members = null;
 
@@ -30,5 +35,19 @@ public class Group extends UiClass implements IGroup {
 
   public IBaseClass[] getMembers() {
     return members.toArray(new IBaseClass[members.size()]);
+  }
+
+  public static Group fromSearchResult(String namespaceId, SearchResult result) {
+    Attributes attributes = result.getAttributes();
+    Attribute cn = attributes.get("cn");
+    Attribute description = attributes.get("description");
+    try {
+      Group group = new Group(namespaceId, (String)cn.get(0));
+      group.addDescription(Locale.ENGLISH, (String)description.get(0)); //TODO: Get some locale
+      return group;
+    } catch (NamingException e) {
+      e.printStackTrace();
+    }
+    return null;
   }
 }

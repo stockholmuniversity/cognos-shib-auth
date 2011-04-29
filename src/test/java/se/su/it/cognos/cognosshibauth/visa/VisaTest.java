@@ -18,7 +18,12 @@ import se.su.it.cognos.cognosshibauth.adapters.Account;
 import se.su.it.cognos.cognosshibauth.config.ConfigHandler;
 import se.su.it.cognos.cognosshibauth.visa.Visa;
 import se.su.it.cognos.cognosshibauth.visa.validator.DummyVisaValidator;
+import se.su.it.sukat.EnterpriseDirectory;
+import se.su.it.sukat.SUKAT;
 
+import javax.naming.NamingEnumeration;
+import javax.naming.directory.Attributes;
+import javax.naming.directory.SearchResult;
 import java.lang.reflect.Field;
 
 @RunWith(PowerMockRunner.class)
