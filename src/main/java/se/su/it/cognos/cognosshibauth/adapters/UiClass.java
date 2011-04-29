@@ -26,6 +26,8 @@ public class UiClass implements IUiClass {
   private HashMap<Locale, String> names = null;
   private HashMap<Locale, String> descriptions = null;
 
+  protected Locale defaultLocale = null;
+
   protected ConfigHandler configHandler = null;
 
   public UiClass(String theObjectID) {
@@ -39,6 +41,7 @@ public class UiClass implements IUiClass {
     objectID = theObjectID;
 
     configHandler = ConfigHandler.instance();
+    defaultLocale = configHandler.getContentLocale();
   }
 
   public void addDescription(Locale theLocale, String theDescription) {

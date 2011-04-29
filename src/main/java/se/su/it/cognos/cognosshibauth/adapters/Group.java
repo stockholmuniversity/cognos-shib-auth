@@ -16,14 +16,10 @@ import javax.naming.directory.SearchResult;
 public class Group extends UiClass implements IGroup {
   private List<IBaseClass> members = null;
 
-  private Locale defaultLocale = null;
-
   public Group(String namespaceId, String name) {
     super(namespaceId + ":" + PREFIX_GROUP + name);
 
     members = new ArrayList<IBaseClass>();
-
-    defaultLocale = configHandler.getContentLocale();
 
     addName(defaultLocale, name);
   }

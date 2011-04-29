@@ -36,7 +36,7 @@ public class Account extends UiClass implements IAccount {
   public Account(String namespaceId, String userName, String givenName, String surname) {
     super(namespaceId + ":" + PREFIX_USER + userName);
 
-    contentLocale = configHandler.getContentLocale();
+    productLocale = contentLocale = defaultLocale;
 
     this.givenName = givenName;
     this.surname = surname;

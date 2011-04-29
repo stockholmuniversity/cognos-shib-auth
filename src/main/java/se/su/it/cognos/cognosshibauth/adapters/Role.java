@@ -17,14 +17,10 @@ public class Role extends UiClass implements IRole {
 
   private List<IBaseClass> members = null;
 
-  private Locale defaultLocale = null;
-
   public Role(String namespaceId, String name) {
     super(namespaceId + ":" + PREFIX_ROLE + name);
     
     members = new ArrayList<IBaseClass>();
-
-    defaultLocale = configHandler.getContentLocale();
 
     addName(defaultLocale, name);
   }
