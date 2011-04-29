@@ -106,8 +106,6 @@ public class CognosShibAuth extends CognosShibAuthBase implements INamespaceAuth
     return new String[0];
   }
 
-
-
   private String getHeaderValue(IBiBusHeader2 iBiBusHeader2, String header, boolean required)
           throws SystemRecoverableException {
     String[] headerValues = getHeaderValues(iBiBusHeader2, header, required);
@@ -115,20 +113,5 @@ public class CognosShibAuth extends CognosShibAuthBase implements INamespaceAuth
     if(headerValues != null && headerValues.length > 0)
       return headerValues[0];
     return null;
-  }
-
-  private String filterGmaiRole(String gmai){
-    // urn:mace:swami.se:gmai:su-ivs:analyst:departmentNumber=647
-    int startGmai = gmai.indexOf("su-ivs:") + 6;
-    int stopGmai = gmai.lastIndexOf(":");
-    String role = gmai.substring(startGmai, stopGmai);
-    return role;
-  }
-
-  private String filterGmaiDepartment(String gmai){
-    // urn:mace:swami.se:gmai:su-ivs:analyst:departmentNumber=647
-    int startGmai = gmai.indexOf("departmentNumber=") + 17;
-    String group = gmai.substring(startGmai);
-    return group;
   }
 }
