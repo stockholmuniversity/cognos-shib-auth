@@ -11,9 +11,7 @@ import com.cognos.CAM_AAA.authentication.*;
 
 import com.cognos.CAM_AAA.authentication.UnrecoverableException;
 import org.apache.commons.configuration.HierarchicalConfiguration;
-import se.su.it.cognos.cognosshibauth.adapters.Account;
-import se.su.it.cognos.cognosshibauth.adapters.NamespaceFolder;
-import se.su.it.cognos.cognosshibauth.adapters.UiClass;
+import se.su.it.cognos.cognosshibauth.adapters.*;
 import se.su.it.cognos.cognosshibauth.visa.Visa;
 import se.su.it.cognos.cognosshibauth.config.ConfigHandler;
 import se.su.it.sukat.EnterpriseDirectory;
@@ -83,9 +81,6 @@ public class CognosShibAuthBase extends CognosShibAuthNamespace implements IName
 
 	  switch (searchType) {
 	    case ISearchStep.SearchAxis.Self :
-          if(isFolder(objectID)) {
-            
-          }
 		case ISearchStep.SearchAxis.DescendentOrSelf :
 		  {
 		    if (objectID == null) {
@@ -106,11 +101,13 @@ public class CognosShibAuthBase extends CognosShibAuthNamespace implements IName
               }
               return result;
             }
-            else if (isUser(objectID) || isRole(objectID)) {
-              result.addObject(visa.getRoles()[0]);
+            else if (isRole(objectID)) {
+              Role role = new Role(namespaceId, camIdToName(objectID));
+              result.addObject(role);
             }
             else if (isUser(objectID) || isGroup(objectID)) {
-              result.addObject(visa.getGroups()[0]);
+              Group group = new Group(namespaceId, camIdToName(objectID));
+              result.addObject(group);
             }
             else if(isFolder(objectID)) {
               result.addObject(folders.get(objectID));
@@ -128,6 +125,12 @@ public class CognosShibAuthBase extends CognosShibAuthNamespace implements IName
             NamespaceFolder folder = folders.get(objectID);
             for(IUiClass child : folder.getChildren())
               result.addObject(child);
+          }
+          else if(isRole(objectID)) {
+            Role role = new Role(namespaceId, camIdToName(objectID));
+            for(IBaseClass member : role.getMembers()) {
+              result.addObject(member);
+            }
           }
           break;
         default :
