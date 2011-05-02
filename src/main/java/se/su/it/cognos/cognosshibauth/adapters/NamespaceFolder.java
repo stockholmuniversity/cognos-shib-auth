@@ -79,7 +79,8 @@ public class NamespaceFolder extends UiClass implements INamespaceFolder {
       for(String filter : groupLdapFilters) {
         NamingEnumeration<SearchResult> results = sukat.search(ldapBaseDn, filter);
         while(results.hasMoreElements()) {
-          Group group = Group.fromSearchResult(null, results.next()); //TODO: Don't send null for namespaceId
+          SearchResult searchResult = results.next();
+          Group group = new Group(null, searchResult.getNameInNamespace()); //TODO: Don't send null for namespaceId
           if(group != null)
             groups.add(group);
         }
