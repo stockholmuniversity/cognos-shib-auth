@@ -92,14 +92,11 @@ public class CognosShibAuthBase extends CognosShibAuthNamespace implements IName
 				return result;
               }
             }
-            else if (isUser(objectID) && filter == null) { //TODO: Fetch real user, not from visa.
-              result.addObject(visa.getAccount());
-            }
-            else if (isUser(objectID) && objectID.equals(visa.getAccount().getObjectID())) {
-              if (filter == null || true) {
-                result.addObject(visa.getAccount());
-              }
-              return result;
+            else if (isUser(objectID) && filter == null) {
+              String uid = camIdToName(objectID);
+              SUKAT sukat = SUKAT.newInstance(configHandler.getStringEntry("ldap.url"));
+              Account account = Account.fromSearchResult(namespaceId, sukat.findUserByUid(uid));
+              result.addObject(account);
             }
             else if (isRole(objectID)) {
               Role role = new Role(namespaceId, camIdToName(objectID));
