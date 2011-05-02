@@ -121,7 +121,7 @@ public class UiClass implements IUiClass {
 
   public static String camIdToName(String camId) {
     try {
-      return camId.substring(camId.lastIndexOf(":"));
+      return camId.substring(camId.lastIndexOf(":")+1);
     } catch(Throwable t) {
       //Swallow everything and return null
       return null;
