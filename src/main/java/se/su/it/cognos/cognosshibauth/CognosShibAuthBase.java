@@ -134,8 +134,9 @@ public class CognosShibAuthBase extends CognosShibAuthNamespace implements IName
         break;
       }
     }
-    catch (Exception e)
-    {
+    catch (Exception e) {
+      //Fetch anything and do nothing (no stack traces in the gui for now)
+      LOG.log(Level.SEVERE, "Failed while parsing search query: " + e.getMessage());
       e.printStackTrace();
     }
     return result;

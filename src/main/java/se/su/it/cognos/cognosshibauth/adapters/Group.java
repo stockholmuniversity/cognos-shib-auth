@@ -24,7 +24,7 @@ public class Group extends UiClass implements IGroup {
   private String dn = null;
   private String namespaceId = null;
 
-  public Group(String namespaceId, String dn) {
+  public Group(String namespaceId, String dn) throws Exception {
     super(namespaceId + ":" + PREFIX_GROUP + ":" + dn);
 
     this.dn = dn;
@@ -45,11 +45,12 @@ public class Group extends UiClass implements IGroup {
         Attribute description = attributes.get("description");
         addDescription(defaultLocale, (String) description.get(0));
       } catch (NamingException e) {
-        e.printStackTrace();
+        LOG.log(Level.SEVERE, "Failed to find group with dn=" + dn + ": " + e.getMessage());
+        throw e;
       }
     } catch (Exception e) {
       LOG.log(Level.SEVERE, "Failed to establish ldap connection to server '" + ldapURL + "': " + e.getMessage());
-      e.printStackTrace();
+      throw e;
     }
   }
 
