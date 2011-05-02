@@ -92,7 +92,7 @@ public class CognosShibAuthBase extends CognosShibAuthNamespace implements IName
 				return result;
               }
             }
-            else if (isUser(objectID) && filter == null) {
+            else if (isUser(objectID) && filter == null) { //TODO: Fetch real user, not from visa.
               result.addObject(visa.getAccount());
             }
             else if (isUser(objectID) && objectID.equals(visa.getAccount().getObjectID())) {
