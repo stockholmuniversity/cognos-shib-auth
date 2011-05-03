@@ -170,15 +170,17 @@ public class Account extends UiClass implements IAccount {
   }
 
   public static Account fromSearchResult(String namespaceId, SearchResult result) {
-    Attributes attributes = result.getAttributes();
-    Attribute uid = attributes.get("uid");
-    Attribute givenName = attributes.get("givenName");
-    Attribute sn = attributes.get("sn");
-    try {
-      Account account = new Account(namespaceId, (String) uid.get(0), (String) givenName.get(0), (String) sn.get(0));
-      return account;
-    } catch (NamingException e) {
-      e.printStackTrace();
+    if(result != null) {
+      Attributes attributes = result.getAttributes();
+      Attribute uid = attributes.get("uid");
+      Attribute givenName = attributes.get("givenName");
+      Attribute sn = attributes.get("sn");
+      try {
+        Account account = new Account(namespaceId, (String) uid.get(0), (String) givenName.get(0), (String) sn.get(0));
+        return account;
+      } catch (NamingException e) {
+        e.printStackTrace();
+      }
     }
     return null;
   }
