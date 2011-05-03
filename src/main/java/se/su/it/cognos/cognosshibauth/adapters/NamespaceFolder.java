@@ -16,8 +16,6 @@ public class NamespaceFolder extends UiClass implements INamespaceFolder {
 
   private Logger LOG = Logger.getLogger(NamespaceFolder.class.getName());
 
-  private Locale defaultLocale = null;
-
   private List<IUiClass> children = null;
 
   private List<String> userLdapFilters = null;
@@ -34,7 +32,6 @@ public class NamespaceFolder extends UiClass implements INamespaceFolder {
     userLdapFilters = new ArrayList<String>();
     groupLdapFilters = new ArrayList<String>();
     roleLdapFilters = new ArrayList<String>();
-    defaultLocale = configHandler.getContentLocale();
 
     addName(defaultLocale, name);
   }
