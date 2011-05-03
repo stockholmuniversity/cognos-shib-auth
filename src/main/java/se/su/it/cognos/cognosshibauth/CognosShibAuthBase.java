@@ -14,15 +14,10 @@ import org.apache.commons.configuration.HierarchicalConfiguration;
 import se.su.it.cognos.cognosshibauth.adapters.*;
 import se.su.it.cognos.cognosshibauth.visa.Visa;
 import se.su.it.cognos.cognosshibauth.config.ConfigHandler;
-import se.su.it.sukat.EnterpriseDirectory;
 import se.su.it.sukat.SUKAT;
 
-import javax.naming.NamingEnumeration;
-import javax.naming.directory.SearchResult;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -148,48 +143,9 @@ public class CognosShibAuthBase extends CognosShibAuthNamespace implements IName
     List<HierarchicalConfiguration> foldersConfiguration = configHandler.getFoldersConfig();
 
     for(HierarchicalConfiguration folderConfiguration : foldersConfiguration) {
-      NamespaceFolder namespaceFolder = configEntryToFolder(folderConfiguration);
+      NamespaceFolder namespaceFolder = NamespaceFolder.configEntryToFolder(folders, folderConfiguration, namespaceId);
 
       folders.put(namespaceFolder.getObjectID(), namespaceFolder);
     }
-  }
-
-  private NamespaceFolder configEntryToFolder(HierarchicalConfiguration folderEntry) {
-    String name = folderEntry.getString("name");
-    String description = folderEntry.getString("description");
-
-    //TODO: Handle CAMID conflicts
-    NamespaceFolder folder = new NamespaceFolder(namespaceId, name);
-    folder.addDescription(description);
-
-    //TODO: Do something with the groups
-    List<HierarchicalConfiguration> groups = folderEntry.configurationsAt("children.groups");
-    for(HierarchicalConfiguration group : groups) {
-      folder.addGroupLdapFilter(group.getString("ldap_filter"));
-    }
-
-    //TODO: Do something with the users
-    List<HierarchicalConfiguration> users = folderEntry.configurationsAt("children.users");
-    for(HierarchicalConfiguration user : users) {
-      folder.addUserLdapFilter(user.getString("ldap_filter"));
-    }
-
-    //TODO: Do something with the roles
-    List<HierarchicalConfiguration> roles = folderEntry.configurationsAt("children.roles");
-    for(HierarchicalConfiguration role : roles) {
-      folder.addRoleLdapFilter(role.getString("ldap_filter"));
-    }
-
-    List<HierarchicalConfiguration> foldersConfig = folderEntry.configurationsAt("children.folder");
-    for(HierarchicalConfiguration folderConfig : foldersConfig) {
-      NamespaceFolder childFolder = configEntryToFolder(folderConfig);
-      if(childFolder != null) {
-        folder.addChild(childFolder);
-        childFolder.addAncestors(folder);
-        folders.put(childFolder.getObjectID(), childFolder);
-      }
-    }
-
-    return folder;
   }
 }

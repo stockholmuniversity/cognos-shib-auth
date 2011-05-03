@@ -2,15 +2,13 @@ package se.su.it.cognos.cognosshibauth.adapters;
 
 import com.cognos.CAM_AAA.authentication.INamespaceFolder;
 import com.cognos.CAM_AAA.authentication.IUiClass;
+import org.apache.commons.configuration.HierarchicalConfiguration;
 import se.su.it.cognos.cognosshibauth.config.ConfigHandler;
 import se.su.it.sukat.SUKAT;
 
 import javax.naming.NamingEnumeration;
 import javax.naming.directory.SearchResult;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -28,8 +26,8 @@ public class NamespaceFolder extends UiClass implements INamespaceFolder {
 
   private String ldapBaseDn = "";
 
-  public NamespaceFolder(String theSearchPath, String name) {
-    super(theSearchPath + ":" + PREFIX_FOLDER + ":" + name);
+  public NamespaceFolder(String parentId, String name) {
+    super(parentId + ":" + PREFIX_FOLDER + ":" + name);
 
     children = new ArrayList<IUiClass>();
 
@@ -39,6 +37,42 @@ public class NamespaceFolder extends UiClass implements INamespaceFolder {
     defaultLocale = configHandler.getContentLocale();
 
     addName(defaultLocale, name);
+  }
+
+  public static NamespaceFolder configEntryToFolder(HashMap<String, NamespaceFolder> folders,
+                                                    HierarchicalConfiguration folderEntry, String parentId) {
+    String name = folderEntry.getString("name");
+    String description = folderEntry.getString("description");
+
+    NamespaceFolder folder = new NamespaceFolder(parentId, name);
+    folder.addDescription(description);
+
+    List<HierarchicalConfiguration> groups = folderEntry.configurationsAt("children.groups");
+    for(HierarchicalConfiguration group : groups) {
+      folder.addGroupLdapFilter(group.getString("ldap_filter"));
+    }
+
+    List<HierarchicalConfiguration> users = folderEntry.configurationsAt("children.users");
+    for(HierarchicalConfiguration user : users) {
+      folder.addUserLdapFilter(user.getString("ldap_filter"));
+    }
+
+    List<HierarchicalConfiguration> roles = folderEntry.configurationsAt("children.roles");
+    for(HierarchicalConfiguration role : roles) {
+      folder.addRoleLdapFilter(role.getString("ldap_filter"));
+    }
+
+    List<HierarchicalConfiguration> foldersConfig = folderEntry.configurationsAt("children.folder");
+    for(HierarchicalConfiguration folderConfig : foldersConfig) {
+      NamespaceFolder childFolder = configEntryToFolder(folders, folderConfig, folder.getObjectID());
+      if(childFolder != null) {
+        folder.addChild(childFolder);
+        childFolder.addAncestors(folder);
+        folders.put(childFolder.getObjectID(), childFolder);
+      }
+    }
+
+    return folder;
   }
 
   public boolean getHasChildren() {
