@@ -81,7 +81,6 @@ public class CognosShibAuthBase extends CognosShibAuthNamespace implements IName
 
 	  switch (searchType) {
 	    case ISearchStep.SearchAxis.Self :
-		case ISearchStep.SearchAxis.DescendentOrSelf :
 		  {
 		    if (objectID == null) {
 			  if (filter == null || true) {
