@@ -129,6 +129,9 @@ public class CognosShibAuthBase extends CognosShibAuthNamespace implements IName
             }
           }
           break;
+        case ISearchStep.SearchAxis.Descendent :
+          //Involved in text searches.
+          break;
         default :
         break;
       }
