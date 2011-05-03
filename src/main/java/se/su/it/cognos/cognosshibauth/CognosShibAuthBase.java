@@ -102,7 +102,7 @@ public class CognosShibAuthBase extends CognosShibAuthNamespace implements IName
               Role role = new Role(namespaceId, camIdToName(objectID));
               result.addObject(role);
             }
-            else if (isUser(objectID) || isGroup(objectID)) {
+            else if (isGroup(objectID)) {
               Group group = new Group(namespaceId, camIdToName(objectID));
               result.addObject(group);
             }
