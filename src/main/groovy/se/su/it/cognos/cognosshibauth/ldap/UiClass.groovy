@@ -12,10 +12,10 @@ import com.cognos.CAM_AAA.authentication.IUiClass;
 import se.su.it.cognos.cognosshibauth.config.ConfigHandler;
 
 public class UiClass implements IUiClass {
-  public static final String PREFIX_FOLDER = "f";
-  public static final String PREFIX_GROUP = "g";
-  public static final String PREFIX_ROLE = "r";
-  public static final String PREFIX_USER = "u";
+  static final PREFIX_FOLDER = "f"
+  static final PREFIX_GROUP = "g"
+  static final PREFIX_ROLE = "r"
+  static final PREFIX_USER = "u"
 
   private Logger LOG = Logger.getLogger(UiClass.class.getName());
 
