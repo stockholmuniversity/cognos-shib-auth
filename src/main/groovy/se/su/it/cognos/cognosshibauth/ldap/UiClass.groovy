@@ -19,7 +19,7 @@ public class UiClass implements IUiClass {
 
   private Logger LOG = Logger.getLogger(UiClass.class.getName());
 
-  private String objectID = null;
+  def objectID = null;
 
   private Stack<IBaseClass>	ancestors = null;
 
@@ -30,7 +30,7 @@ public class UiClass implements IUiClass {
 
   protected ConfigHandler configHandler = null;
 
-  public UiClass(String theObjectID) {
+  public UiClass(theObjectID) {
     LOG.log(Level.FINEST, "Creating new UiClass with objectID '" + theObjectID + "'.");
 
     names = new HashMap<Locale, String>();
