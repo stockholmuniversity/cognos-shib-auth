@@ -1,10 +1,11 @@
 package se.su.it.cognos.cognosshibauth.adapters;
+
 import java.util.*;
 
 import com.cognos.CAM_AAA.authentication.IBaseClass;
 import com.cognos.CAM_AAA.authentication.IRole;
-import org.apache.commons.lang.ArrayUtils;
 import se.su.it.cognos.cognosshibauth.config.ConfigHandler;
+import se.su.it.cognos.cognosshibauth.ldap.Account;
 import se.su.it.sukat.SUKAT;
 
 import javax.naming.NamingEnumeration;
@@ -39,7 +40,7 @@ public class Role extends UiClass implements IRole {
 
     List<IBaseClass> accounts = new ArrayList<IBaseClass>();
     try {
-      SUKAT sukat = SUKAT.newInstance("ldap://ldap.su.se");
+      SUKAT sukat = SUKAT.newInstance("adapters://adapters.su.se");
       NamingEnumeration<SearchResult> results = sukat.search("dc=su,dc=se", "eduPersonEntitlement=" + gmaiUrn);
       while(results.hasMoreElements()) {
         Account account = Account.fromSearchResult(null, results.next());

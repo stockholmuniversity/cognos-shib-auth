@@ -12,6 +12,7 @@ import com.cognos.CAM_AAA.authentication.*;
 import com.cognos.CAM_AAA.authentication.UnrecoverableException;
 import org.apache.commons.configuration.HierarchicalConfiguration;
 import se.su.it.cognos.cognosshibauth.adapters.*;
+import se.su.it.cognos.cognosshibauth.ldap.Account;
 import se.su.it.cognos.cognosshibauth.visa.Visa;
 import se.su.it.cognos.cognosshibauth.config.ConfigHandler;
 import se.su.it.sukat.SUKAT;
@@ -88,7 +89,7 @@ public class CognosShibAuthBase extends CognosShibAuthNamespace implements IName
             }
             else if (isUser(objectID) && filter == null) {
               String uid = camIdToName(objectID);
-              SUKAT sukat = SUKAT.newInstance(configHandler.getStringEntry("ldap.url"));
+              SUKAT sukat = SUKAT.newInstance(configHandler.getStringEntry("adapters.url"));
               Account account = Account.fromSearchResult(namespaceId, sukat.read(uid));
               result.addObject(account);
             }

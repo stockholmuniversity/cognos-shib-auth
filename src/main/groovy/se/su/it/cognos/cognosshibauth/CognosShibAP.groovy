@@ -7,7 +7,7 @@ import se.su.it.cognos.cognosshibauth.config.ConfigHandler
 import com.cognos.CAM_AAA.authentication.UserRecoverableException
 import com.cognos.CAM_AAA.authentication.UnrecoverableException
 import se.su.it.cognos.cognosshibauth.visa.Visa
-import se.su.it.cognos.cognosshibauth.adapters.Account
+import se.su.it.cognos.cognosshibauth.ldap.Account
 import com.cognos.CAM_AAA.authentication.SystemRecoverableException
 import se.su.it.cognos.cognosshibauth.adapters.Role
 import java.util.logging.Level

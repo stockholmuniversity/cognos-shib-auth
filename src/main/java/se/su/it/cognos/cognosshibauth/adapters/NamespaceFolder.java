@@ -3,7 +3,7 @@ package se.su.it.cognos.cognosshibauth.adapters;
 import com.cognos.CAM_AAA.authentication.INamespaceFolder;
 import com.cognos.CAM_AAA.authentication.IUiClass;
 import org.apache.commons.configuration.HierarchicalConfiguration;
-import se.su.it.cognos.cognosshibauth.config.ConfigHandler;
+import se.su.it.cognos.cognosshibauth.ldap.Account;
 import se.su.it.sukat.SUKAT;
 
 import javax.naming.NamingEnumeration;
@@ -96,13 +96,13 @@ public class NamespaceFolder extends UiClass implements INamespaceFolder {
   public List<IUiClass> loadLdapGroups() {
     List<IUiClass> groups = new ArrayList<IUiClass>();
 
-    String ldapURL = configHandler.getStringEntry("ldap.url");
-    ldapBaseDn = configHandler.getStringEntry("ldap.base_dn", "");
+    String ldapURL = configHandler.getStringEntry("adapters.url");
+    ldapBaseDn = configHandler.getStringEntry("adapters.base_dn", "");
     SUKAT sukat = null;
     try {
       sukat = SUKAT.newInstance(ldapURL);
     } catch (Exception e) {
-      LOG.log(Level.SEVERE, "Failed to establish ldap connection to server '" + ldapURL + "': " + e.getMessage());
+      LOG.log(Level.SEVERE, "Failed to establish adapters connection to server '" + ldapURL + "': " + e.getMessage());
       e.printStackTrace();
     }
 
@@ -125,13 +125,13 @@ public class NamespaceFolder extends UiClass implements INamespaceFolder {
   public List<IUiClass> loadLdapRoles() {
     List<IUiClass> roles = new ArrayList<IUiClass>();
 
-    String ldapURL = configHandler.getStringEntry("ldap.url");
-    ldapBaseDn = configHandler.getStringEntry("ldap.base_dn", "");
+    String ldapURL = configHandler.getStringEntry("adapters.url");
+    ldapBaseDn = configHandler.getStringEntry("adapters.base_dn", "");
     SUKAT sukat = null;
     try {
       sukat = SUKAT.newInstance(ldapURL);
     } catch (Exception e) {
-      LOG.log(Level.SEVERE, "Failed to establish ldap connection to server '" + ldapURL + "': " + e.getMessage());
+      LOG.log(Level.SEVERE, "Failed to establish adapters connection to server '" + ldapURL + "': " + e.getMessage());
       e.printStackTrace();
     }
 
@@ -153,13 +153,13 @@ public class NamespaceFolder extends UiClass implements INamespaceFolder {
   public List<IUiClass> loadLdapUsers() {
     List<IUiClass> accounts = new ArrayList<IUiClass>();
 
-    String ldapURL = configHandler.getStringEntry("ldap.url");
-    ldapBaseDn = configHandler.getStringEntry("ldap.base_dn", "");
+    String ldapURL = configHandler.getStringEntry("adapters.url");
+    ldapBaseDn = configHandler.getStringEntry("adapters.base_dn", "");
     SUKAT sukat = null;
     try {
       sukat = SUKAT.newInstance(ldapURL);
     } catch (Exception e) {
-      LOG.log(Level.SEVERE, "Failed to establish ldap connection to server '" + ldapURL + "': " + e.getMessage());
+      LOG.log(Level.SEVERE, "Failed to establish adapters connection to server '" + ldapURL + "': " + e.getMessage());
       e.printStackTrace();
     }
 

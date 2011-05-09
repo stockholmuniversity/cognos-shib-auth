@@ -113,7 +113,6 @@
             <configuration>
               <providerSelection>1.7</providerSelection>
             </configuration>
-            <phase>compile</phase>
             <goals>
               <goal>generateStubs</goal>
               <goal>compile</goal>

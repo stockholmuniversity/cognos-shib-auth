@@ -2,13 +2,12 @@ package se.su.it.cognos.cognosshibauth.adapters;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.cognos.CAM_AAA.authentication.IBaseClass;
 import com.cognos.CAM_AAA.authentication.IGroup;
-import se.su.it.cognos.cognosshibauth.config.ConfigHandler;
+import se.su.it.cognos.cognosshibauth.ldap.Account;
 import se.su.it.sukat.SUKAT;
 
 import javax.naming.NamingEnumeration;
@@ -30,7 +29,7 @@ public class Group extends UiClass implements IGroup {
     this.dn = dn;
     this.namespaceId = namespaceId;
 
-    String ldapURL = configHandler.getStringEntry("ldap.url");
+    String ldapURL = configHandler.getStringEntry("adapters.url");
 
     try {
       SUKAT sukat = SUKAT.newInstance(ldapURL);
@@ -49,13 +48,13 @@ public class Group extends UiClass implements IGroup {
         throw e;
       }
     } catch (Exception e) {
-      LOG.log(Level.SEVERE, "Failed to establish ldap connection to server '" + ldapURL + "': " + e.getMessage());
+      LOG.log(Level.SEVERE, "Failed to establish adapters connection to server '" + ldapURL + "': " + e.getMessage());
       throw e;
     }
   }
 
   public IBaseClass[] getMembers() {
-    String ldapURL = configHandler.getStringEntry("ldap.url");
+    String ldapURL = configHandler.getStringEntry("adapters.url");
     List<IBaseClass> members = new ArrayList<IBaseClass>();
 
     try {
@@ -75,7 +74,7 @@ public class Group extends UiClass implements IGroup {
         e.printStackTrace();
       }
     } catch (Exception e) {
-      LOG.log(Level.SEVERE, "Failed to establish ldap connection to server '" + ldapURL + "': " + e.getMessage());
+      LOG.log(Level.SEVERE, "Failed to establish adapters connection to server '" + ldapURL + "': " + e.getMessage());
       e.printStackTrace();
     }
     return members.toArray(new IBaseClass[members.size()]);
