@@ -32,7 +32,7 @@ public class Account extends UiClass implements IAccount {
   private HashMap<String, List<String>> customProperties = null;
 
   public Account(String namespaceId, String dn) throws Exception {
-    super(new String("${namespaceId}:${PREFIX_USER}:${dn}"));
+    super("${namespaceId}:${PREFIX_USER}:${dn}")
 
     productLocale = contentLocale = defaultLocale;
 
