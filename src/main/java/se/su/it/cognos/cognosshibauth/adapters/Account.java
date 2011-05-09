@@ -33,18 +33,31 @@ public class Account extends UiClass implements IAccount {
 
   private HashMap<String, List<String>> customProperties = null;
 
-  public Account(String namespaceId, String userName, String givenName, String surname) {
-    super(namespaceId + ":" + PREFIX_USER + ":" + userName);
+  public Account(String namespaceId, String dn) throws Exception {
+    super(namespaceId + ":" + PREFIX_USER + ":" + dn);
 
     productLocale = contentLocale = defaultLocale;
 
-    this.givenName = givenName;
-    this.surname = surname;
-    this.userName = userName;
-
     customProperties = new HashMap<String, List<String>>();
 
-    addName(contentLocale, givenName + " " + surname);
+    String ldapURL = configHandler.getStringEntry("ldap.url");
+
+    SUKAT sukat = SUKAT.newInstance(ldapURL);
+    SearchResult result = sukat.read(dn);
+    Attributes attributes = result.getAttributes();
+    Attribute businessPhone = attributes.get("telephoneNumber");
+    Attribute email = attributes.get("mail");
+    Attribute faxPhone = attributes.get("");
+    Attribute givenName = attributes.get("givenName");
+    Attribute homePhone = attributes.get("homePhone");
+    Attribute mobilePhone = attributes.get("mobile");
+    Attribute pagerPhone = attributes.get("");
+    Attribute postalAddress = attributes.get("registeredAddress");
+    Attribute surname = attributes.get("sn");
+    Attribute userName = attributes.get("uid");
+    Attribute entitlement = attributes.get("eduPersonEntitlement");
+
+    addName(contentLocale, "");
     addDescription(contentLocale, "");
   }
 
@@ -169,19 +182,20 @@ public class Account extends UiClass implements IAccount {
     list.add(theValue);
   }
 
-  public static Account fromSearchResult(String namespaceId, SearchResult result) {
+  public static Account fromSearchResult(String namespaceId, SearchResult result) throws Exception {
     if(result != null) {
-      Attributes attributes = result.getAttributes();
-      Attribute uid = attributes.get("uid");
-      Attribute givenName = attributes.get("givenName");
-      Attribute sn = attributes.get("sn");
-      try {
-        Account account = new Account(namespaceId, (String) uid.get(0), (String) givenName.get(0), (String) sn.get(0));
-        return account;
-      } catch (NamingException e) {
-        e.printStackTrace();
-      }
+      Account account = new Account(namespaceId, result.getNameInNamespace());
+      return account;
     }
     return null;
+  }
+
+  public static Account fromUid(String uid, String namespaceId) throws Exception {
+    ConfigHandler configHandler = ConfigHandler.instance();
+    String ldapURL = configHandler.getStringEntry("ldap.url");
+
+    SUKAT sukat = SUKAT.newInstance(ldapURL);
+    SearchResult result = sukat.findUserByUid(uid);
+    return Account.fromSearchResult(namespaceId, result);
   }
 }

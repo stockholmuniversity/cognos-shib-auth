@@ -89,7 +89,7 @@ public class CognosShibAuthBase extends CognosShibAuthNamespace implements IName
             else if (isUser(objectID) && filter == null) {
               String uid = camIdToName(objectID);
               SUKAT sukat = SUKAT.newInstance(configHandler.getStringEntry("ldap.url"));
-              Account account = Account.fromSearchResult(namespaceId, sukat.findUserByUid(uid));
+              Account account = Account.fromSearchResult(namespaceId, sukat.read(uid));
               result.addObject(account);
             }
             else if (isRole(objectID)) {

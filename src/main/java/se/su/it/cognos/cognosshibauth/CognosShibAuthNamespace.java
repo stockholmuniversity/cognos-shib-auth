@@ -19,9 +19,9 @@ import java.util.logging.Logger;
 
 public class CognosShibAuthNamespace implements INamespace {
 
-  String namespaceFormat = null;
-  String capabilities[] = null;
-  String namespaceId = null;
+  protected String namespaceFormat = null;
+  protected String capabilities[] = null;
+  protected String namespaceId = null;
   private Logger LOG = Logger.getLogger(CognosShibAuthNamespace.class.getName());
 
   protected ConfigHandler configHandler = null;
