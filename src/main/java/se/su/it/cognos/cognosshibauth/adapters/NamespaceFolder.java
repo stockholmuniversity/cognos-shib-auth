@@ -4,6 +4,7 @@ import com.cognos.CAM_AAA.authentication.INamespaceFolder;
 import com.cognos.CAM_AAA.authentication.IUiClass;
 import org.apache.commons.configuration.HierarchicalConfiguration;
 import se.su.it.cognos.cognosshibauth.ldap.Account;
+import se.su.it.cognos.cognosshibauth.ldap.UiClass;
 import se.su.it.sukat.SUKAT;
 
 import javax.naming.NamingEnumeration;

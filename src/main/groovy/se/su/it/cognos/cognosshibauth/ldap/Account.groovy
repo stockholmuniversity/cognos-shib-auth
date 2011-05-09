@@ -10,7 +10,6 @@ import se.su.it.sukat.SUKAT;
 import javax.naming.directory.Attribute;
 import javax.naming.directory.Attributes;
 import javax.naming.directory.SearchResult
-import se.su.it.cognos.cognosshibauth.adapters.UiClass;
 
 public class Account extends UiClass implements IAccount {
 

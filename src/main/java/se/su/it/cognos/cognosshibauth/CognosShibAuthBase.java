@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static se.su.it.cognos.cognosshibauth.adapters.UiClass.*;
+import static se.su.it.cognos.cognosshibauth.ldap.UiClass.*;
 
 public class CognosShibAuthBase extends CognosShibAuthNamespace implements INamespaceAuthenticationProviderBase {
 

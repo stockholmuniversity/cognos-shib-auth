@@ -6,6 +6,7 @@ import com.cognos.CAM_AAA.authentication.IBaseClass;
 import com.cognos.CAM_AAA.authentication.IRole;
 import se.su.it.cognos.cognosshibauth.config.ConfigHandler;
 import se.su.it.cognos.cognosshibauth.ldap.Account;
+import se.su.it.cognos.cognosshibauth.ldap.UiClass;
 import se.su.it.sukat.SUKAT;
 
 import javax.naming.NamingEnumeration;

@@ -9,6 +9,7 @@ import com.cognos.CAM_AAA.authentication.ISearchFilterConditionalExpression;
 import com.cognos.CAM_AAA.authentication.ISearchFilterFunctionCall;
 import com.cognos.CAM_AAA.authentication.ISearchFilterRelationExpression;
 import com.cognos.CAM_AAA.authentication.UnrecoverableException;
+import se.su.it.cognos.cognosshibauth.ldap.UiClass;
 
 
 public class Namespace extends UiClass implements INamespace

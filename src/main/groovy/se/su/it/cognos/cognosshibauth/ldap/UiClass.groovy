@@ -1,4 +1,4 @@
-package se.su.it.cognos.cognosshibauth.adapters;
+package se.su.it.cognos.cognosshibauth.ldap;
 
 import java.util.HashMap;
 import java.util.Locale;
