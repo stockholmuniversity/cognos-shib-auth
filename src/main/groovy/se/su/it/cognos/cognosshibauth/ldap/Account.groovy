@@ -1,30 +1,21 @@
 package se.su.it.cognos.cognosshibauth.ldap;
 
-import java.util.logging.Level;
+
 import java.util.logging.Logger;
 
 import com.cognos.CAM_AAA.authentication.IAccount;
 import se.su.it.cognos.cognosshibauth.config.ConfigHandler;
 import se.su.it.sukat.SUKAT;
 
-import javax.naming.directory.Attribute;
-import javax.naming.directory.Attributes;
+
 import javax.naming.directory.SearchResult
+import se.su.it.cognos.cognosshibauth.ldap.schema.SuPerson
 
 public class Account extends UiClass implements IAccount {
 
   public Logger LOG = Logger.getLogger(Account.class.getName());
 
-  public String businessPhone = null;
-  public String email = null;
-  public String faxPhone = null;
-  public String givenName = null;
-  public String homePhone = null;
-  public String mobilePhone = null;
-  public String pagerPhone = null;
-  public String postalAddress = null;
-  public String surname = null;
-  public String userName = null;
+  SuPerson suPerson
 
   public Locale contentLocale;
   public Locale productLocale;
@@ -38,22 +29,7 @@ public class Account extends UiClass implements IAccount {
 
     customProperties = new HashMap<String, List<String>>();
 
-    String ldapURL = configHandler.getStringEntry("adapters.url");
-
-    SUKAT sukat = SUKAT.newInstance(ldapURL);
-    SearchResult result = sukat.read(dn);
-    Attributes attributes = result.getAttributes();
-    Attribute businessPhone = attributes.get("telephoneNumber");
-    Attribute email = attributes.get("mail");
-    Attribute faxPhone = attributes.get("");
-    Attribute givenName = attributes.get("givenName");
-    Attribute homePhone = attributes.get("homePhone");
-    Attribute mobilePhone = attributes.get("mobile");
-    Attribute pagerPhone = attributes.get("");
-    Attribute postalAddress = attributes.get("registeredAddress");
-    Attribute surname = attributes.get("sn");
-    Attribute userName = attributes.get("uid");
-    Attribute entitlement = attributes.get("eduPersonEntitlement");
+    suPerson = SuPerson.getByDn(dn)
 
     addName(contentLocale, "");
     addDescription(contentLocale, "");
@@ -101,5 +77,65 @@ public class Account extends UiClass implements IAccount {
     SUKAT sukat = SUKAT.newInstance(ldapURL);
     SearchResult result = sukat.findUserByUid(uid);
     return Account.fromSearchResult(namespaceId, result);
+  }
+
+  @Override
+  String getBusinessPhone() {
+    suPerson.telephoneNumber
+  }
+
+  @Override
+  String getEmail() {
+    suPerson.mail
+  }
+
+  @Override
+  Locale getContentLocale() {
+    contentLocale
+  }
+
+  @Override
+  String getFaxPhone() {
+    suPerson.faxPhone
+  }
+
+  @Override
+  String getGivenName() {
+    suPerson.givenName
+  }
+
+  @Override
+  String getHomePhone() {
+    suPerson.homePhone
+  }
+
+  @Override
+  String getMobilePhone() {
+    suPerson.mobile
+  }
+
+  @Override
+  String getPagerPhone() {
+    suPerson.pagerPhone
+  }
+
+  @Override
+  String getPostalAddress() {
+    suPerson.registeredAddress
+  }
+
+  @Override
+  Locale getProductLocale() {
+    productLocale
+  }
+
+  @Override
+  String getSurname() {
+    suPerson.sn
+  }
+
+  @Override
+  String getUserName() {
+    suPerson.uid
   }
 }

@@ -89,6 +89,11 @@
       <artifactId>gmaven-runtime-1.6</artifactId>
       <version>1.3</version>
     </dependency>
+    <dependency>
+      <groupId>org.codehaus</groupId>
+      <artifactId>gldapo</artifactId>
+      <version>0.8.5</version>
+    </dependency>
   </dependencies>
   <build>
     <defaultGoal>install</defaultGoal>
@@ -171,6 +176,14 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-release-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <additionalClasspathElements>
+            <element>src/test/resources</element>
+          </additionalClasspathElements>
+        </configuration>
       </plugin>
     </plugins>
   </build>

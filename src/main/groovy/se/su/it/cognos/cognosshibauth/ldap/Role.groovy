@@ -20,7 +20,7 @@ public class Role extends UiClass implements IRole {
   private List<IBaseClass> members = null;
 
   public Role(String namespaceId, String name) {
-    super(namespaceId + ":" + UiClass.PREFIX_ROLE + ":" + name);
+    super("${namespaceId}:${UiClass.PREFIX_ROLE}:${name}")
     
     members = new ArrayList<IBaseClass>();
 

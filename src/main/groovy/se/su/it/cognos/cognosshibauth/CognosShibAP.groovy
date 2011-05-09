@@ -42,16 +42,16 @@ class CognosShibAP extends CognosShibAuthBase implements INamespaceAuthenticatio
     Account account = Account.fromUid(remoteUser, namespaceId)
     
     String mail = "foo@su.se" //getHeaderValue(iBiBusHeader2, configHandler.getHeaderMail(), true)
-    account.setEmail mail
+    account.mail mail
 
     String businessPhone = getHeaderValue(iBiBusHeader2, configHandler.getHeaderBusinessPhone(), false)
-    account.setBusinessPhone businessPhone
+    account.telephoneNumber businessPhone
 
     String homePhone = getHeaderValue(iBiBusHeader2, configHandler.getHeaderHomePhone(), false)
     account.setHomePhone homePhone
 
     String mobilePhone = getHeaderValue(iBiBusHeader2, configHandler.getHeaderMobilePhone(), false)
-    account.setMobilePhone mobilePhone
+    account.mobile mobilePhone
 
     String faxPhone = getHeaderValue(iBiBusHeader2, configHandler.getHeaderFaxPhone(), false)
     account.setFaxPhone faxPhone
@@ -60,7 +60,7 @@ class CognosShibAP extends CognosShibAuthBase implements INamespaceAuthenticatio
     account.setPagerPhone pagerPhone
 
     String postalAddress = getHeaderValue(iBiBusHeader2, configHandler.getHeaderPostalAddress(), false)
-    account.setPostalAddress postalAddress
+    account.registeredAddress postalAddress
 
     visa.init account
 

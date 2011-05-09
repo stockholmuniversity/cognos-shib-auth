@@ -25,7 +25,7 @@ public class Group extends UiClass implements IGroup {
   private String namespaceId = null;
 
   public Group(String namespaceId, String dn) throws Exception {
-    super(namespaceId + ":" + UiClass.PREFIX_GROUP + ":" + dn);
+    super("${namespaceId}:${UiClass.PREFIX_GROUP}:${dn}")
 
     this.dn = dn;
     this.namespaceId = namespaceId;

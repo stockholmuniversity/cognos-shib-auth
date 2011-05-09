@@ -26,7 +26,7 @@ public class NamespaceFolder extends UiClass implements INamespaceFolder {
   private String ldapBaseDn = "";
 
   public NamespaceFolder(String parentId, String name) {
-    super(parentId + ":" + UiClass.PREFIX_FOLDER + ":" + name);
+    super("${parentId}:${UiClass.PREFIX_FOLDER}:${name}");
 
     children = new ArrayList<IUiClass>();
 
