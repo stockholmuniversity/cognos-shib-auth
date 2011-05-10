@@ -41,7 +41,7 @@ public class Role extends UiClass implements IRole {
 
     List<IBaseClass> accounts = new ArrayList<IBaseClass>();
     try {
-      SUKAT sukat = SUKAT.newInstance("adapters://adapters.su.se");
+      SUKAT sukat = SUKAT.newInstance("ldap://ldap.su.se");
       NamingEnumeration<SearchResult> results = sukat.search("dc=su,dc=se", "eduPersonEntitlement=" + gmaiUrn);
       while(results.hasMoreElements()) {
         Account account = Account.fromSearchResult(null, results.next());
