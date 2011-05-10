@@ -31,7 +31,7 @@ public class Account extends UiClass implements IAccount {
     this.suPerson = suPerson
 
     addName(contentLocale, "${suPerson.givenName} ${suPerson.sn}")
-    addDescription(contentLocale, "")
+    addDescription(contentLocale, "") //TODO: link to "Kontohantering"?
   }
 
   public String[] getCustomPropertyNames() {
