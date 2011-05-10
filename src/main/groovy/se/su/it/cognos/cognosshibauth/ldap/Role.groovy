@@ -4,12 +4,13 @@ import com.cognos.CAM_AAA.authentication.IBaseClass;
 import com.cognos.CAM_AAA.authentication.IRole;
 
 import se.su.it.cognos.cognosshibauth.config.ConfigHandler;
-import se.su.it.cognos.cognosshibauth.ldap.schema.SuPerson;
+import se.su.it.cognos.cognosshibauth.ldap.schema.SuPerson
+import se.su.it.cognos.cognosshibauth.CognosShibAuthNamespace;
 
 public class Role extends UiClass implements IRole {
 
-  public Role(String namespaceId, String name) {
-    super("${namespaceId}:${UiClass.PREFIX_ROLE}:${name}")
+  public Role(String name) {
+    super("${CognosShibAuthNamespace.namespaceId}:${UiClass.PREFIX_ROLE}:${name}")
 
     addName(defaultLocale, name)
   }
@@ -25,11 +26,11 @@ public class Role extends UiClass implements IRole {
     List<SuPerson> suPersons = SuPerson.findAll(filter: "eduPersonEntitlement=${gmaiUrn}")
 
     suPersons.collect { suPerson ->
-      new Account(namespaceId, suPerson)
+      new Account(suPerson)
     } as IBaseClass[]
   }
 
-  static List<Role> findAllByFilter(String namespacaId, String filter) {
+  static List<Role> findAllByFilter(String filter) {
     List<SuPerson> suPersons = SuPerson.findAll(filter: filter)
 
     List<String> entitlements = new ArrayList<String>()
@@ -38,7 +39,7 @@ public class Role extends UiClass implements IRole {
     }
 
     entitlements.unique().collect { entitlement ->
-      new Role(namespacaId, parseRoleFromEntitlementUri(entitlement))
+      new Role(parseRoleFromEntitlementUri(entitlement))
     }
   }
 

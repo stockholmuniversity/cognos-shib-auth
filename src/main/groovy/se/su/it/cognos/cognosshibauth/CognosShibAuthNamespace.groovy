@@ -19,9 +19,10 @@ import java.util.logging.Logger;
 
 public class CognosShibAuthNamespace implements INamespace {
 
+  static String namespaceId = null
+
   protected String namespaceFormat = null;
-  protected String capabilities[] = null;
-  protected String namespaceId = null;
+  protected String[] capabilities = null;
   private Logger LOG = Logger.getLogger(CognosShibAuthNamespace.class.getName());
 
   protected ConfigHandler configHandler = null;
@@ -33,8 +34,8 @@ public class CognosShibAuthNamespace implements INamespace {
   public void init(INamespaceConfiguration iNamespaceConfiguration) throws UnrecoverableException {
     LOG.log(Level.FINEST, "intit method reached");
 
-    namespaceId = iNamespaceConfiguration.getID();
-    LOG.log(Level.FINE, "ObjectID set to '" + namespaceId + "'.");
+    namespaceId = iNamespaceConfiguration.getID()
+    LOG.log(Level.FINE, "ObjectID set to '" + namespaceId + "'.")
 
     List<String> capabilitiesList = configHandler.getCapabilities();
     capabilities = capabilitiesList.toArray(new String[capabilitiesList.size()]);

@@ -2,6 +2,7 @@ package se.su.it.cognos.cognosshibauth.ldap
 
 import org.junit.Test
 import static org.junit.Assert.assertTrue
+import static org.junit.Assert.assertEquals
 
 /**
  * User: joakim
@@ -12,8 +13,14 @@ class AccountTest {
 
   @Test
   def void test1() {
-    Account account = new Account(null, "uid=jolu,dc=it,dc=su,dc=se")
-    assertTrue(true)
+    Account account = Account.createFromDn("uid=jolu,dc=it,dc=su,dc=se")
+    assertEquals("jolu", account.getUserName())
+  }
+
+  @Test
+  def void test2() {
+    Account account = Account.findByUid("jolu")
+    assertEquals("jolu", account.getUserName())
   }
 
 }

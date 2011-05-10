@@ -5,6 +5,8 @@ import java.util.logging.Logger
 import com.cognos.CAM_AAA.authentication.IAccount
 
 import se.su.it.cognos.cognosshibauth.ldap.schema.SuPerson
+import se.su.it.cognos.cognosshibauth.CognosShibAuthNamespace
+import static gldapo.filter.FilterUtil.eq
 
 public class Account extends UiClass implements IAccount {
 
@@ -17,12 +19,8 @@ public class Account extends UiClass implements IAccount {
 
   HashMap<String, List<String>> customProperties
 
-  def Account(String namespaceId, String dn) throws Exception {
-    this(namespaceId, SuPerson.getByDn(dn))
-  }
-
-  def Account(String namespaceId, SuPerson suPerson) throws Exception {
-    super("${namespaceId}:${UiClass.PREFIX_USER}:${suPerson.getDn()}")
+  public Account(SuPerson suPerson) {
+    super("${CognosShibAuthNamespace.namespaceId}:${UiClass.PREFIX_USER}:${suPerson.getDn()}")
 
     productLocale = contentLocale = defaultLocale
 
@@ -32,6 +30,10 @@ public class Account extends UiClass implements IAccount {
 
     addName(contentLocale, "${suPerson.givenName} ${suPerson.sn}")
     addDescription(contentLocale, "") //TODO: link to "Kontohantering"?
+  }
+
+  public static Account createFromDn(String dn) {
+    new Account(SuPerson.getByDn(dn))
   }
 
   public String[] getCustomPropertyNames() {
@@ -60,9 +62,9 @@ public class Account extends UiClass implements IAccount {
     list.add(theValue);
   }
 
-  static Account findByUid(String namespaceId, String uid) throws Exception {
-    SuPerson suPerson1 = SuPerson.find(filter: "(uid=${uid})")
-    return new Account(namespaceId, suPerson1)
+  static Account findByUid(String uid) {
+    def suPerson1 = SuPerson.findByUid(uid)
+    return new Account(suPerson1.first)
   }
 
   @Override

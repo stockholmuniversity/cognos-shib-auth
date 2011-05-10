@@ -90,15 +90,15 @@ public class CognosShibAuthBase extends CognosShibAuthNamespace implements IName
             }
             else if (isUser(objectID) && filter == null) {
               String uid = camIdToName(objectID);
-              Account account = Account.findByUid(namespaceId, uid);
+              Account account = Account.findByUid(uid);
               result.addObject(account);
             }
             else if (isRole(objectID)) {
-              Role role = new Role(namespaceId, camIdToName(objectID));
+              Role role = new Role(camIdToName(objectID));
               result.addObject(role);
             }
             else if (isGroup(objectID)) {
-              Group group = new Group(namespaceId, camIdToName(objectID));
+              Group group = new Group(camIdToName(objectID));
               result.addObject(group);
             }
             else if(isFolder(objectID)) {
@@ -119,7 +119,7 @@ public class CognosShibAuthBase extends CognosShibAuthNamespace implements IName
               result.addObject(child);
           }
           else if(isRole(objectID)) {
-            Role role = new Role(namespaceId, camIdToName(objectID));
+            Role role = new Role(camIdToName(objectID));
             for(IBaseClass member : role.getMembers()) {
               result.addObject(member);
             }
@@ -144,7 +144,7 @@ public class CognosShibAuthBase extends CognosShibAuthNamespace implements IName
     List<HierarchicalConfiguration> foldersConfiguration = configHandler.getFoldersConfig();
 
     for(HierarchicalConfiguration folderConfiguration : foldersConfiguration) {
-      NamespaceFolder namespaceFolder = NamespaceFolder.configEntryToFolder(folders, folderConfiguration, namespaceId);
+      NamespaceFolder namespaceFolder = NamespaceFolder.configEntryToFolder(folders, folderConfiguration);
 
       folders.put(namespaceFolder.getObjectID(), namespaceFolder);
     }

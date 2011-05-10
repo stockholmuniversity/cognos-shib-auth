@@ -6,6 +6,7 @@ import java.util.logging.Logger
 import org.apache.commons.configuration.HierarchicalConfiguration
 import se.su.it.cognos.cognosshibauth.ldap.schema.GroupOfUniqueNames
 import se.su.it.cognos.cognosshibauth.ldap.schema.SuPerson
+import se.su.it.cognos.cognosshibauth.CognosShibAuthNamespace
 
 public class NamespaceFolder extends UiClass implements INamespaceFolder {
 
@@ -26,7 +27,8 @@ public class NamespaceFolder extends UiClass implements INamespaceFolder {
   }
 
   public static NamespaceFolder configEntryToFolder(HashMap<String, NamespaceFolder> folders,
-                                                    HierarchicalConfiguration folderEntry, String parentId) {
+                                                    HierarchicalConfiguration folderEntry,
+                                                    String parentId = CognosShibAuthNamespace.namespaceId) {
     String name = folderEntry.getString("name");
     String description = folderEntry.getString("description");
 
@@ -87,7 +89,7 @@ public class NamespaceFolder extends UiClass implements INamespaceFolder {
     groupLdapFilters.each { filter ->
       List<GroupOfUniqueNames> groupOfUniqueNamesList = GroupOfUniqueNames.findAll(filter: filter)
       groups.addAll groupOfUniqueNamesList.collect { groupOfUniqueName ->
-        new Group(null, groupOfUniqueName) //TODO: Don't send null as namespaceId
+        new Group(groupOfUniqueName) //TODO: Don't send null as namespaceId
       }
     }
 
@@ -98,7 +100,7 @@ public class NamespaceFolder extends UiClass implements INamespaceFolder {
     def roles = []
 
     roleLdapFilters.each { filter ->
-      List<Role> roleList = Role.findAllByFilter(null, filter) //TODO: Don't send null as namespaceId
+      List<Role> roleList = Role.findAllByFilter(filter) //TODO: Don't send null as namespaceId
       roles.addAll roleList
     }
 
@@ -111,7 +113,7 @@ public class NamespaceFolder extends UiClass implements INamespaceFolder {
     userLdapFilters.each { filter ->
       List<SuPerson> suPersons = SuPerson.findAll(filter: filter)
       users.addAll suPersons.collect { suPerson ->
-        new Account(null, suPerson)
+        new Account(suPerson)
       }
     }
 
