@@ -3,8 +3,6 @@ directories {
     defaultDirectory = true
     url = "ldap://sukat-ldap.it.su.se"
     base = "dc=su,dc=se"
-    userDn = ""
-    password = ""
     searchControls {
       countLimit: 500
       timeLimit: 120000
@@ -15,7 +13,8 @@ directories {
 }
 // An array of class objects that are the Gldap Schema Classes
 schemas = [
-        se.su.it.cognos.cognosshibauth.ldap.schema.SuPerson
+        se.su.it.cognos.cognosshibauth.ldap.schema.SuPerson,
+        se.su.it.cognos.cognosshibauth.ldap.schema.GroupOfUniqueNames
 ]
 
 typemappings = []
