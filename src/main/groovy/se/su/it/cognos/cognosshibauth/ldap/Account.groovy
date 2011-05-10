@@ -63,8 +63,8 @@ public class Account extends UiClass implements IAccount {
   }
 
   static Account findByUid(String uid) {
-    def suPerson1 = SuPerson.findByUid(uid)
-    return new Account(suPerson1.first)
+    SuPerson suPerson1 = SuPerson.findByUid(uid)
+    return new Account(suPerson1)
   }
 
   @Override
