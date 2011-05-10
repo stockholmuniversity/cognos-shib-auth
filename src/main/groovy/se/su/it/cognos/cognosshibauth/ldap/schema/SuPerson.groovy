@@ -6,6 +6,10 @@ import gldapo.Gldapo
 import gldapo.entry.GldapoEntry
 import gldapo.schema.annotation.GldapoSchemaFilter
 import static java.lang.ClassLoader.getSystemClassLoader
+import java.util.logging.Logger
+import java.util.logging.Level
+import se.su.it.cognos.cognosshibauth.config.ConfigHandler
+import static gldapo.filter.FilterUtil.eq
 
 /**
  * User: joakim
@@ -13,9 +17,9 @@ import static java.lang.ClassLoader.getSystemClassLoader
  * Time: 12:46
  */
 
-@GldapoSchemaFilter("objectClass=suPerson")
-class SuPerson {
+class SuPerson extends SchemaBase {
 
+@GldapoSchemaFilter("(objectClass=suPerson)")
   @GldapoNamingAttribute
   String uid
   String givenName
@@ -29,10 +33,10 @@ class SuPerson {
   String registeredAddress
   Set<String> eduPersonEntitlement
 
-  static {
-    ClassLoader classLoader = getSystemClassLoader()
-    File file = new File(classLoader.getResource("gldapo-conf.groovy").getFile())
-    Gldapo.initialize(file.toURL())
+  static SuPerson findByUid(String uid) {
+    return find(base: "") {
+      eq "uid", uid
+    }
   }
 }
 
