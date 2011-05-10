@@ -4,7 +4,6 @@ import java.util.logging.Logger;
 
 import com.cognos.CAM_AAA.authentication.IAccount;
 
-import javax.naming.directory.SearchResult
 import se.su.it.cognos.cognosshibauth.ldap.schema.SuPerson
 
 public class Account extends UiClass implements IAccount {
@@ -61,15 +60,7 @@ public class Account extends UiClass implements IAccount {
     list.add(theValue);
   }
 
-  public static Account fromSearchResult(String namespaceId, SearchResult result) throws Exception {
-    if (result != null) {
-      Account account = new Account(namespaceId, result.getNameInNamespace());
-      return account;
-    }
-    return null;
-  }
-
-  public static Account findByUid(String uid, String namespaceId) throws Exception {
+  public static Account findByUid(String namespaceId, String uid) throws Exception {
     SuPerson suPerson1 = SuPerson.find(filter: "(uid=${uid})")
     return new Account(namespaceId, suPerson1);
   }
