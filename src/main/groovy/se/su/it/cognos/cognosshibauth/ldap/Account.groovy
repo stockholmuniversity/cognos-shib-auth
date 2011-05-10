@@ -8,7 +8,7 @@ import se.su.it.cognos.cognosshibauth.ldap.schema.SuPerson
 
 public class Account extends UiClass implements IAccount {
 
-  Logger LOG = Logger.getLogger Account.class.getName()
+  Logger LOG = Logger.getLogger(Account.class.getName())
 
   SuPerson suPerson
 
