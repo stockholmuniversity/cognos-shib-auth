@@ -39,7 +39,7 @@ class CognosShibAP extends CognosShibAuthBase implements INamespaceAuthenticatio
 
     entitlements = ["urn:mace:swami.se:gmai:su-ivs:analyst"]
 
-    Account account = Account.fromUid(remoteUser, namespaceId)
+    Account account = Account.findByUid(remoteUser, namespaceId)
     
     String mail = "foo@su.se" //getHeaderValue(iBiBusHeader2, configHandler.getHeaderMail(), true)
     account.mail mail

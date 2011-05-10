@@ -1,12 +1,8 @@
 package se.su.it.cognos.cognosshibauth.ldap;
 
-
 import java.util.logging.Logger;
 
 import com.cognos.CAM_AAA.authentication.IAccount;
-import se.su.it.cognos.cognosshibauth.config.ConfigHandler;
-import se.su.it.sukat.SUKAT;
-
 
 import javax.naming.directory.SearchResult
 import se.su.it.cognos.cognosshibauth.ldap.schema.SuPerson
@@ -23,18 +19,21 @@ public class Account extends UiClass implements IAccount {
   public HashMap<String, List<String>> customProperties = null;
 
   public Account(String namespaceId, String dn) throws Exception {
-    super("${namespaceId}:${UiClass.PREFIX_USER}:${dn}")
-
-    productLocale = contentLocale = defaultLocale;
-
-    customProperties = new HashMap<String, List<String>>();
-
-    suPerson = SuPerson.getByDn(dn)
-
-    addName(contentLocale, "");
-    addDescription(contentLocale, "");
+    this(namespaceId, SuPerson.getByDn(dn))
   }
 
+  public Account(String namespaceId, SuPerson suPerson) throws Exception {
+    super("${namespaceId}:${UiClass.PREFIX_USER}:${suPerson.getDn()}")
+
+    productLocale = contentLocale = defaultLocale
+
+    customProperties = new HashMap<String, List<String>>()
+
+    this.suPerson = suPerson
+
+    addName(contentLocale, "${suPerson.givenName} ${suPerson.sn}")
+    addDescription(contentLocale, "")
+  }
 
   public String[] getCustomPropertyNames() {
     if (customProperties != null) {
@@ -70,13 +69,9 @@ public class Account extends UiClass implements IAccount {
     return null;
   }
 
-  public static Account fromUid(String uid, String namespaceId) throws Exception {
-    ConfigHandler configHandler = ConfigHandler.instance();
-    String ldapURL = configHandler.getStringEntry("adapters.url");
-
-    SUKAT sukat = SUKAT.newInstance(ldapURL);
-    SearchResult result = sukat.findUserByUid(uid);
-    return Account.fromSearchResult(namespaceId, result);
+  public static Account findByUid(String uid, String namespaceId) throws Exception {
+    SuPerson suPerson1 = SuPerson.find(filter: "(uid=${uid})")
+    return new Account(namespaceId, suPerson1);
   }
 
   @Override
