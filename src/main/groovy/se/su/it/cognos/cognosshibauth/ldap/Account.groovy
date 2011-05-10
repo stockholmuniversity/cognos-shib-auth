@@ -1,27 +1,27 @@
-package se.su.it.cognos.cognosshibauth.ldap;
+package se.su.it.cognos.cognosshibauth.ldap
 
-import java.util.logging.Logger;
+import java.util.logging.Logger
 
-import com.cognos.CAM_AAA.authentication.IAccount;
+import com.cognos.CAM_AAA.authentication.IAccount
 
 import se.su.it.cognos.cognosshibauth.ldap.schema.SuPerson
 
 public class Account extends UiClass implements IAccount {
 
-  public Logger LOG = Logger.getLogger(Account.class.getName());
+  Logger LOG = Logger.getLogger Account.class.getName()
 
   SuPerson suPerson
 
-  public Locale contentLocale;
-  public Locale productLocale;
+  Locale contentLocale
+  Locale productLocale
 
-  public HashMap<String, List<String>> customProperties = null;
+  HashMap<String, List<String>> customProperties
 
-  public Account(String namespaceId, String dn) throws Exception {
+  def Account(String namespaceId, String dn) throws Exception {
     this(namespaceId, SuPerson.getByDn(dn))
   }
 
-  public Account(String namespaceId, SuPerson suPerson) throws Exception {
+  def Account(String namespaceId, SuPerson suPerson) throws Exception {
     super("${namespaceId}:${UiClass.PREFIX_USER}:${suPerson.getDn()}")
 
     productLocale = contentLocale = defaultLocale
@@ -60,9 +60,9 @@ public class Account extends UiClass implements IAccount {
     list.add(theValue);
   }
 
-  public static Account findByUid(String namespaceId, String uid) throws Exception {
+  static Account findByUid(String namespaceId, String uid) throws Exception {
     SuPerson suPerson1 = SuPerson.find(filter: "(uid=${uid})")
-    return new Account(namespaceId, suPerson1);
+    return new Account(namespaceId, suPerson1)
   }
 
   @Override
