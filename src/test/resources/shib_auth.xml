@@ -9,6 +9,9 @@
     <prefix>urn:mace:swami.se:gmai</prefix>
     <application>su-ivs</application>
   </gmai>
+  <gldapo>
+    <conf>file:src/test/resources/gldapo-conf.groovy</conf>
+  </gldapo>
   <ldap>
     <url>ldap://sukat-ldap.it.su.se</url>
     <base_dn>dc=su\,dc=se</base_dn>
