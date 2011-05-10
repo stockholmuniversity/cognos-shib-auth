@@ -1,40 +1,28 @@
-package se.su.it.cognos.cognosshibauth.ldap;
+package se.su.it.cognos.cognosshibauth.ldap
 
-import com.cognos.CAM_AAA.authentication.INamespaceFolder;
-import com.cognos.CAM_AAA.authentication.IUiClass;
-import org.apache.commons.configuration.HierarchicalConfiguration;
-import se.su.it.cognos.cognosshibauth.ldap.Account;
-import se.su.it.cognos.cognosshibauth.ldap.UiClass;
-import se.su.it.sukat.SUKAT;
-
-import javax.naming.NamingEnumeration;
-import javax.naming.directory.SearchResult;
-import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import com.cognos.CAM_AAA.authentication.INamespaceFolder
+import com.cognos.CAM_AAA.authentication.IUiClass
+import java.util.logging.Logger
+import org.apache.commons.configuration.HierarchicalConfiguration
+import se.su.it.cognos.cognosshibauth.ldap.schema.GroupOfUniqueNames
+import se.su.it.cognos.cognosshibauth.ldap.schema.SuPerson
 
 public class NamespaceFolder extends UiClass implements INamespaceFolder {
 
-  private Logger LOG = Logger.getLogger(NamespaceFolder.class.getName());
+  private Logger LOG = Logger.getLogger(NamespaceFolder.class.getName())
 
-  private List<IUiClass> children = null;
+  private List<IUiClass> children = null
 
-  private List<String> userLdapFilters = null;
-  private List<String> groupLdapFilters = null;
-  private List<String> roleLdapFilters = null;
-
-  private String ldapBaseDn = "";
+  private List<String> userLdapFilters = null
+  private List<String> groupLdapFilters = null
+  private List<String> roleLdapFilters = null
 
   public NamespaceFolder(String parentId, String name) {
-    super("${parentId}:${UiClass.PREFIX_FOLDER}:${name}");
+    super("${parentId}:${UiClass.PREFIX_FOLDER}:${name}")
 
-    children = new ArrayList<IUiClass>();
+    children = userLdapFilters = groupLdapFilters = roleLdapFilters = new ArrayList<String>()
 
-    userLdapFilters = new ArrayList<String>();
-    groupLdapFilters = new ArrayList<String>();
-    roleLdapFilters = new ArrayList<String>();
-
-    addName(defaultLocale, name);
+    addName(defaultLocale, name)
   }
 
   public static NamespaceFolder configEntryToFolder(HashMap<String, NamespaceFolder> folders,
@@ -95,39 +83,22 @@ public class NamespaceFolder extends UiClass implements INamespaceFolder {
   }
 
   public List<IUiClass> loadLdapGroups() {
-    List<IUiClass> groups = new ArrayList<IUiClass>();
-
-    String ldapURL = configHandler.getStringEntry("adapters.url");
-    ldapBaseDn = configHandler.getStringEntry("adapters.base_dn", "");
-    SUKAT sukat = null;
-    try {
-      sukat = SUKAT.newInstance(ldapURL);
-    } catch (Exception e) {
-      LOG.log(Level.SEVERE, "Failed to establish adapters connection to server '" + ldapURL + "': " + e.getMessage());
-      e.printStackTrace();
-    }
-
-    try {
-      for(String filter : groupLdapFilters) {
-        NamingEnumeration<SearchResult> results = sukat.search(ldapBaseDn, filter);
-        while(results.hasMoreElements()) {
-          SearchResult searchResult = results.next();
-          Group group = new Group(null, searchResult.getNameInNamespace()); //TODO: Don't send null for namespaceId
-          if(group != null)
-            groups.add(group);
-        }
+    def groups = []
+    groupLdapFilters.each { filter ->
+      List<GroupOfUniqueNames> groupOfUniqueNamesList = GroupOfUniqueNames.findAll(filter: filter)
+      groups.addAll groupOfUniqueNamesList.collect { groupOfUniqueName ->
+        new Group(null, groupOfUniqueName) //TODO: Don't send null as namespaceId
       }
-    } catch (Exception e) {
-      e.printStackTrace();
     }
-    return groups;
+
+    groups
   }
 
   public List<IUiClass> loadLdapRoles() {
     def roles = []
 
     roleLdapFilters.each { filter ->
-      List<Role> roleList = Role.findAllByFilter(null, filter)
+      List<Role> roleList = Role.findAllByFilter(null, filter) //TODO: Don't send null as namespaceId
       roles.addAll roleList
     }
 
@@ -135,31 +106,16 @@ public class NamespaceFolder extends UiClass implements INamespaceFolder {
   }
 
   public List<IUiClass> loadLdapUsers() {
-    List<IUiClass> accounts = new ArrayList<IUiClass>();
+    def users = []
 
-    String ldapURL = configHandler.getStringEntry("adapters.url");
-    ldapBaseDn = configHandler.getStringEntry("ldap.base_dn", "");
-    SUKAT sukat = null;
-    try {
-      sukat = SUKAT.newInstance(ldapURL);
-    } catch (Exception e) {
-      LOG.log(Level.SEVERE, "Failed to establish adapters connection to server '" + ldapURL + "': " + e.getMessage());
-      e.printStackTrace();
-    }
-
-    try {
-      for(String filter : userLdapFilters) {
-        NamingEnumeration<SearchResult> results = sukat.search(ldapBaseDn, filter);
-        while(results.hasMoreElements()) {
-          Account account = Account.fromSearchResult(null, results.next()); //TODO: Don't send null for namespaceId
-          if(account != null)
-            accounts.add(account);
-        }
+    userLdapFilters.each { filter ->
+      List<SuPerson> suPersons = SuPerson.findAll(filter: filter)
+      users.addAll suPersons.collect { suPerson ->
+        new Account(null, suPerson)
       }
-    } catch (Exception e) {
-      e.printStackTrace();
     }
-    return accounts;
+
+    users
   }
 
   public List<String> getUserLdapFilters() {

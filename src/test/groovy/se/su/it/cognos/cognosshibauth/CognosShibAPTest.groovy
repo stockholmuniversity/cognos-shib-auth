@@ -1,18 +1,11 @@
 package se.su.it.cognos.cognosshibauth;
 
-import com.cognos.CAM_AAA.authentication.INamespaceConfiguration;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.powermock.modules.junit4.PowerMockRunner;
-import se.su.it.sukat.SUKAT;
-
-import javax.naming.NamingEnumeration;
-import javax.naming.directory.Attribute;
-import javax.naming.directory.Attributes;
-import javax.naming.directory.SearchResult;
-
-import static org.mockito.Mockito.*;
-import static org.junit.Assert.*;
+import com.cognos.CAM_AAA.authentication.INamespaceConfiguration
+import org.junit.Test
+import org.junit.runner.RunWith
+import static org.junit.Assert.assertEquals
+import static org.mockito.Mockito.mock
+import static org.mockito.Mockito.when
 
 @RunWith(org.powermock.modules.junit4.PowerMockRunner.class)
 public class CognosShibAPTest {
