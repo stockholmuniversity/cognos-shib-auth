@@ -27,7 +27,7 @@ class SuPerson {
   String faxPhone
   String pagerPhone
   String registeredAddress
-  String eduPersonEntitlement
+  Set<String> eduPersonEntitlement
 
   static {
     ClassLoader classLoader = getSystemClassLoader()
