@@ -14,10 +14,14 @@ public class Group extends UiClass implements IGroup {
 
   GroupOfUniqueNames groupOfUniqueNames
 
-  public Group(String namespaceId, String dn) throws Exception {
-    super("${namespaceId}:${UiClass.PREFIX_GROUP}:${dn}")
+  public Group(String namespaceId, String dn) {
+    this(namespaceId, GroupOfUniqueNames.getByDn(dn))
+  }
 
-    groupOfUniqueNames = GroupOfUniqueNames.getByDn(dn)
+  public Group(String namespaceId, GroupOfUniqueNames groupOfUniqueNames) {
+    super("${namespaceId}:${UiClass.PREFIX_GROUP}:${groupOfUniqueNames.getDn()}")
+
+    this.groupOfUniqueNames = groupOfUniqueNames
     this.namespaceId = namespaceId
 
     addName(defaultLocale, groupOfUniqueNames.cn)
