@@ -124,38 +124,21 @@ public class NamespaceFolder extends UiClass implements INamespaceFolder {
   }
 
   public List<IUiClass> loadLdapRoles() {
-    List<IUiClass> roles = new ArrayList<IUiClass>();
+    def roles = []
 
-    String ldapURL = configHandler.getStringEntry("adapters.url");
-    ldapBaseDn = configHandler.getStringEntry("adapters.base_dn", "");
-    SUKAT sukat = null;
-    try {
-      sukat = SUKAT.newInstance(ldapURL);
-    } catch (Exception e) {
-      LOG.log(Level.SEVERE, "Failed to establish adapters connection to server '" + ldapURL + "': " + e.getMessage());
-      e.printStackTrace();
+    roleLdapFilters.each { filter ->
+      List<Role> roleList = Role.findAllByFilter(null, filter)
+      roles.addAll roleList
     }
 
-    try {
-      for(String filter : roleLdapFilters) {
-        NamingEnumeration<SearchResult> results = sukat.search(ldapBaseDn, filter);
-        Collection<Role> roleList = Role.fromSearchResults(null, results); //TODO: Don't send null for namespaceId
-        for(Role role : roleList) {
-          if(role != null)
-            roles.add(role);
-        }
-      }
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
-    return roles;
+    roles
   }
 
   public List<IUiClass> loadLdapUsers() {
     List<IUiClass> accounts = new ArrayList<IUiClass>();
 
     String ldapURL = configHandler.getStringEntry("adapters.url");
-    ldapBaseDn = configHandler.getStringEntry("adapters.base_dn", "");
+    ldapBaseDn = configHandler.getStringEntry("ldap.base_dn", "");
     SUKAT sukat = null;
     try {
       sukat = SUKAT.newInstance(ldapURL);
