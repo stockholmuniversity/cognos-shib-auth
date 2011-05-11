@@ -18,7 +18,7 @@ import static gldapo.filter.FilterUtil.eq
  */
 
 @GldapoSchemaFilter("(objectClass=suPerson)")
-class SuPerson/* extends SchemaBase */{
+class SuPerson extends SchemaBase {
 
   @GldapoNamingAttribute
   String uid
@@ -35,23 +35,6 @@ class SuPerson/* extends SchemaBase */{
 
   static SuPerson findByUid(String uid) {
     return find(filter:"(uid=$uid)")
-  }
-
-  static {
-    Gldapo.initialize(
-            directories: [
-                    example: [
-                            url: "ldap://sukat-ldap.it.su.se",
-                            base: "dc=su,dc=se",
-                            searchControls: [
-                                    countLimit: 500,
-                                    timeLimit: 120000,
-                                    searchScope: "subtree",
-                            ]
-                    ]
-            ],
-            schemas: [se.su.it.cognos.cognosshibauth.ldap.schema.SuPerson]
-    )
   }
 }
 

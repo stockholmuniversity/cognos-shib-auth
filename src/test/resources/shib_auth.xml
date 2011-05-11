@@ -15,6 +15,8 @@
   <ldap>
     <url>ldap://sukat-ldap.it.su.se</url>
     <base_dn>dc=su\,dc=se</base_dn>
+    <count_limit>500</count_limit>
+    <time_limit>120000</time_limit>
   </ldap>
   <capabilities>caseSensitive,contains,equals,sort,startsWith,endsWith</capabilities>
   <headers>

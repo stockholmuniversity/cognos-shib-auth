@@ -13,9 +13,30 @@ import gldapo.Gldapo
 class SchemaBase {
   static {
     ConfigHandler configHandler = ConfigHandler.instance()
+    def url = configHandler.getStringEntry("ldap.url", "ldap://sukat-ldap.it.su.se")
+    def baseDn = configHandler.getStringEntry("ldap.base_dn", "dc=su,dc=se")
+    def countLimit = configHandler.getIntEntry("ldap.count_limit", 500)
+    def timeLimit = configHandler.getIntEntry("ldap.time_limit", 120000)
+
     Logger LOG = Logger.getLogger(SchemaBase.class.getName())
-    URL url = new URL(configHandler.getStringEntry("gldapo.conf", "gldapo-conf.groovy"))
-    LOG.log(Level.FINE, "Initializing Gldapo schema '${SchemaBase.class.getName()}' from file '${url}'")
-    Gldapo.initialize(url)
+    LOG.log(Level.FINE, "Initializing Gldapo schema '${SchemaBase.class.getName()}'")
+
+    Gldapo.initialize(
+            directories: [
+                    example: [
+                            url: url,
+                            base: baseDn,
+                            searchControls: [
+                                    countLimit: countLimit,
+                                    timeLimit: timeLimit,
+                                    searchScope: "subtree"
+                            ]
+                    ]
+            ],
+            schemas: [
+                    se.su.it.cognos.cognosshibauth.ldap.schema.SuPerson,
+                    se.su.it.cognos.cognosshibauth.ldap.schema.GroupOfUniqueNames
+            ]
+    )
   }
 }

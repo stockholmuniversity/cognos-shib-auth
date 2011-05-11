@@ -223,4 +223,8 @@ public class ConfigHandler {
   public String getStringEntry(String string, String defaultValue) {
     return config.getString(string, defaultValue);
   }
+
+  public int getIntEntry(String string, int defaultValue) {
+    return config.getInt(string, defaultValue);
+  }
 }
