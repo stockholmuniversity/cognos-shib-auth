@@ -89,8 +89,8 @@ public class CognosShibAuthBase extends CognosShibAuthNamespace implements IName
               }
             }
             else if (isUser(objectID) && filter == null) {
-              String uid = camIdToName(objectID);
-              Account account = Account.findByUid(uid);
+              String dn = camIdToName(objectID);
+              Account account = Account.createFromDn(dn);
               result.addObject(account);
             }
             else if (isRole(objectID)) {
