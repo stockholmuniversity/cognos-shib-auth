@@ -109,14 +109,7 @@ public class UiClass implements IUiClass {
   }
 
   private static boolean isType(String objectId, String type) {
-    try {
-      int index = objectId.lastIndexOf(":");
-      char typeC = objectId.charAt(index-1);
-      return type.equals(String.valueOf(typeC));
-    } catch (Throwable t){
-      //Swallow error and return false.
-    }
-    return false;
+    return objectId ==~ /.*:$type:.*/
   }
 
   public static String camIdToName(String camId) {
