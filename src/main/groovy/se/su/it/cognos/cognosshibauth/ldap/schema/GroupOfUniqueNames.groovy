@@ -9,7 +9,7 @@ import gldapo.schema.annotation.GldapoNamingAttribute
  * Time: 08:37
  */
 
-@GldapoSchemaFilter("objectClass=groupOfUniqueNames")
+@GldapoSchemaFilter("(objectClass=groupOfUniqueNames)")
 class GroupOfUniqueNames extends SchemaBase {
 
   @GldapoNamingAttribute
