@@ -30,7 +30,7 @@ public class UiClass implements IUiClass {
 
   protected ConfigHandler configHandler = null;
 
-  public UiClass(GString theObjectID) {
+  public UiClass(theObjectID) {
     LOG.log(Level.FINEST, "Creating new UiClass with objectID '" + theObjectID + "'.");
 
     names = new HashMap<Locale, String>();
@@ -109,7 +109,7 @@ public class UiClass implements IUiClass {
   }
 
   private static boolean isType(String objectId, String type) {
-    return objectId ==~ /.*:$type:.*/
+    objectId ==~ /.*$type:.*/
   }
 
   public static String camIdToName(String camId) {
