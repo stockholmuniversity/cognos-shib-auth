@@ -12,16 +12,13 @@ public class NamespaceFolder extends UiClass implements INamespaceFolder {
 
   private Logger LOG = Logger.getLogger(NamespaceFolder.class.getName())
 
-  private List<IUiClass> children = null
-
-  private List<String> userLdapFilters = null
-  private List<String> groupLdapFilters = null
-  private List<String> roleLdapFilters = null
+  List<UiClass> folders = []
+  List<UiClass> userLdapFilters = []
+  List<UiClass> groupLdapFilters = []
+  List<UiClass> roleLdapFilters = []
 
   public NamespaceFolder(String parentId, String name) {
     super("${parentId}:${UiClass.PREFIX_FOLDER}:${name}")
-
-    children = userLdapFilters = groupLdapFilters = roleLdapFilters = new ArrayList<String>()
 
     addName(defaultLocale, name)
   }
@@ -64,7 +61,7 @@ public class NamespaceFolder extends UiClass implements INamespaceFolder {
   }
 
   public boolean getHasChildren() {
-    return children.size() > 0;
+    return folders.size() > 0;
   }
 
   public void addDescription(String description) {
@@ -72,16 +69,16 @@ public class NamespaceFolder extends UiClass implements INamespaceFolder {
   }
 
   public void addChild(IUiClass iUiClass) {
-    children.add(iUiClass);
+    folders.add(iUiClass);
   }
 
-  public List<IUiClass> getChildren() {
-    List<IUiClass> retList = new ArrayList<IUiClass>();
-    retList.addAll(children);
-    retList.addAll(loadLdapGroups());
-    retList.addAll(loadLdapRoles());
-    retList.addAll(loadLdapUsers());
-    return retList;
+  List<UiClass> getChildren() {
+    List<UiClass> retList = new ArrayList<UiClass>()
+    retList.addAll getFolders()
+    retList.addAll loadLdapGroups()
+    retList.addAll loadLdapRoles()
+    retList.addAll loadLdapUsers()
+    return retList
   }
 
   public List<IUiClass> loadLdapGroups() {
@@ -120,26 +117,14 @@ public class NamespaceFolder extends UiClass implements INamespaceFolder {
     users
   }
 
-  public List<String> getUserLdapFilters() {
-    return userLdapFilters;
-  }
-
   public void addUserLdapFilter(String userLdapFilter) {
     if(userLdapFilter != null)
       userLdapFilters.add(userLdapFilter);
   }
 
-  public List<String> getGroupLdapFilters() {
-    return groupLdapFilters;
-  }
-
   public void addGroupLdapFilter(String groupLdapFilter) {
     if(groupLdapFilter != null)
       groupLdapFilters.add(groupLdapFilter);
-  }
-
-  public List<String> getRoleLdapFilters() {
-    return roleLdapFilters;
   }
 
   public void addRoleLdapFilter(String roleLdapFilter) {

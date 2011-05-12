@@ -27,8 +27,8 @@ public class CognosShibAuthNamespace implements INamespace {
 
   protected ConfigHandler configHandler = null;
 
-  public CognosShibAuthNamespace(ConfigHandler configHandler) {
-    this.configHandler = configHandler;
+  CognosShibAuthNamespace() {
+    this.configHandler = ConfigHandler.instance();
   }
 
   public void init(INamespaceConfiguration iNamespaceConfiguration) throws UnrecoverableException {

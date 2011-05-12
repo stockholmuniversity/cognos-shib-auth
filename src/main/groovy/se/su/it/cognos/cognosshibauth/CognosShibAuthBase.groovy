@@ -31,8 +31,8 @@ public class CognosShibAuthBase extends CognosShibAuthNamespace implements IName
 
   HashMap<String,NamespaceFolder> folders = null;
 
-  public CognosShibAuthBase(ConfigHandler configHandler) {
-    super(configHandler);
+  CognosShibAuthBase() {
+    super()
 
     folders = new HashMap<String,NamespaceFolder>();
   }
@@ -78,7 +78,6 @@ public class CognosShibAuthBase extends CognosShibAuthNamespace implements IName
 
 	  switch (searchType) {
 	    case ISearchStep.SearchAxis.Self :
-		  {
 		    if (objectID == null) {
 			  if (filter == null || true) {
                 result.addObject(this);
@@ -104,7 +103,6 @@ public class CognosShibAuthBase extends CognosShibAuthNamespace implements IName
             else if(isFolder(objectID)) {
               result.addObject(folders.get(objectID));
             }
-          }
           break;
         case ISearchStep.SearchAxis.Child :
           if(objectID == null) {

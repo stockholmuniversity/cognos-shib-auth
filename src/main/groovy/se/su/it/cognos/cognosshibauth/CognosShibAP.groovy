@@ -22,10 +22,6 @@ class CognosShibAP extends CognosShibAuthBase implements INamespaceAuthenticatio
 
   private Logger LOG = Logger.getLogger(CognosShibAP.class.getName());
 
-  public CognosShibAP() {
-    super(ConfigHandler.instance())
-  }
-
   @Override
   public IVisa logon(IBiBusHeader2 iBiBusHeader2) throws UserRecoverableException, SystemRecoverableException,
           UnrecoverableException {
