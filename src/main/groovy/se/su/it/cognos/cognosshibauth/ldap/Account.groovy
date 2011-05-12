@@ -6,7 +6,6 @@ import com.cognos.CAM_AAA.authentication.IAccount
 
 import se.su.it.cognos.cognosshibauth.ldap.schema.SuPerson
 import se.su.it.cognos.cognosshibauth.CognosShibAuthNamespace
-import static gldapo.filter.FilterUtil.eq
 
 public class Account extends UiClass implements IAccount {
 
