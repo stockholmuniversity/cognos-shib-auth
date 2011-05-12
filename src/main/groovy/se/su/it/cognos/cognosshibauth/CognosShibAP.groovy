@@ -40,33 +40,33 @@ class CognosShibAP extends CognosShibAuthBase implements INamespaceAuthenticatio
     entitlements = ["urn:mace:swami.se:gmai:su-ivs:analyst"]
 
     Account account = Account.findByUid(remoteUser)
-    
+/*
     String mail = "foo@su.se" //getHeaderValue(iBiBusHeader2, configHandler.getHeaderMail(), true)
-    account.mail mail
+    account.mail = mail
 
     String businessPhone = getHeaderValue(iBiBusHeader2, configHandler.getHeaderBusinessPhone(), false)
-    account.telephoneNumber businessPhone
+    account.telephoneNumber = businessPhone
 
     String homePhone = getHeaderValue(iBiBusHeader2, configHandler.getHeaderHomePhone(), false)
-    account.setHomePhone homePhone
+    account.setHomePhone = homePhone
 
     String mobilePhone = getHeaderValue(iBiBusHeader2, configHandler.getHeaderMobilePhone(), false)
-    account.mobile mobilePhone
+    account.mobile = mobilePhone
 
     String faxPhone = getHeaderValue(iBiBusHeader2, configHandler.getHeaderFaxPhone(), false)
-    account.setFaxPhone faxPhone
+    account.setFaxPhone = faxPhone
 
     String pagerPhone = getHeaderValue(iBiBusHeader2, configHandler.getHeaderPagerPhone(), false)
-    account.setPagerPhone pagerPhone
+    account.setPagerPhone = pagerPhone
 
     String postalAddress = getHeaderValue(iBiBusHeader2, configHandler.getHeaderPostalAddress(), false)
-    account.registeredAddress postalAddress
-
+    account.registeredAddress = postalAddress
+*/
     visa.init account
 
     entitlements.each { entitlement ->
       String roleName = Role.parseRoleFromEntitlementUri(entitlement);
-      Role role = new Role(namespaceId, roleName);
+      Role role = new Role(roleName);
       visa.addRole(role);
     }
 
