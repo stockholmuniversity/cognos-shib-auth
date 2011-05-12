@@ -2,10 +2,6 @@ package se.su.it.cognos.cognosshibauth.ldap.schema
 
 import gldapo.schema.annotation.GldapoSchemaFilter
 import gldapo.schema.annotation.GldapoNamingAttribute
-import se.su.it.cognos.cognosshibauth.config.ConfigHandler
-import java.util.logging.Logger
-import java.util.logging.Level
-import gldapo.Gldapo
 
 /**
  * User: Joakim Lundin <joakim.lundin@it.su.se>

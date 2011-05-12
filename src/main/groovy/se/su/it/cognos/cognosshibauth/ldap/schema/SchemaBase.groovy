@@ -4,12 +4,11 @@ import se.su.it.cognos.cognosshibauth.config.ConfigHandler
 import java.util.logging.Logger
 import java.util.logging.Level
 import gldapo.Gldapo
+import gldapo.GldapoDirectoryRegistry
+import gldapo.GldapoSchemaRegistry
+import gldapo.GldapoDirectory
+import se.su.it.cognos.cognosshibauth.ldap.DummyGldapoDirectoryRegistry
 
-/**
- * User: Joakim Lundin <joakim.lundin@it.su.se>
- * Date: 2011-05-10
- * Time: 12:51
- */
 class SchemaBase {
   static {
     ConfigHandler configHandler = ConfigHandler.instance()
@@ -21,22 +20,27 @@ class SchemaBase {
     Logger LOG = Logger.getLogger(SchemaBase.class.getName())
     LOG.log(Level.FINE, "Initializing Gldapo schema '${SchemaBase.class.getName()}'")
 
-    Gldapo.initialize(
-            directories: [
-                    example: [
-                            url: url,
-                            base: baseDn,
-                            searchControls: [
-                                    countLimit: countLimit,
-                                    timeLimit: timeLimit,
-                                    searchScope: "subtree"
-                            ]
-                    ]
-            ],
-            schemas: [
-                    se.su.it.cognos.cognosshibauth.ldap.schema.SuPerson,
-                    se.su.it.cognos.cognosshibauth.ldap.schema.GroupOfUniqueNames
-            ]
-    )
+    Gldapo gldapo = new Gldapo()
+
+    def gldapoDirectoryMap = [
+      defaultDirectory: true,
+      url: url,
+      base: baseDn,
+      searchControls: [
+        countLimit: 500,
+        timeLimit: 120000,
+        searchScope: "subtree"
+      ]
+    ]
+
+    GldapoSchemaRegistry gldapoSchemaRegistry = new GldapoSchemaRegistry(gldapo)
+    gldapoSchemaRegistry.add(se.su.it.cognos.cognosshibauth.ldap.schema.SuPerson)
+    gldapoSchemaRegistry.add(se.su.it.cognos.cognosshibauth.ldap.schema.GroupOfUniqueNames)
+    gldapo.setSchemas(gldapoSchemaRegistry)
+
+    DummyGldapoDirectoryRegistry gldapoDirectoryRegistry = new DummyGldapoDirectoryRegistry()
+    GldapoDirectory gldapoDirectory = new GldapoDirectory("example", gldapoDirectoryMap)
+    gldapoDirectoryRegistry.put("example", gldapoDirectory)
+    gldapo.setDirectories(gldapoDirectoryRegistry)
   }
 }
