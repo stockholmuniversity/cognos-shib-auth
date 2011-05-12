@@ -93,7 +93,7 @@
       <description>Roles folder</description>
       <children>
         <roles>
-          <ldap_filter>eduPersonEntitlement=urn:mace:swami.se:gmai:su-ivs:*</ldap_filter>
+          <ldap_filter>(eduPersonEntitlement=urn:mace:swami.se:gmai:su-ivs:*)</ldap_filter>
         </roles>
       </children>
     </folder>
