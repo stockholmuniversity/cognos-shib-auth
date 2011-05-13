@@ -68,49 +68,18 @@ public class Visa implements IVisa {
     visaValidator.destroy();
   }
 
-  public ITrustedCredential generateTrustedCredential(     // implementera ordentligt senare...
-          IBiBusHeader theAuthRequest) throws UserRecoverableException,
-          SystemRecoverableException, UnrecoverableException {
-
+  public ITrustedCredential generateTrustedCredential(IBiBusHeader theAuthRequest)
+          throws UnrecoverableException {
+    //TODO: Implement something smart
     LOG.log(Level.FINEST, "Generating trusted credentials.");
-    boolean isValidCredentials = true;
-    String[] theUsername = null;
-    String[] thePassword = null;
-    theUsername = theAuthRequest.getCredentialValue("username");
-
-    if (theUsername == null && thePassword == null)
-       theUsername = new String[]{account.getUserName()};
-    else if (theUsername != null && theUsername.length == 1 && theUsername[0].equals(account.getUserName()))
-      isValidCredentials = false; // nånBraKoll(theUsername[0]);
-
-    if (!isValidCredentials) {
-      UserRecoverableException e = new UserRecoverableException(
-              "Please type your credentials for authentication.",
-              "The provided credentials are invalid.");
-      throw e;
-    }
-
-    TrustedCredential tc = new TrustedCredential();
-    tc.addCredentialValue("username", theUsername.toString());
-    return tc;
+    return null;
   }
 
   public ICredential generateCredential(IBiBusHeader theAuthRequest)
-          throws UserRecoverableException, SystemRecoverableException,
-          UnrecoverableException {
+          throws UnrecoverableException {
+    //TODO: Implement something smart
     LOG.log(Level.FINEST, "Generating credentials.");
-    boolean validCredential = true; //nånBraKoll(account.getUserName());
-    if(! validCredential){
-      UnrecoverableException e = new UnrecoverableException(
-              "Could not generate credentials for the user.",
-              "Visa contains invalid credentials.");
-      throw e;
-    }
-    else {
-      Credential credentials = new Credential();
-      credentials.addCredentialValue("username", account.getUserName());
-      return credentials;
-    }
+    return null;
   }
 
   public boolean isValid() {
