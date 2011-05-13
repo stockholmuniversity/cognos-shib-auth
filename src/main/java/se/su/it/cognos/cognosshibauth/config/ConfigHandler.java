@@ -11,21 +11,15 @@ import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-
-/**
- * Created by IntelliJ IDEA.
- * User: joakim
- * Date: 2011-04-06
- * Time: 07:04
- * To change this template use File | Settings | File Templates.
- */
 public class ConfigHandler {
 
-  private static ConfigHandler _instance = null;
-  private static String CONFIG_FILENAME = "shib_auth.xml";
-  private Logger LOG = Logger.getLogger(ConfigHandler.class.getName());
+  private static final String CONFIG_FILENAME = "shib_auth.xml";
 
-  private XMLConfiguration config = new XMLConfiguration();
+  private static ConfigHandler _instance = null;
+
+  private final Logger LOG = Logger.getLogger(ConfigHandler.class.getName());
+
+  private final XMLConfiguration config = new XMLConfiguration();
 
   private String headerRemoteUser = "REMOTE_USER";
   private String headerGivenName = "givenName";
@@ -43,7 +37,7 @@ public class ConfigHandler {
 
   private String headerEntitlement = "entitlement";
 
-  protected ConfigHandler() {
+  private ConfigHandler() {
     config.setFileName(CONFIG_FILENAME);
     try {
       config.load();
