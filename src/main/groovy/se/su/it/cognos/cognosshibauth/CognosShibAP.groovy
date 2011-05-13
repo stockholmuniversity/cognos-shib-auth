@@ -28,7 +28,7 @@ class CognosShibAP extends CognosShibAuthBase implements INamespaceAuthenticatio
     Visa visa = new Visa(configHandler)
 
     String remoteUser = getHeaderValue(iBiBusHeader2, configHandler.getHeaderRemoteUser(), true)
-    remoteUser?.replaceAll(/@.*/, "")
+    remoteUser = remoteUser?.replaceAll(/@.*/, "")
 //    String givenName = "Joakim" //getHeaderValue(iBiBusHeader2, configHandler.getHeaderGivenName(), true)
 //    String surname = "Lundin" //getHeaderValue(iBiBusHeader2, configHandler.getHeaderSurname(), true)
 
