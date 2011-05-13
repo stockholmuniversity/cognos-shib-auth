@@ -1,4 +1,4 @@
-package se.su.it.cognos.cognosshibauth.ldap
+package se.su.it.cognos.cognosshibauth.ldap.gldapo
 
 import gldapo.GldapoDirectoryRegistry
 import gldapo.GldapoDirectory

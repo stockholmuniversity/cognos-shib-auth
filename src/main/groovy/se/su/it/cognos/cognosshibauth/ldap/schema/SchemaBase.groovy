@@ -4,10 +4,10 @@ import se.su.it.cognos.cognosshibauth.config.ConfigHandler
 import java.util.logging.Logger
 import java.util.logging.Level
 import gldapo.Gldapo
-import gldapo.GldapoDirectoryRegistry
+
 import gldapo.GldapoSchemaRegistry
 import gldapo.GldapoDirectory
-import se.su.it.cognos.cognosshibauth.ldap.DummyGldapoDirectoryRegistry
+import se.su.it.cognos.cognosshibauth.ldap.gldapo.DummyGldapoDirectoryRegistry
 
 class SchemaBase {
   static {
