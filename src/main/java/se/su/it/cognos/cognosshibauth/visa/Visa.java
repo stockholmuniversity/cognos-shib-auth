@@ -22,7 +22,7 @@ import se.su.it.cognos.cognosshibauth.config.ConfigHandler;
 
 public class Visa implements IVisa {
 
-  private Logger LOG = Logger.getLogger(Visa.class.getName());
+  private final Logger LOG = Logger.getLogger(Visa.class.getName());
 
   private List<IRole> roles;
   private List<IGroup> groups;
@@ -60,7 +60,7 @@ public class Visa implements IVisa {
     visaValidator.init(account);
   }
 
-  public void destroy() throws UnrecoverableException {
+  public void destroy() {
     LOG.log(Level.FINEST, "Destroying Visa for '" + account.getUserName() + "'.");
     roles = null;
     groups = null;
