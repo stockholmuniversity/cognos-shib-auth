@@ -125,4 +125,8 @@ public class Account extends UiClass implements IAccount {
   String getUserName() {
     suPerson.uid
   }
+
+  String getEduPersonEntitlements() {
+    suPerson.eduPersonEntitlement
+  }
 }
