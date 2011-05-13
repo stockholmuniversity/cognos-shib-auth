@@ -23,7 +23,7 @@ public class Role extends UiClass implements IRole {
 
     String gmaiUrn = "${gmaiPrefix}:${gmaiApplication}:${getName(defaultLocale)}"
 
-    List<SuPerson> suPersons = SuPerson.findAll(filter: "eduPersonEntitlement=${gmaiUrn}")
+    List<SuPerson> suPersons = SuPerson.findAll(filter: "(eduPersonEntitlement=${gmaiUrn})")
 
     suPersons.collect { suPerson ->
       new Account(suPerson)
@@ -38,7 +38,11 @@ public class Role extends UiClass implements IRole {
       entitlements.addAll suPerson.eduPersonEntitlement
     }
 
-    entitlements.unique().collect { entitlement ->
+    entitlements.unique().removeAll { entitlement ->
+      !isApplicationRole(entitlement)
+    }
+
+    entitlements.collect { entitlement ->
       new Role(parseRoleFromEntitlementUri(entitlement))
     }
   }
@@ -49,11 +53,20 @@ public class Role extends UiClass implements IRole {
     String gmaiPrefix = configHandler.getStringEntry("gmai.prefix")
     String gmaiApplication = configHandler.getStringEntry("gmai.application")
 
-    if(entitlement != null && entitlement.startsWith("${gmaiPrefix}:${gmaiApplication}:")) {
+    if(entitlement != null && isApplicationRole(entitlement)) {
       String subS = entitlement.substring(("${gmaiPrefix}:${gmaiApplication}:").length())
       subS.indexOf(":")
       return subS
     }
     return null
+  }
+
+  static boolean isApplicationRole(entitlement) {
+    ConfigHandler configHandler = ConfigHandler.instance()
+
+    String gmaiPrefix = configHandler.getStringEntry("gmai.prefix")
+    String gmaiApplication = configHandler.getStringEntry("gmai.application")
+
+    entitlement.startsWith("${gmaiPrefix}:${gmaiApplication}:")
   }
 }
