@@ -27,13 +27,14 @@ class CognosShibAP extends CognosShibAuthBase implements INamespaceAuthenticatio
           UnrecoverableException {
     Visa visa = new Visa(configHandler)
 
-    String remoteUser = "jolu" //getHeaderValue(iBiBusHeader2, configHandler.getHeaderRemoteUser(), true)
-    String givenName = "Joakim" //getHeaderValue(iBiBusHeader2, configHandler.getHeaderGivenName(), true)
-    String surname = "Lundin" //getHeaderValue(iBiBusHeader2, configHandler.getHeaderSurname(), true)
+    String remoteUser = getHeaderValue(iBiBusHeader2, configHandler.getHeaderRemoteUser(), true)
+    remoteUser?.replaceAll(/@.*/, "")
+//    String givenName = "Joakim" //getHeaderValue(iBiBusHeader2, configHandler.getHeaderGivenName(), true)
+//    String surname = "Lundin" //getHeaderValue(iBiBusHeader2, configHandler.getHeaderSurname(), true)
 
-    String[] entitlements = getHeaderValues(iBiBusHeader2, configHandler.getHeaderEntitlement(), false)
+//    String[] entitlements = getHeaderValues(iBiBusHeader2, configHandler.getHeaderEntitlement(), false)
 
-    entitlements = ["urn:mace:swami.se:gmai:su-ivs:analyst"]
+//    entitlements = ["urn:mace:swami.se:gmai:su-ivs:analyst"]
 
     Account account = Account.findByUid(remoteUser)
 /*
@@ -60,11 +61,11 @@ class CognosShibAP extends CognosShibAuthBase implements INamespaceAuthenticatio
 */
     visa.init account
 
-    entitlements.each { entitlement ->
+/*    account.eduPersonEntitlements.each { entitlement ->
       String roleName = Role.parseRoleFromEntitlementUri(entitlement);
       Role role = new Role(roleName);
       visa.addRole(role);
-    }
+    }*/
 
     return visa;
   }
@@ -75,7 +76,7 @@ class CognosShibAP extends CognosShibAuthBase implements INamespaceAuthenticatio
     if(header == null || header.trim().length() == 0)
       return new String[0];
 
-    String[] headerValue = iBiBusHeader2.getEnvVarValue(header); //TODO: Use getTrustedEnvVarValue when releasing stable.
+    String[] headerValue = iBiBusHeader2.getTrustedEnvVarValue(header); //TODO: Use getTrustedEnvVarValue when releasing stable.
 
     if(headerValue == null) {
       LOG.log(Level.INFO, "Header '" + header + "' not found.");
