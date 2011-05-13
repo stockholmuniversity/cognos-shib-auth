@@ -32,7 +32,7 @@ public class Credential implements ICredential {
   public String[] getCredentialValue(String theName) {
     List<String> list = credentials.get(theName);
     if (list != null)
-      return (String[]) list.toArray(new String[list.size()]);
+      return list.toArray(new String[list.size()]);
     return null;
   }
 }
