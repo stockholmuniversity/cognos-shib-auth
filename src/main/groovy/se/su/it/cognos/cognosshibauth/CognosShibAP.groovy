@@ -29,43 +29,9 @@ class CognosShibAP extends CognosShibAuthBase implements INamespaceAuthenticatio
 
     String remoteUser = getHeaderValue(iBiBusHeader2, configHandler.getHeaderRemoteUser(), true)
     remoteUser = remoteUser?.replaceAll(/@.*/, "")
-//    String givenName = "Joakim" //getHeaderValue(iBiBusHeader2, configHandler.getHeaderGivenName(), true)
-//    String surname = "Lundin" //getHeaderValue(iBiBusHeader2, configHandler.getHeaderSurname(), true)
-
-//    String[] entitlements = getHeaderValues(iBiBusHeader2, configHandler.getHeaderEntitlement(), false)
-
-//    entitlements = ["urn:mace:swami.se:gmai:su-ivs:analyst"]
 
     Account account = Account.findByUid(remoteUser)
-/*
-    String mail = "foo@su.se" //getHeaderValue(iBiBusHeader2, configHandler.getHeaderMail(), true)
-    account.mail = mail
-
-    String businessPhone = getHeaderValue(iBiBusHeader2, configHandler.getHeaderBusinessPhone(), false)
-    account.telephoneNumber = businessPhone
-
-    String homePhone = getHeaderValue(iBiBusHeader2, configHandler.getHeaderHomePhone(), false)
-    account.setHomePhone = homePhone
-
-    String mobilePhone = getHeaderValue(iBiBusHeader2, configHandler.getHeaderMobilePhone(), false)
-    account.mobile = mobilePhone
-
-    String faxPhone = getHeaderValue(iBiBusHeader2, configHandler.getHeaderFaxPhone(), false)
-    account.setFaxPhone = faxPhone
-
-    String pagerPhone = getHeaderValue(iBiBusHeader2, configHandler.getHeaderPagerPhone(), false)
-    account.setPagerPhone = pagerPhone
-
-    String postalAddress = getHeaderValue(iBiBusHeader2, configHandler.getHeaderPostalAddress(), false)
-    account.registeredAddress = postalAddress
-*/
     visa.init account
-
-/*    account.eduPersonEntitlements.each { entitlement ->
-      String roleName = Role.parseRoleFromEntitlementUri(entitlement);
-      Role role = new Role(roleName);
-      visa.addRole(role);
-    }*/
 
     return visa;
   }
