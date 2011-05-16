@@ -49,32 +49,22 @@ class CognosShibAP extends CognosShibAuthBase implements INamespaceAuthenticatio
   private String[] getHeaderValues(IBiBusHeader2 iBiBusHeader2, String header, boolean required)
           throws SystemRecoverableException {
 
-    if(header == null || header.trim().length() == 0)
-      return new String[0];
+    header = header?.trim()
 
     String[] headerValue = iBiBusHeader2.getTrustedEnvVarValue(header);
 
     if(headerValue == null) {
       LOG.log(Level.INFO, "Header '" + header + "' not found.");
-      if(required) { // Value not found in trusted environment variables.
-        LOG.log(Level.SEVERE, "Header '" + header + "' required but not found, throwing SystemRecoverableException");
-        throw new SystemRecoverableException("Missing required header '" + header + "'.", header);
+
+      if(required) { // Start the "authentication dance"
+        LOG.log(Level.SEVERE, "Header '${header}' required but not found, throwing SystemRecoverableException");
+        throw new SystemRecoverableException("Missing required header '${header}'.", header);
       }
     }
-    else {
-      String values = "";
-      headerValue.each { s ->
-        values += s + ", "
-      }
-      LOG.log(Level.FINEST, "Values in '" + header + "': " + values);
 
-      if(headerValue.length < 1)
-        headerValue = null;
-    }
+    LOG.log(Level.FINEST, "Values in '${header}': " + headerValue?.join(","));
 
-    if(headerValue != null)
-      return headerValue;
-    return new String[0];
+    headerValue
   }
 
   /**
@@ -89,10 +79,8 @@ class CognosShibAP extends CognosShibAuthBase implements INamespaceAuthenticatio
    */
   private String getHeaderValue(IBiBusHeader2 iBiBusHeader2, String header, boolean required)
           throws SystemRecoverableException {
-    String[] headerValues = getHeaderValues(iBiBusHeader2, header, required);
+    String[] values = getHeaderValues(iBiBusHeader2, header, required);
 
-    if(headerValues != null && headerValues.length > 0)
-      return headerValues[0];
-    return null;
+    values.empty ? null : values?.first()
   }
 }
