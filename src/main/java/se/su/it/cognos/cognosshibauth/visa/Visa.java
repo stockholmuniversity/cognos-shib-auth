@@ -1,24 +1,12 @@
 package se.su.it.cognos.cognosshibauth.visa;
 
+import com.cognos.CAM_AAA.authentication.*;
+import se.su.it.cognos.cognosshibauth.config.ConfigHandler;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import com.cognos.CAM_AAA.authentication.IAccount;
-import com.cognos.CAM_AAA.authentication.IBiBusHeader;
-import com.cognos.CAM_AAA.authentication.ICredential;
-import com.cognos.CAM_AAA.authentication.IGroup;
-import com.cognos.CAM_AAA.authentication.IRole;
-import com.cognos.CAM_AAA.authentication.ITrustedCredential;
-import com.cognos.CAM_AAA.authentication.IVisa;
-import com.cognos.CAM_AAA.authentication.SystemRecoverableException;
-import com.cognos.CAM_AAA.authentication.UnrecoverableException;
-import com.cognos.CAM_AAA.authentication.UserRecoverableException;
-import se.su.it.cognos.cognosshibauth.adapters.Credential;
-import se.su.it.cognos.cognosshibauth.adapters.TrustedCredential;
-import se.su.it.cognos.cognosshibauth.config.ConfigHandler;
-
 
 public class Visa implements IVisa {
 
@@ -92,14 +80,12 @@ public class Visa implements IVisa {
     return account;
   }
 
-
   public void addGroup(IGroup theGroup) {
     LOG.log(Level.FINEST, "Adding group to Visa for '" + account.getUserName() + "'.");
     if (groups == null)
       groups = new ArrayList<IGroup>();
     groups.add(theGroup);
   }
-
 
   public IGroup[] getGroups() {
     LOG.log(Level.FINEST, "Getting groups from Visa for '" + account.getUserName() + "'.");
@@ -108,15 +94,12 @@ public class Visa implements IVisa {
     return null;
   }
 
-
   public void addRole(IRole theRole) {
     LOG.log(Level.FINEST, "Adding role to Visa for '" + account.getUserName() + "'.");
     if (roles == null)
       roles = new ArrayList<IRole>();
     roles.add(theRole);
   }
-
-
 
   public IRole[] getRoles() {
     LOG.log(Level.FINEST, "Getting roles from Visa for '" + account.getUserName() + "'.");
