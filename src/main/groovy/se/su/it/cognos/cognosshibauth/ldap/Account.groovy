@@ -17,7 +17,10 @@ public class Account extends UiClass implements IAccount {
   Locale productLocale
 
   HashMap<String, List<String>> customProperties
-
+  /**
+   * Constructs an Account instance
+   * @param SuPerson suPerson
+   */
   public Account(SuPerson suPerson) {
     super("${CognosShibAuthNamespace.namespaceId}:${UiClass.PREFIX_USER}:${suPerson.getDn()}")
 
@@ -32,7 +35,7 @@ public class Account extends UiClass implements IAccount {
   }
 /**
  * Create an Account from dn
- * @param dn identifier in sukat
+ * @param String dn identifier in sukat
  * @return A new Account instance based on what is fetched from sukat from dn
  */
   public static Account createFromDn(String dn) {
@@ -55,8 +58,8 @@ public class Account extends UiClass implements IAccount {
   }
   /**
    * Add property to the Accounts custom property HashMap
-   * @param theName
-   * @param theValue
+   * @param String theName
+   * @param String theValue
    */
   public void addCustomProperty(String theName, String theValue) {
     List<String> list = customProperties.get(theName);
@@ -70,7 +73,7 @@ public class Account extends UiClass implements IAccount {
   }
   /**
    * Find an Account by uid
-   * @param uid
+   * @param String uid
    * @return A new Account instance based on what is fetched from sukat from uid
    */
   static Account findByUid(String uid) {
@@ -138,7 +141,7 @@ public class Account extends UiClass implements IAccount {
     suPerson.uid
   }
   /**
-   *
+   * Fetches the Accounts eduPersonEntitlement strings in a Set
    * @return Set<String> eduPersonEntitlement
    */
   String getEduPersonEntitlements() {
