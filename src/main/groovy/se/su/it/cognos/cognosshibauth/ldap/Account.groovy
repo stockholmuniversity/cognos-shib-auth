@@ -17,7 +17,10 @@ public class Account extends UiClass implements IAccount {
   Locale productLocale
 
   HashMap<String, List<String>> customProperties
-
+  /**
+   * Constructs an Account instance
+   * @param SuPerson suPerson
+   */
   public Account(SuPerson suPerson) {
     super("${CognosShibAuthNamespace.namespaceId}:${UiClass.PREFIX_USER}:${suPerson.getDn()}")
 
@@ -30,11 +33,15 @@ public class Account extends UiClass implements IAccount {
     addName(contentLocale, "${suPerson.givenName} ${suPerson.sn}")
     addDescription(contentLocale, "") //TODO: link to "Kontohantering"?
   }
-
+/**
+ * Create an Account from dn
+ * @param String dn identifier in sukat
+ * @return A new Account instance based on what is fetched from sukat from dn
+ */
   public static Account createFromDn(String dn) {
     new Account(SuPerson.getByDn(dn))
   }
-
+  @Override
   public String[] getCustomPropertyNames() {
     if (customProperties != null) {
       Set keySet = this.customProperties.keySet();
@@ -42,14 +49,18 @@ public class Account extends UiClass implements IAccount {
     }
     return null;
   }
-
+  @Override
   public String[] getCustomPropertyValue(String theName) {
     List<String> list = customProperties.get(theName);
     if (list != null)
       return (String[]) list.toArray(new String[list.size()]);
     return null;
   }
-
+  /**
+   * Add property to the Accounts custom property HashMap
+   * @param String theName
+   * @param String theValue
+   */
   public void addCustomProperty(String theName, String theValue) {
     List<String> list = customProperties.get(theName);
 
@@ -60,7 +71,11 @@ public class Account extends UiClass implements IAccount {
 
     list.add(theValue);
   }
-
+  /**
+   * Find an Account by uid
+   * @param String uid
+   * @return A new Account instance based on what is fetched from sukat from uid
+   */
   static Account findByUid(String uid) {
     SuPerson suPerson1 = SuPerson.findByUid(uid)
     return new Account(suPerson1)
@@ -125,7 +140,10 @@ public class Account extends UiClass implements IAccount {
   String getUserName() {
     suPerson.uid
   }
-
+  /**
+   * Fetches the Accounts eduPersonEntitlement strings in a Set
+   * @return Set<String> eduPersonEntitlement
+   */
   String getEduPersonEntitlements() {
     suPerson.eduPersonEntitlement
   }

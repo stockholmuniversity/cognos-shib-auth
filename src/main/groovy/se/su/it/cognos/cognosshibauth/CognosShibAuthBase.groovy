@@ -44,6 +44,7 @@ public class CognosShibAuthBase extends CognosShibAuthNamespace implements IName
     loadFolders();
   }
 
+  @Override
   public void logoff(IVisa iVisa, IBiBusHeader iBiBusHeader) {
     Visa visa = (Visa) iVisa;
     try {
@@ -54,6 +55,7 @@ public class CognosShibAuthBase extends CognosShibAuthNamespace implements IName
     }
   }
 
+  @Override
   public IQueryResult search(IVisa iVisa, IQuery iQuery) throws UnrecoverableException {
 
     // We can safely assume that we'll get back the same Visa that we issued.
@@ -65,8 +67,8 @@ public class CognosShibAuthBase extends CognosShibAuthNamespace implements IName
       String objectID = expression.getObjectID();
       ISearchStep[] steps = expression.getSteps();
 
-      // It doesn't make sense to have multiple steps for this provider
-      // since the objects are not hierarchical.
+
+      //TODO handle hierarchical steps
       if (steps.length != 1) {
         throw new UnrecoverableException(
                 "Internal Error",
@@ -138,12 +140,13 @@ public class CognosShibAuthBase extends CognosShibAuthNamespace implements IName
     return result;
   }
 
+  /**
+   *  Loads the folders specified in configuration file
+   */
   private void loadFolders() {
     List<HierarchicalConfiguration> foldersConfiguration = configHandler.getFoldersConfig();
-
     for(HierarchicalConfiguration folderConfiguration : foldersConfiguration) {
       NamespaceFolder namespaceFolder = NamespaceFolder.configEntryToFolder(folders, folderConfiguration);
-
       folders.put(namespaceFolder.getObjectID(), namespaceFolder);
     }
   }
