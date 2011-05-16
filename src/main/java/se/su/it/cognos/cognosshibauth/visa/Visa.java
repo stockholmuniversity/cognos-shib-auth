@@ -56,7 +56,7 @@ public class Visa implements IVisa {
       throw new UnrecoverableException("Failed to load visa validator.", e.getMessage());
     }
 
-    visaValidator.init(account);
+    visaValidator.init(this);
   }
 
   /**

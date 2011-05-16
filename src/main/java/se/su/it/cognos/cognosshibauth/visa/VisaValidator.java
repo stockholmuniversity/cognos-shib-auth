@@ -1,6 +1,6 @@
 package se.su.it.cognos.cognosshibauth.visa;
 
-import com.cognos.CAM_AAA.authentication.IAccount;
+import com.cognos.CAM_AAA.authentication.IVisa;
 
 /**
  * Interface for validating Visas.
@@ -10,9 +10,9 @@ public interface VisaValidator {
   /**
    * Init the validator.
    *
-   * @param iAccount the account to validate
+   * @param iVisa the account to validate
    */
-  public void init(IAccount iAccount);
+  public void init(IVisa iVisa);
 
   /**
    * The method called upon validation.
