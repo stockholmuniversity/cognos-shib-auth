@@ -3,17 +3,26 @@ package se.su.it.cognos.cognosshibauth.visa;
 import com.cognos.CAM_AAA.authentication.IAccount;
 
 /**
- * Created by IntelliJ IDEA.
- * User: joakim
- * Date: 2011-04-18
- * Time: 08:57
- * To change this template use File | Settings | File Templates.
+ * Interface for validating Visas.
  */
 public interface VisaValidator {
 
+  /**
+   * Init the validator.
+   *
+   * @param iAccount the account to validate
+   */
   public void init(IAccount iAccount);
 
+  /**
+   * The method called upon validation.
+   *
+   * @return true if Visa is valid.
+   */
   public boolean isValid();
 
+  /**
+   * Destroy the validator.
+   */
   public void destroy();
 }
