@@ -36,13 +36,23 @@ class CognosShibAP extends CognosShibAuthBase implements INamespaceAuthenticatio
     return visa;
   }
 
+  /**
+   * Starts the "authentication dance" and gets header values from TrustedEnvVar in IBiBusHeader2.
+   *
+   * @param iBiBusHeader2 the IBiBusHeader2 object
+   * @param header the header name
+   * @param required true if this header should generate a SystemRecoverableException and start the
+   * "authentication dance"
+   * @return the value of the header
+   * @throws SystemRecoverableException thrown to start the "authentication dance" if the header value is null
+   */
   private String[] getHeaderValues(IBiBusHeader2 iBiBusHeader2, String header, boolean required)
           throws SystemRecoverableException {
 
     if(header == null || header.trim().length() == 0)
       return new String[0];
 
-    String[] headerValue = iBiBusHeader2.getTrustedEnvVarValue(header); //TODO: Use getTrustedEnvVarValue when releasing stable.
+    String[] headerValue = iBiBusHeader2.getTrustedEnvVarValue(header);
 
     if(headerValue == null) {
       LOG.log(Level.INFO, "Header '" + header + "' not found.");
@@ -67,6 +77,16 @@ class CognosShibAP extends CognosShibAuthBase implements INamespaceAuthenticatio
     return new String[0];
   }
 
+  /**
+   * Starts the "authentication dance" and gets header value from TrustedEnvVar in IBiBusHeader2.
+   *
+   * @param iBiBusHeader2 the IBiBusHeader2 object
+   * @param header the header name
+   * @param required true if this header should generate a SystemRecoverableException and start the
+   * "authentication dance"
+   * @return the value of the header
+   * @throws SystemRecoverableException thrown to start the "authentication dance" if the header value is null
+   */
   private String getHeaderValue(IBiBusHeader2 iBiBusHeader2, String header, boolean required)
           throws SystemRecoverableException {
     String[] headerValues = getHeaderValues(iBiBusHeader2, header, required);
