@@ -20,15 +20,26 @@ public class Visa implements IVisa {
 
   private ConfigHandler configHandler = null;
 
-  public Visa(ConfigHandler configHandler) {
+  /**
+   * Creates a new Visa.
+   *
+   * @param configHandler the ConfigHandler used for this object.
+   */
+  Visa(ConfigHandler configHandler) {
     LOG.log(Level.FINEST, "Creating a Visa.");
     roles = null;
     groups = null;
     this.configHandler = configHandler;
   }
 
-  public void init(IAccount theAccount) throws UnrecoverableException {
-    account = theAccount;
+  /**
+   * Inits the Visa.
+   *
+   * @param account the account
+   * @throws UnrecoverableException thrown if something goes wrong, if say the VisaValidator fails to load.
+   */
+  void init(IAccount account) throws UnrecoverableException {
+    this.account = account;
     
     LOG.log(Level.FINEST, "Initing new account for '" + account.getUserName() + "'");
 
@@ -48,7 +59,10 @@ public class Visa implements IVisa {
     visaValidator.init(account);
   }
 
-  public void destroy() {
+  /**
+   * Destroys the Visa.
+   */
+  void destroy() {
     LOG.log(Level.FINEST, "Destroying Visa for '" + account.getUserName() + "'.");
     roles = null;
     groups = null;
@@ -56,6 +70,7 @@ public class Visa implements IVisa {
     visaValidator.destroy();
   }
 
+  @Override
   public ITrustedCredential generateTrustedCredential(IBiBusHeader theAuthRequest)
           throws UnrecoverableException {
     //TODO: Implement something smart
@@ -63,6 +78,7 @@ public class Visa implements IVisa {
     return null;
   }
 
+  @Override
   public ICredential generateCredential(IBiBusHeader theAuthRequest)
           throws UnrecoverableException {
     //TODO: Implement something smart
@@ -70,16 +86,23 @@ public class Visa implements IVisa {
     return null;
   }
 
+  @Override
   public boolean isValid() {
     LOG.log(Level.FINEST, "Checking isValid.");
     return visaValidator.isValid();
   }
 
+  @Override
   public IAccount getAccount() {
     LOG.log(Level.FINEST, "Getting account for '" + account.getUserName() + "'.");
     return account;
   }
 
+  /**
+   * Adds a group to the Visa.
+   *
+   * @param theGroup the group to add.
+   */
   public void addGroup(IGroup theGroup) {
     LOG.log(Level.FINEST, "Adding group to Visa for '" + account.getUserName() + "'.");
     if (groups == null)
@@ -87,6 +110,7 @@ public class Visa implements IVisa {
     groups.add(theGroup);
   }
 
+  @Override
   public IGroup[] getGroups() {
     LOG.log(Level.FINEST, "Getting groups from Visa for '" + account.getUserName() + "'.");
     if (groups != null)
@@ -94,6 +118,11 @@ public class Visa implements IVisa {
     return null;
   }
 
+  /**
+   * Adds a role to the visa.
+   *
+   * @param theRole the role fto add.
+   */
   public void addRole(IRole theRole) {
     LOG.log(Level.FINEST, "Adding role to Visa for '" + account.getUserName() + "'.");
     if (roles == null)
@@ -101,6 +130,7 @@ public class Visa implements IVisa {
     roles.add(theRole);
   }
 
+  @Override
   public IRole[] getRoles() {
     LOG.log(Level.FINEST, "Getting roles from Visa for '" + account.getUserName() + "'.");
     if (roles != null)
