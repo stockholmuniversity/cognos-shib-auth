@@ -1,17 +1,10 @@
 package se.su.it.cognos.cognosshibauth
 
-import com.cognos.CAM_AAA.authentication.INamespaceAuthenticationProvider2
-import com.cognos.CAM_AAA.authentication.IVisa
-import com.cognos.CAM_AAA.authentication.IBiBusHeader2
-import se.su.it.cognos.cognosshibauth.config.ConfigHandler
-import com.cognos.CAM_AAA.authentication.UserRecoverableException
-import com.cognos.CAM_AAA.authentication.UnrecoverableException
-import se.su.it.cognos.cognosshibauth.visa.Visa
-import se.su.it.cognos.cognosshibauth.ldap.Account
-import com.cognos.CAM_AAA.authentication.SystemRecoverableException
 import java.util.logging.Level
 import java.util.logging.Logger
-import se.su.it.cognos.cognosshibauth.ldap.Role
+import se.su.it.cognos.cognosshibauth.ldap.Account
+import se.su.it.cognos.cognosshibauth.visa.Visa
+import com.cognos.CAM_AAA.authentication.*
 
 /**
  * User: Joakim Lundin (joakim.lundin@it.su.se)
