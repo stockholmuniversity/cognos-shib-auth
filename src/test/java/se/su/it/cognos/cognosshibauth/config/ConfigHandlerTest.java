@@ -24,7 +24,7 @@ public class ConfigHandlerTest {
   @Test
   public void testThatNameReturnsNameForLocale() throws Exception {
     Locale locale_sv = new Locale("sv_SE");
-    ConfigHandler configHandler = new ConfigHandler();
+    ConfigHandler configHandler = ConfigHandler.instance();
 
     String sv_name = configHandler.getName(locale_sv);
 
@@ -33,7 +33,7 @@ public class ConfigHandlerTest {
 
   @Test
   public void testThatGetCapabilitiesReturnsAllCapabilities() throws Exception {
-    ConfigHandler configHandler = new ConfigHandler();
+    ConfigHandler configHandler = ConfigHandler.instance();
 
     List<String> list = configHandler.getCapabilities();
 
