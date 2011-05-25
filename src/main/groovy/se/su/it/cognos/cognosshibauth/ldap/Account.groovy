@@ -144,7 +144,13 @@ public class Account extends UiClass implements IAccount {
    * Fetches the Accounts eduPersonEntitlement strings in a Set
    * @return Set<String> eduPersonEntitlement
    */
-  String getEduPersonEntitlements() {
+  Set<String> getEduPersonEntitlements() {
     suPerson.eduPersonEntitlement
+  }
+
+  List<Role> getRoles() {
+    getEduPersonEntitlements().collect { entitlement ->
+      Role.createFromUri(entitlement)
+    }.removeAll {it == null}
   }
 }
