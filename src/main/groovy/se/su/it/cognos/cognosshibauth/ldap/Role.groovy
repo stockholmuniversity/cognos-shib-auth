@@ -30,6 +30,12 @@ public class Role extends UiClass implements IRole {
     } as IBaseClass[]
   }
 
+  static Role createFromUri(String gmaiUri) {
+    String roleName = parseRoleFromEntitlementUri(gmaiUri)
+
+    roleName != null ? new Role(roleName) : null
+  }
+
   static List<Role> findAllByFilter(String filter) {
     List<SuPerson> suPersons = SuPerson.findAll(filter: filter)
 
