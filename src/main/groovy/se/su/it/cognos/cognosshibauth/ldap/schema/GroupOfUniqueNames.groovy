@@ -16,4 +16,8 @@ class GroupOfUniqueNames extends SchemaBase {
   String cn
   String description
   Set<String> uniqueMember
+
+  static Collection<GroupOfUniqueNames> findAllByUniqueMember(String memberDn) {
+    return findAll(filter:"(uniqueMember=$memberDn)")
+  }
 }
