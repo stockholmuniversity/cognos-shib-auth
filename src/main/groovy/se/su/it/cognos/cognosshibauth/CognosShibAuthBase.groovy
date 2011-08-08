@@ -40,7 +40,7 @@ public class CognosShibAuthBase extends CognosShibAuthNamespace implements IName
   @Override
   public void init(INamespaceConfiguration iNamespaceConfiguration) throws UnrecoverableException {
     super.init(iNamespaceConfiguration);
-    
+
     loadFolders();
   }
 
@@ -60,7 +60,7 @@ public class CognosShibAuthBase extends CognosShibAuthNamespace implements IName
 
     // We can safely assume that we'll get back the same Visa that we issued.
     Visa visa = (Visa) iVisa;
-	QueryResult result = new QueryResult();
+    QueryResult result = new QueryResult();
 
     try {
       ISearchExpression expression = iQuery.getSearchExpression();
@@ -75,18 +75,27 @@ public class CognosShibAuthBase extends CognosShibAuthNamespace implements IName
                 "Invalid search expression. Multiple steps is not supported for this namespace.");
       }
 
-	  int searchType = steps[0].getAxis();
-	  ISearchFilter filter = steps[0].getPredicate();
+      int searchType = steps[0].getAxis();
+      ISearchFilter filter = steps[0].getPredicate();
 
-	  switch (searchType) {
-	    case ISearchStep.SearchAxis.Self :
-		    if (objectID == null) {
-			  if (filter == null || true) {
+      String key = result + searchType + filter.getSearchFilterType();
+
+      byte[] bytes = MyCache.getInstance().get(key);
+
+      if(bytes != null){
+         result = toObject(bytes);
+        return result;
+      }
+      else{
+        switch (searchType) {
+          case ISearchStep.SearchAxis.Self :
+            if (objectID == null) {
+              if (filter == null || true) {
                 result.addObject(this);
-			  }
+              }
 
               if (searchType == ISearchStep.SearchAxis.Self) {
-				return result;
+                return result;
               }
             }
             else if (isUser(objectID) && filter == null) {
@@ -105,31 +114,33 @@ public class CognosShibAuthBase extends CognosShibAuthNamespace implements IName
             else if(isFolder(objectID)) {
               result.addObject(folders.get(objectID));
             }
-          break;
-        case ISearchStep.SearchAxis.Child :
-          if(objectID == null) {
-            for(NamespaceFolder folder : folders.values()) {
-              if(folder.getAncestors().length <= 0)
-                result.addObject(folder);
+            break;
+          case ISearchStep.SearchAxis.Child :
+            if(objectID == null) {
+              for(NamespaceFolder folder : folders.values()) {
+                if(folder.getAncestors().length <= 0)
+                  result.addObject(folder);
+              }
             }
-          }
-          else if(isFolder(objectID) && folders.containsKey(objectID)) {
-            NamespaceFolder folder = folders.get(objectID);
-            for(IUiClass child : folder.getChildren())
-              result.addObject(child);
-          }
-          else if(isRole(objectID)) {
-            Role role = new Role(camIdToName(objectID));
-            for(IBaseClass member : role.getMembers()) {
-              result.addObject(member);
+            else if(isFolder(objectID) && folders.containsKey(objectID)) {
+              NamespaceFolder folder = folders.get(objectID);
+              for(IUiClass child : folder.getChildren())
+                result.addObject(child);
             }
-          }
-          break;
-        case ISearchStep.SearchAxis.Descendent :
-          //Involved in text searches.
-          break;
-        default :
-        break;
+            else if(isRole(objectID)) {
+              Role role = new Role(camIdToName(objectID));
+              for(IBaseClass member : role.getMembers()) {
+                result.addObject(member);
+              }
+            }
+            break;
+          case ISearchStep.SearchAxis.Descendent :
+            //Involved in text searches.
+            break;
+          default :
+            break;
+        }
+
       }
     }
     catch (Exception e) {
@@ -137,7 +148,9 @@ public class CognosShibAuthBase extends CognosShibAuthNamespace implements IName
       LOG.log(Level.SEVERE, "Failed while parsing search query: " + e.getMessage());
       e.printStackTrace();
     }
+    MyCache.getInstance().put(key, 3600, toBytes(result));
     return result;
+
   }
 
   /**
@@ -150,4 +163,33 @@ public class CognosShibAuthBase extends CognosShibAuthNamespace implements IName
       folders.put(namespaceFolder.getObjectID(), namespaceFolder);
     }
   }
+
+  private byte[] toBytes(Object object){
+    java.io.ByteArrayOutputStream baos = new java.io.ByteArrayOutputStream();
+    try{
+      java.io.ObjectOutputStream oos = new java.io.ObjectOutputStream(baos);
+      oos.writeObject(object);
+      oos.flush();
+      oos.close();
+      baos.close();
+    }catch(java.io.IOException ioe){
+    }
+    return baos.toByteArray();
+  }
+
+
+  private Object toObject(byte[] bytes){
+    Object object = null;
+    try{
+      java.io.ByteArrayInputStream bais = new java.io.ByteArrayInputStream(bytes);
+      java.io.ObjectInputStream ois = new java.io.ObjectInputStream(bais);
+      object = ois.readObject();
+      ois.close();
+      bais.close();
+    }catch(java.io.IOException ioe){
+    }catch(java.lang.ClassNotFoundException cnfe){
+    }
+    return object;
+  }
+
 }
