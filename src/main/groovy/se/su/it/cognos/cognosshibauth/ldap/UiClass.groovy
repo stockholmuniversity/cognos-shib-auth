@@ -120,4 +120,11 @@ public class UiClass implements IUiClass {
       return null;
     }
   }
+
+  @Override
+  boolean equals(Object o) {
+    if (o instanceof UiClass)
+      return this.objectID?.equals(o.objectID)
+    return super.equals(o)
+  }
 }
