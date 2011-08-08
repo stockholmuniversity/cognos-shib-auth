@@ -148,9 +148,23 @@ public class Account extends UiClass implements IAccount {
     suPerson.eduPersonEntitlement
   }
 
+  /**
+   * Get all roles for this account
+   *
+   * @return list of roles for this account
+   */
   List<Role> getRoles() {
     getEduPersonEntitlements().collect { entitlement ->
       Role.createFromUri(entitlement)
     }.removeAll {it == null}
+  }
+
+  /**
+   * Get all groups for this account
+   *
+   * @return list of groups for this account
+   */
+  List<Group> getGroups() {
+    Group.findByMember(this)
   }
 }
