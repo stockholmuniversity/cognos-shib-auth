@@ -17,7 +17,9 @@ public class UiClass implements IUiClass, Serializable {
   static final PREFIX_ROLE = "r"
   static final PREFIX_USER = "u"
 
-  private Logger LOG = Logger.getLogger(UiClass.class.getName());
+  private static Logger LOG = Logger.getLogger(UiClass.class.getName());
+
+  transient protected ConfigHandler configHandler = null;
 
   String objectID = null;
 
@@ -27,8 +29,6 @@ public class UiClass implements IUiClass, Serializable {
   private HashMap<Locale, String> descriptions = null;
 
   protected Locale defaultLocale = null;
-
-  protected ConfigHandler configHandler = null;
 
   public UiClass(){}
 
