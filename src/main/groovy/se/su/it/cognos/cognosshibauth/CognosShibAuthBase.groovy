@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.ArrayList;
 
 import static se.su.it.cognos.cognosshibauth.ldap.UiClass.*
 import se.su.it.cognos.cognosshibauth.memcached.MyCache;
@@ -81,20 +82,31 @@ public class CognosShibAuthBase extends CognosShibAuthNamespace implements IName
 
       String key = objectID + searchType + filterType;
 
- //     byte[] bytes = (byte[]) MyCache.getInstance().get(key);
+      //     byte[] bytes = (byte[]) MyCache.getInstance().get(key);
 
-/*      if(bytes != null){
-         result = (QueryResult) toObject(bytes);
-        return result;
+      /*      if(bytes != null){
+               result = (QueryResult) toObject(bytes);
+              return result;
+            }
+            else{
+      */
+
+      ArrayList ret = MyCache.getInstance().get(key);
+      if(ret != null){
+        Iterator iter = ret.iterator();
+        while(iter.hasNext()){
+          result.addObject(iter.next());
+        }
       }
       else{
-*/        switch (searchType) {
+        ret = new ArrayList();
+        switch (searchType) {
           case ISearchStep.SearchAxis.Self :
             if (objectID == null) {
               if (filter == null || true) {
                 result.addObject(this);
+                ret.add(this);
               }
-
               if (searchType == ISearchStep.SearchAxis.Self) {
                 return result;
               }
@@ -104,37 +116,46 @@ public class CognosShibAuthBase extends CognosShibAuthNamespace implements IName
               Account account = (Account) MyCache.getInstance().get(objectID)
               if(account == null) {
                 account = Account.createFromDn(dn);
-                MyCache.getInstance().set(objectID, 3600, account)
+                //MyCache.getInstance().set(objectID, 3600, account)
               }
+              ret.add(account);
               result.addObject(account);
             }
             else if (isRole(objectID)) {
               Role role = new Role(camIdToName(objectID));
+              ret.add(role);
               result.addObject(role);
             }
             else if (isGroup(objectID)) {
               Group group = new Group(camIdToName(objectID));
+              ret.add(group);
               result.addObject(group);
             }
             else if(isFolder(objectID)) {
+              ret.add(folders.get(objectID));
               result.addObject(folders.get(objectID));
             }
             break;
           case ISearchStep.SearchAxis.Child :
             if(objectID == null) {
               for(NamespaceFolder folder : folders.values()) {
-                if(folder.getAncestors().length <= 0)
+                if(folder.getAncestors().length <= 0){
+                  ret.add(folder);
                   result.addObject(folder);
+                }
               }
             }
             else if(isFolder(objectID) && folders.containsKey(objectID)) {
               NamespaceFolder folder = folders.get(objectID);
-              for(IUiClass child : folder.getChildren())
+              for(IUiClass child : folder.getChildren()){
+                ret.add(child);
                 result.addObject(child);
+              }
             }
             else if(isRole(objectID)) {
               Role role = new Role(camIdToName(objectID));
               for(IBaseClass member : role.getMembers()) {
+                ret.add(member);
                 result.addObject(member);
               }
             }
@@ -147,8 +168,8 @@ public class CognosShibAuthBase extends CognosShibAuthNamespace implements IName
         }
 
       }
-//      MyCache.instance.set(key, 3600, toBytes(result));
-//    }
+      MyCache.instance.set(key, 3600, ret);
+    }
     catch (Exception e) {
       //Fetch anything and do nothing (no stack traces in the gui for now)
       LOG.log(Level.SEVERE, "Failed while parsing search query: " + e.getMessage());
