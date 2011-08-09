@@ -59,8 +59,6 @@ public class CognosShibAuthBase extends CognosShibAuthNamespace implements IName
   @Override
   public IQueryResult search(IVisa iVisa, IQuery iQuery) throws UnrecoverableException {
 
-    // We can safely assume that we'll get back the same Visa that we issued.
-    Visa visa = (Visa) iVisa;
     QueryResult result = new QueryResult();
 
     try {
@@ -76,7 +74,7 @@ public class CognosShibAuthBase extends CognosShibAuthNamespace implements IName
                 "Invalid search expression. Multiple steps is not supported for this namespace.");
       }
 
-      int searchType = steps[0].getAxis();
+      int searchType = steps.first().axis
       ISearchFilter filter = steps[0].getPredicate();
 
       int filterType = filter == null ? 0 : filter.getSearchFilterType()
@@ -145,7 +143,7 @@ public class CognosShibAuthBase extends CognosShibAuthNamespace implements IName
         }
 
       }
-      MyCache.getInstance().put(key, 3600, toBytes(result));
+      MyCache.instance.set(key, 3600, toBytes(result));
     }
     catch (Exception e) {
       //Fetch anything and do nothing (no stack traces in the gui for now)
