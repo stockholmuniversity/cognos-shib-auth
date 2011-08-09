@@ -177,34 +177,4 @@ public class CognosShibAuthBase extends CognosShibAuthNamespace implements IName
       folders.put(namespaceFolder.getObjectID(), namespaceFolder);
     }
   }
-
-  public static byte[] toBytes(Object object){
-    java.io.ByteArrayOutputStream baos = new java.io.ByteArrayOutputStream();
-    try{
-      java.io.ObjectOutputStream oos = new java.io.ObjectOutputStream(baos);
-      oos.writeObject(object);
-      oos.flush();
-      oos.close();
-      baos.flush();
-      baos.close();
-    }catch(java.io.IOException ioe){
-    }
-    return baos.toByteArray();
-  }
-
-
-  public static Object toObject(byte[] bytes){
-    Object object = null;
-    try{
-      java.io.ByteArrayInputStream bais = new java.io.ByteArrayInputStream(bytes);
-      java.io.ObjectInputStream ois = new java.io.ObjectInputStream(bais);
-      object = ois.readObject();
-      ois.close();
-      bais.close();
-    }catch(java.io.IOException ioe){
-    }catch(java.lang.ClassNotFoundException cnfe){
-    }
-    return object;
-  }
-
 }
