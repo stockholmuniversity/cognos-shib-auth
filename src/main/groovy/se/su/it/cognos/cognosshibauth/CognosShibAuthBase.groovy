@@ -23,7 +23,8 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static se.su.it.cognos.cognosshibauth.ldap.UiClass.*;
+import static se.su.it.cognos.cognosshibauth.ldap.UiClass.*
+import se.su.it.cognos.cognosshibauth.memcached.MyCache;
 
 public class CognosShibAuthBase extends CognosShibAuthNamespace implements INamespaceAuthenticationProviderBase {
 
@@ -78,12 +79,14 @@ public class CognosShibAuthBase extends CognosShibAuthNamespace implements IName
       int searchType = steps[0].getAxis();
       ISearchFilter filter = steps[0].getPredicate();
 
-      String key = result + searchType + filter.getSearchFilterType();
+      int filterType = filter == null ? 0 : filter.getSearchFilterType()
 
-      byte[] bytes = MyCache.getInstance().get(key);
+      String key = objectID + searchType + filterType;
+
+      byte[] bytes = (byte[]) MyCache.getInstance().get(key);
 
       if(bytes != null){
-         result = toObject(bytes);
+         result = (QueryResult) toObject(bytes);
         return result;
       }
       else{
@@ -142,13 +145,13 @@ public class CognosShibAuthBase extends CognosShibAuthNamespace implements IName
         }
 
       }
+      MyCache.getInstance().put(key, 3600, toBytes(result));
     }
     catch (Exception e) {
       //Fetch anything and do nothing (no stack traces in the gui for now)
       LOG.log(Level.SEVERE, "Failed while parsing search query: " + e.getMessage());
       e.printStackTrace();
     }
-    MyCache.getInstance().put(key, 3600, toBytes(result));
     return result;
 
   }
