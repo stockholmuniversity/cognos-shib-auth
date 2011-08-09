@@ -11,7 +11,7 @@ import com.cognos.CAM_AAA.authentication.IBaseClass;
 import com.cognos.CAM_AAA.authentication.IUiClass;
 import se.su.it.cognos.cognosshibauth.config.ConfigHandler;
 
-public class UiClass implements IUiClass {
+public class UiClass implements IUiClass, Serializable {
   static final PREFIX_FOLDER = "f"
   static final PREFIX_GROUP = "g"
   static final PREFIX_ROLE = "r"
