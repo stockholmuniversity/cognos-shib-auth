@@ -4,12 +4,12 @@ import net.spy.memcached.AddrUtil
 import net.spy.memcached.BinaryConnectionFactory
 import net.spy.memcached.MemcachedClient
 
-public class MyCache {
+public class Cache {
   private static final String NAMESPACE= "CognosShibAuth"
-  private static MyCache instance = null
+  private static Cache instance = null
   private static MemcachedClient[] m = null
 
-  private MyCache() {
+  private Cache() {
     try {
       m= new MemcachedClient[21]
       for (int i = 0; i <= 20; i ++) {
@@ -23,10 +23,10 @@ public class MyCache {
     }
   }
 
-  public static synchronized MyCache getInstance() {
+  public static synchronized Cache getInstance() {
     System.out.println("Instance: " + instance)
     if(instance == null) {
-      instance = new MyCache()
+      instance = new Cache()
     }
     instance
   }

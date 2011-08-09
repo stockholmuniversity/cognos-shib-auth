@@ -7,7 +7,7 @@ import com.cognos.CAM_AAA.authentication.*
 import static junit.framework.Assert.assertEquals
 import groovy.mock.interceptor.MockFor
 import se.su.it.cognos.cognosshibauth.ldap.UiClass
-import se.su.it.cognos.cognosshibauth.memcached.MyCache
+import se.su.it.cognos.cognosshibauth.memcached.Cache
 import static junit.framework.Assert.assertNull
 import static junit.framework.Assert.assertNotNull
 
@@ -53,15 +53,15 @@ public class CognosShibAuthBaseTest {
   void testCache() {
     String key = "TEST:u:uid=test,dc=it,dc=su,dc=se"
 
-    MyCache.getInstance().delete(key)
+    Cache.getInstance().delete(key)
 
-    Account account = (Account) MyCache.getInstance().get(key)
+    Account account = (Account) Cache.getInstance().get(key)
     assertNull account
 
     account = Account.createFromDn(UiClass.camIdToName(key));
-    MyCache.getInstance().set(key, 1, account)
+    Cache.getInstance().set(key, 1, account)
 
-    def result = MyCache.getInstance().get(key)
+    def result = Cache.getInstance().get(key)
     assertNotNull(result)
     assertEquals(account.getUserName(), result.getUserName())
   }

@@ -16,16 +16,14 @@ import se.su.it.cognos.cognosshibauth.ldap.Group;
 import se.su.it.cognos.cognosshibauth.ldap.NamespaceFolder;
 import se.su.it.cognos.cognosshibauth.ldap.Role;
 import se.su.it.cognos.cognosshibauth.visa.Visa;
-import se.su.it.cognos.cognosshibauth.config.ConfigHandler;
 
-import java.util.HashMap;
-import java.util.List;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.ArrayList;
+
 
 import static se.su.it.cognos.cognosshibauth.ldap.UiClass.*
-import se.su.it.cognos.cognosshibauth.memcached.MyCache;
+import se.su.it.cognos.cognosshibauth.memcached.Cache;
 
 public class CognosShibAuthBase extends CognosShibAuthNamespace implements INamespaceAuthenticationProviderBase {
 
@@ -83,7 +81,7 @@ public class CognosShibAuthBase extends CognosShibAuthNamespace implements IName
       String key = objectID + searchType + filterType + 1;
 
 
-      ArrayList ret = MyCache.getInstance().get(key);
+      ArrayList ret = Cache.getInstance().get(key);
       if(ret != null){
         Iterator iter = ret.iterator();
         while(iter.hasNext()){
@@ -156,7 +154,7 @@ public class CognosShibAuthBase extends CognosShibAuthNamespace implements IName
         }
 
       }
-      MyCache.instance.set(key, 3600, ret);
+      Cache.instance.set(key, 3600, ret);
     }
     catch (Exception e) {
       //Fetch anything and do nothing (no stack traces in the gui for now)
