@@ -46,7 +46,7 @@ public class CognosShibAuthBaseTest {
 
     QueryResult result = target.search(iVisa.proxyInstance(), iQuery.proxyInstance())
 
-    assertEquals(mockAccount, result.objects.first())
+    assert mockAccount.equals(result.objects.first())
   }
 
   @Test
