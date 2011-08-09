@@ -80,7 +80,7 @@ public class CognosShibAuthBase extends CognosShibAuthNamespace implements IName
 
       int filterType = filter == null ? 0 : filter.getSearchFilterType()
 
-      String key = objectID + searchType + filterType + 1;
+      String key = objectID + searchType + filterType;
 
 
       ArrayList ret = MyCache.getInstance().get(key);
@@ -154,9 +154,9 @@ public class CognosShibAuthBase extends CognosShibAuthNamespace implements IName
           default :
             break;
         }
-
+        MyCache.instance.set(key, 3600, ret);
       }
-      MyCache.instance.set(key, 3600, ret);
+
     }
     catch (Exception e) {
       //Fetch anything and do nothing (no stack traces in the gui for now)
