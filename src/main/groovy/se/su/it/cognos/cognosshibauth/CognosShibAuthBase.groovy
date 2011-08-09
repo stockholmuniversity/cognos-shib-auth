@@ -80,16 +80,8 @@ public class CognosShibAuthBase extends CognosShibAuthNamespace implements IName
 
       int filterType = filter == null ? 0 : filter.getSearchFilterType()
 
-      String key = objectID + searchType + filterType;
+      String key = objectID + searchType + filterType + 1;
 
-      //     byte[] bytes = (byte[]) MyCache.getInstance().get(key);
-
-      /*      if(bytes != null){
-               result = (QueryResult) toObject(bytes);
-              return result;
-            }
-            else{
-      */
 
       ArrayList ret = MyCache.getInstance().get(key);
       if(ret != null){
@@ -113,11 +105,7 @@ public class CognosShibAuthBase extends CognosShibAuthNamespace implements IName
             }
             else if (isUser(objectID) && filter == null) {
               String dn = camIdToName(objectID);
-              Account account = (Account) MyCache.getInstance().get(objectID)
-              if(account == null) {
-                account = Account.createFromDn(dn);
-                //MyCache.getInstance().set(objectID, 3600, account)
-              }
+              Account account = Account.createFromDn(dn);
               ret.add(account);
               result.addObject(account);
             }
