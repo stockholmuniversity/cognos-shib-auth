@@ -30,6 +30,8 @@ public class UiClass implements IUiClass {
 
   protected ConfigHandler configHandler = null;
 
+  public UiClass(){}
+
   public UiClass(theObjectID) {
     LOG.log(Level.FINEST, "Creating new UiClass with objectID '" + theObjectID + "'.");
 

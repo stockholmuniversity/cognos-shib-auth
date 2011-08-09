@@ -9,7 +9,7 @@ import gldapo.GldapoSchemaRegistry
 import gldapo.GldapoDirectory
 import se.su.it.cognos.cognosshibauth.ldap.gldapo.DummyGldapoDirectoryRegistry
 
-class SchemaBase {
+class SchemaBase implements Serializable {
   static {
     ConfigHandler configHandler = ConfigHandler.instance()
     def url = configHandler.getStringEntry("ldap.url", "ldap://sukat-ldap.it.su.se")

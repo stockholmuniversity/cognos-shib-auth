@@ -7,9 +7,9 @@ import com.cognos.CAM_AAA.authentication.IAccount
 import se.su.it.cognos.cognosshibauth.ldap.schema.SuPerson
 import se.su.it.cognos.cognosshibauth.CognosShibAuthNamespace
 
-public class Account extends UiClass implements IAccount {
+public class Account extends UiClass implements IAccount, Serializable {
 
-  Logger LOG = Logger.getLogger(Account.class.getName())
+  transient Logger LOG = Logger.getLogger(Account.class.getName())
 
   SuPerson suPerson
 
@@ -17,6 +17,7 @@ public class Account extends UiClass implements IAccount {
   Locale productLocale
 
   HashMap<String, List<String>> customProperties
+
   /**
    * Constructs an Account instance
    * @param SuPerson suPerson
