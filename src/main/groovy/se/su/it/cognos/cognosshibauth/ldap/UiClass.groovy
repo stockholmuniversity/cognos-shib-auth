@@ -1,17 +1,13 @@
 package se.su.it.cognos.cognosshibauth.ldap;
 
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Set;
-import java.util.Stack;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import com.cognos.CAM_AAA.authentication.IBaseClass;
-import com.cognos.CAM_AAA.authentication.IUiClass;
-import se.su.it.cognos.cognosshibauth.config.ConfigHandler;
+import com.cognos.CAM_AAA.authentication.IBaseClass
+import com.cognos.CAM_AAA.authentication.IUiClass
+import java.util.logging.Level
+import java.util.logging.Logger
+import se.su.it.cognos.cognosshibauth.config.ConfigHandler
 
 public class UiClass implements IUiClass, Serializable {
+  
   static final PREFIX_FOLDER = "f"
   static final PREFIX_GROUP = "g"
   static final PREFIX_ROLE = "r"
