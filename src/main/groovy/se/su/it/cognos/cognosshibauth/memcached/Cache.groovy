@@ -19,6 +19,8 @@ public class Cache {
   private static String host = "127.0.0.1"
   private static String port = "11211"
 
+  private Random random = new Random()
+
   private Cache() {
     try {
       m= new MemcachedClient[clients]
@@ -56,11 +58,8 @@ public class Cache {
   public MemcachedClient getCache() {
     MemcachedClient c= null
     try {
-      int i = (int) (Math.random()* clients)
-      c = m[i]
-    } catch(Exception e) {
-
-    }
+      c = m[random.nextInt(clients)]
+    } catch(Exception e) { }
     c
   }
 
