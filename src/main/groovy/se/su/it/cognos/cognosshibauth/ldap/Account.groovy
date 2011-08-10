@@ -79,6 +79,7 @@ public class Account extends UiClass implements IAccount {
    */
   static Account findByUid(String uid) {
     SuPerson suPerson1 = SuPerson.findByUid(uid)
+    //TODO: Null check here.
     return new Account(suPerson1)
   }
 
