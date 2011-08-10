@@ -10,7 +10,7 @@ import se.su.it.cognos.cognosshibauth.CognosShibAuthNamespace
 public class Group extends UiClass implements IGroup {
 
   private Logger LOG = Logger.getLogger(Group.class.getName())
-
+  private static long SerialVersionUID = 2L
   GroupOfUniqueNames groupOfUniqueNames
 
   /**

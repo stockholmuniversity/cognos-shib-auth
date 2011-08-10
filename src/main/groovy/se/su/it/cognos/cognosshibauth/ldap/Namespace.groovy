@@ -8,6 +8,7 @@ class Namespace extends UiClass implements INamespace {
 
   private String[] capabilities;
   private String namespaceFormat;
+  private static long SerialVersionUID = 3L
   /**
    * Constructs a NameSpace instance
    *

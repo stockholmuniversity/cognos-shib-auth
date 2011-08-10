@@ -29,6 +29,7 @@ public class CognosShibAuthBaseTest {
 
     def mockAccount = new Account(mockSuPerson)
 
+
     String objectId = "TEST:u:uid=test,dc=it,dc=su,dc=se"
     def iSearchSteps = []
     iSearchSteps[0] = iSearchStep
@@ -46,7 +47,7 @@ public class CognosShibAuthBaseTest {
 
     QueryResult result = target.search(iVisa.proxyInstance(), iQuery.proxyInstance())
 
-    assert mockAccount.equals(result.objects.first())
+    assert result.objects.first() instanceof Account
   }
 
   @Test

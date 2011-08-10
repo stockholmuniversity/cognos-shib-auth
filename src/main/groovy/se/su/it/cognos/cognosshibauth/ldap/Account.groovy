@@ -6,11 +6,14 @@ import com.cognos.CAM_AAA.authentication.IAccount
 
 import se.su.it.cognos.cognosshibauth.ldap.schema.SuPerson
 import se.su.it.cognos.cognosshibauth.CognosShibAuthNamespace
+import javassist.SerialVersionUID
 
 public class Account extends UiClass implements IAccount {
 
   private static Logger LOG = Logger.getLogger(Account.class.getName())
 
+  private static long SerialVersionUID = 1L
+  
   SuPerson suPerson
 
   Locale contentLocale
