@@ -18,6 +18,13 @@
     <count_limit>500</count_limit>
     <time_limit>120000</time_limit>
   </ldap>
+  <cache>
+    <namespace>CognosShibAuth</namespace>
+    <host>127.0.0.1</host>
+    <port>11211</port>
+    <ttl>3600</ttl>
+    <clients>10</clients>
+  </cache>
   <capabilities>caseSensitive,contains,equals,sort,startsWith,endsWith</capabilities>
   <headers>
     <remote_user>REMOTE_USER</remote_user>

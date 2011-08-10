@@ -3,20 +3,29 @@ package se.su.it.cognos.cognosshibauth.memcached
 import net.spy.memcached.AddrUtil
 import net.spy.memcached.BinaryConnectionFactory
 import net.spy.memcached.MemcachedClient
+import java.util.logging.Logger
+import java.util.logging.Level
+import se.su.it.cognos.cognosshibauth.config.ConfigHandler
 
 public class Cache {
-  private static final String NAMESPACE= "CognosShibAuth"
+
+  private static Logger LOG = Logger.getLogger(Cache.class.getName())
   private static Cache instance = null
   private static MemcachedClient[] m = null
 
+  private static String namespace = "CognosShibAuth"
+  private static int ttl = 300
+  private static int clients = 20
+  private static String host = "127.0.0.1"
+  private static String port = "11211"
+
   private Cache() {
     try {
-      m= new MemcachedClient[21]
-      for (int i = 0; i <= 20; i ++) {
-        MemcachedClient c =  new MemcachedClient(
-                new BinaryConnectionFactory(),
-                AddrUtil.getAddresses("127.0.0.1:11211"))
-        m[i] = c
+      m= new MemcachedClient[clients]
+      for (int i = 0; i < clients; i ++) {
+        m[i] =  new MemcachedClient(
+                  new BinaryConnectionFactory(),
+                    AddrUtil.getAddresses("$host:$port"))
       }
     } catch (Exception e) {
 
@@ -24,33 +33,44 @@ public class Cache {
   }
 
   public static synchronized Cache getInstance() {
-    System.out.println("Instance: " + instance)
-    if(instance == null) {
-      instance = new Cache()
-    }
-    instance
+    LOG.log(Level.FINE, "Instance: " + instance)
+    instance ?: new Cache()
+  }
+
+  public void set(String key, final Object o) {
+    getCache().set(namespace + key, ttl, o)
   }
 
   public void set(String key, int ttl, final Object o) {
-    getCache().set(NAMESPACE + key, ttl, o)
+    getCache().set(namespace + key, ttl, o)
   }
 
   public Object get(String key) {
-    getCache().get(NAMESPACE + key)
+    getCache().get(namespace + key)
   }
 
   public Object delete(String key) {
-    getCache().delete(NAMESPACE + key)
+    getCache().delete(namespace + key)
   }
 
   public MemcachedClient getCache() {
     MemcachedClient c= null
     try {
-      int i = (int) (Math.random()* 20)
+      int i = (int) (Math.random()* clients)
       c = m[i]
     } catch(Exception e) {
 
     }
     c
+  }
+
+  static {
+    def configHandler = ConfigHandler.instance()
+
+    namespace = configHandler.getStringEntry("cache.namespace", namespace)
+    host = configHandler.getStringEntry("cache.host", host)
+    port = configHandler.getStringEntry("cache.port", port)
+    ttl = configHandler.getIntEntry("cache.ttl", ttl)
+    clients = configHandler.getIntEntry("cache.clients", clients)
   }
 }
