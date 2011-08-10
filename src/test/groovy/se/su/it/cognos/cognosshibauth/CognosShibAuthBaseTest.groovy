@@ -34,6 +34,8 @@ public class CognosShibAuthBaseTest {
     def iSearchSteps = []
     iSearchSteps[0] = iSearchStep
 
+    mockAccount.metaClass.objectID = { "fookaka" }
+
     iQuery.demand.getSearchExpression { iSearchExpression.proxyInstance() }
 
     iSearchStep.demand.getAxis(0..2) { ISearchStep.SearchAxis.Self }

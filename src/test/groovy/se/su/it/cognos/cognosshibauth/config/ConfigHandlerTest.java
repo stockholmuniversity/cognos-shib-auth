@@ -11,6 +11,7 @@ import com.cognos.CAM_AAA.authentication.INamespaceConfiguration;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.modules.junit4.PowerMockRunner;
+import se.su.it.cognos.cognosshibauth.config.ConfigHandler;
 
 import java.util.List;
 import java.util.Locale;
