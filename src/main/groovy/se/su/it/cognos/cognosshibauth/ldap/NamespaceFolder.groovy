@@ -11,6 +11,7 @@ import se.su.it.cognos.cognosshibauth.CognosShibAuthNamespace
 public class NamespaceFolder extends UiClass implements INamespaceFolder {
 
   private Logger LOG = Logger.getLogger(NamespaceFolder.class.getName())
+  private static long SerialVersionUID = 4L
 
   List<UiClass> folders = []
   List<UiClass> userLdapFilters = []

@@ -29,6 +29,7 @@ public class CognosShibAuthBaseTest {
 
     def mockAccount = new Account(mockSuPerson)
 
+
     String objectId = "TEST:u:uid=test,dc=it,dc=su,dc=se"
     def iSearchSteps = []
     iSearchSteps[0] = iSearchStep

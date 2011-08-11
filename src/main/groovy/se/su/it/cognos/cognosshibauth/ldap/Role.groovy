@@ -8,7 +8,7 @@ import se.su.it.cognos.cognosshibauth.ldap.schema.SuPerson
 import se.su.it.cognos.cognosshibauth.CognosShibAuthNamespace;
 
 public class Role extends UiClass implements IRole {
-
+  private static long SerialVersionUID = 6L
   public Role(String name) {
     super("${CognosShibAuthNamespace.namespaceId}:${UiClass.PREFIX_ROLE}:${name}")
 
