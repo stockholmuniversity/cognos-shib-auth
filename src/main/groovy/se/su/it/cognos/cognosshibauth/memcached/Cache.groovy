@@ -50,7 +50,12 @@ public class Cache {
   }
 
   public Object get(String key) {
-    getCache().get(namespace + key)
+    try {
+      return getCache().get(namespace + key)
+    } catch (Exception e) {
+      LOG.log(Level.SEVERE, "Error while getting object from cache for key '$key': " + e.getMessage())
+    }
+    null
   }
 
   public Object delete(String key) {
