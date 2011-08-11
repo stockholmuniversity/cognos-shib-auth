@@ -65,7 +65,6 @@ public class CognosShibAuthBase extends CognosShibAuthNamespace implements IName
       String objectID = expression.getObjectID();
       ISearchStep[] steps = expression.getSteps();
 
-
       //TODO handle hierarchical steps
       if (steps.length != 1) {
         throw new UnrecoverableException(
@@ -78,8 +77,7 @@ public class CognosShibAuthBase extends CognosShibAuthNamespace implements IName
 
       int filterType = filter == null ? 0 : filter.getSearchFilterType()
 
-      String key = objectID + searchType + filterType;
-
+      String key = objectID?.replaceAll(/ /, "") + searchType + filterType;
 
       ArrayList ret = Cache.getInstance().get(key);
       if(ret != null){
