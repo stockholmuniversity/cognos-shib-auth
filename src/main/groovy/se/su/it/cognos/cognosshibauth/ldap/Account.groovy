@@ -6,6 +6,7 @@ import com.cognos.CAM_AAA.authentication.IAccount
 
 import se.su.it.cognos.cognosshibauth.ldap.schema.SuPerson
 import se.su.it.cognos.cognosshibauth.CognosShibAuthNamespace
+import com.cognos.CAM_AAA.authentication.UnrecoverableException
 
 public class Account extends UiClass implements IAccount {
 
@@ -78,8 +79,14 @@ public class Account extends UiClass implements IAccount {
    * @return A new Account instance based on what is fetched from sukat from uid
    */
   static Account findByUid(String uid) {
+    if(uid == null)
+      throw new UnrecoverableException("Cannot create account", "User uid == null")
+
     SuPerson suPerson1 = SuPerson.findByUid(uid)
-    //TODO: Null check here.
+
+    if (suPerson1 == null)
+      throw new UnrecoverableException("Cannot create account", "User uid='$uid' not found in LDAP.")
+
     return new Account(suPerson1)
   }
 
@@ -156,9 +163,11 @@ public class Account extends UiClass implements IAccount {
    * @return list of roles for this account
    */
   List<Role> getRoles() {
-    getEduPersonEntitlements().collect { entitlement ->
+    def list = getEduPersonEntitlements()?.collect { entitlement ->
       Role.createFromUri(entitlement)
-    }.removeAll {it == null}
+    }
+    list?.removeAll {it == null}
+    list
   }
 
   /**
