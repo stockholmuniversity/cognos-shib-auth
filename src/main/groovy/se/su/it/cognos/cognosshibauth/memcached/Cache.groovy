@@ -1,19 +1,19 @@
 package se.su.it.cognos.cognosshibauth.memcached
 
 import net.spy.memcached.AddrUtil
-import net.spy.memcached.BinaryConnectionFactory
 import net.spy.memcached.MemcachedClient
 import java.util.logging.Logger
 import java.util.logging.Level
 import se.su.it.cognos.cognosshibauth.config.ConfigHandler
+import net.spy.memcached.DefaultConnectionFactory
 
 public class Cache {
 
   private static Logger LOG = Logger.getLogger(Cache.class.getName())
-  private static Cache instance = null
+  private static Cache _instance = null
   private static MemcachedClient[] m = null
 
-  private static String namespace = "CognosShibAuth"
+  private static String namespace = "CAM"
   private static int ttl = 300
   private static int clients = 20
   private static String host = "127.0.0.1"
@@ -25,8 +25,7 @@ public class Cache {
     try {
       m= new MemcachedClient[clients]
       for (int i = 0; i < clients; i ++) {
-        m[i] =  new MemcachedClient(
-                  new BinaryConnectionFactory(),
+        m[i] =  new MemcachedClient(new DefaultConnectionFactory(),
                     AddrUtil.getAddresses("$host:$port"))
       }
     } catch (Exception e) {
@@ -35,23 +34,43 @@ public class Cache {
   }
 
   public static synchronized Cache getInstance() {
-    LOG.log(Level.FINE, "Instance: " + instance)
-    if (instance == null)
-      instance = new Cache()
-    instance
+    LOG.log(Level.FINE, "Instance: " + _instance)
+    if (_instance == null)
+      _instance = new Cache()
+    _instance
   }
 
   public void set(String key, final Object o) {
-    getCache().set(namespace + key, ttl, o)
+    try {
+      MemcachedClient mc = getCache();
+      if(mc.isAlive())
+        mc.set(namespace + key, ttl, o)
+      else
+        LOG.log(Level.SEVERE, "Memcached client not alive: " + mc.toString())
+    } catch (Exception e) {
+      LOG.log(Level.SEVERE, "Error while setting object to cache using key '$key' and ttl '$ttl': " + e.getMessage())
+    }
   }
 
   public void set(String key, int ttl, final Object o) {
-    getCache().set(namespace + key, ttl, o)
+    try {
+      MemcachedClient mc = getCache();
+      if(mc.isAlive())
+        mc.set(namespace + key, ttl, o)
+      else
+        LOG.log(Level.SEVERE, "Memcached client not alive: " + mc.toString())
+    } catch (Exception e) {
+      LOG.log(Level.SEVERE, "Error while setting object to cache using key '$key' and ttl '$ttl': " + e.getMessage())
+    }
   }
 
   public Object get(String key) {
     try {
-      return getCache().get(namespace + key)
+      MemcachedClient mc = getCache();
+      if(mc.isAlive())
+        return mc.get(namespace + key)
+      else
+        LOG.log(Level.SEVERE, "Memcached client not alive: " + mc.toString())
     } catch (Exception e) {
       LOG.log(Level.SEVERE, "Error while getting object from cache for key '$key': " + e.getMessage())
     }
@@ -59,14 +78,25 @@ public class Cache {
   }
 
   public Object delete(String key) {
-    getCache().delete(namespace + key)
+    try {
+      MemcachedClient mc = getCache();
+      if(mc.isAlive())
+        return mc.delete(namespace + key)
+      else
+        LOG.log(Level.SEVERE, "Memcached client not alive: " + mc.toString())
+    } catch (Exception e) {
+      LOG.log(Level.SEVERE, "Error while deleting object from cache for key '$key': " + e.getMessage())
+    }
+    null
   }
 
   public MemcachedClient getCache() {
-    MemcachedClient c= null
+    MemcachedClient c = null
     try {
       c = m[random.nextInt(clients)]
-    } catch(Exception e) { }
+    } catch(Exception e) {
+      LOG.log(Level.SEVERE, "Failed to get memcached client: " + e.getMessage())
+    }
     c
   }
 
