@@ -9,7 +9,6 @@ public class CacheTest {
 
   @Test
   public void testGetInstanceReturnsSingleton() throws Exception {
-
     Cache cache2 = Cache.getInstance()
     assert target == cache2
   }
@@ -17,5 +16,15 @@ public class CacheTest {
   @Test
   public void testGetCacheReturnsAMemcachedClient() throws Exception {
     assert target.getCache() instanceof MemcachedClient
+  }
+
+  @Test
+  public void testGetCacheReturnsARandomClient() throws Exception {
+    def client1 = target.getCache()
+    def client2 = target.getCache()
+    def client3 = target.getCache()
+    def client4 = target.getCache()
+    
+    assert !(client1 == client2 == client3 == client4)
   }
 }
