@@ -46,7 +46,7 @@ public class Account extends UiClass implements IAccount {
  */
   public static Account createFromDn(String dn) {
     String objectId = createObjectId(UiClass.PREFIX_USER, dn)
-    Cache.getInstance().get(objectId, { new Account(SuPerson.getByDn(dn)) } )
+    Cache.getInstance().get(objectId, { new Account(SuPerson.getByDn(dn).toString()) } )
   }
 
   @Override
@@ -96,7 +96,7 @@ public class Account extends UiClass implements IAccount {
     if (suPerson1 == null)
       throw new UnrecoverableException("Cannot create account", "User uid='$uid' not found in LDAP.")
 
-    Cache.getInstance().get(createObjectId(UiClass.PREFIX_USER, suPerson1.getDn()), { new Account(suPerson1) } )
+    Cache.getInstance().get(createObjectId(UiClass.PREFIX_USER, suPerson1.getDn().toString()), { new Account(suPerson1) } )
   }
 
   @Override
