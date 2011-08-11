@@ -5,8 +5,11 @@ import com.cognos.CAM_AAA.authentication.IUiClass
 import java.util.logging.Level
 import java.util.logging.Logger
 import se.su.it.cognos.cognosshibauth.config.ConfigHandler
+import se.su.it.cognos.cognosshibauth.CognosShibAuthNamespace
 
 public class UiClass implements IUiClass, Serializable {
+
+  private static long serialVersionUID = 10L
   
   static final PREFIX_FOLDER = "f"
   static final PREFIX_GROUP = "g"
@@ -124,5 +127,9 @@ public class UiClass implements IUiClass, Serializable {
     if (o instanceof UiClass)
       return this.objectID?.equals(o.objectID)
     return super.equals(o)
+  }
+
+  public static String createObjectId(String prefix, String sufix) {
+    "${CognosShibAuthNamespace.namespaceId}:${prefix}:${sufix}"
   }
 }

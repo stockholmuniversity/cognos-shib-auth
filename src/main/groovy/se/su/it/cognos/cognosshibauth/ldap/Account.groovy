@@ -7,6 +7,7 @@ import com.cognos.CAM_AAA.authentication.IAccount
 import se.su.it.cognos.cognosshibauth.ldap.schema.SuPerson
 import se.su.it.cognos.cognosshibauth.CognosShibAuthNamespace
 import com.cognos.CAM_AAA.authentication.UnrecoverableException
+import se.su.it.cognos.cognosshibauth.memcached.Cache
 
 public class Account extends UiClass implements IAccount {
 
@@ -26,7 +27,7 @@ public class Account extends UiClass implements IAccount {
    * @param SuPerson suPerson
    */
   public Account(SuPerson suPerson) {
-    super("${CognosShibAuthNamespace.namespaceId}:${UiClass.PREFIX_USER}:${suPerson.getDn()}")
+    super(createObjectId(UiClass.PREFIX_USER, suPerson.getDn()))
 
     productLocale = contentLocale = defaultLocale
 
@@ -37,14 +38,22 @@ public class Account extends UiClass implements IAccount {
     addName(contentLocale, "${suPerson.givenName} ${suPerson.sn}")
     addDescription(contentLocale, "") //TODO: link to "Kontohantering"?
   }
+
 /**
  * Create an Account from dn
  * @param String dn identifier in sukat
  * @return A new Account instance based on what is fetched from sukat from dn
  */
   public static Account createFromDn(String dn) {
-    new Account(SuPerson.getByDn(dn))
+    String objectId = createObjectId(UiClass.PREFIX_USER, dn)
+    Account account = Cache.getInstance().get(objectId)
+    if (account == null) {
+      account = new Account(SuPerson.getByDn(dn))
+      Cache.getInstance().set(objectId, account)
+    }
+    account
   }
+
   @Override
   public String[] getCustomPropertyNames() {
     if (customProperties != null) {
@@ -53,6 +62,7 @@ public class Account extends UiClass implements IAccount {
     }
     return null;
   }
+
   @Override
   public String[] getCustomPropertyValue(String theName) {
     List<String> list = customProperties.get(theName);
@@ -60,6 +70,7 @@ public class Account extends UiClass implements IAccount {
       return (String[]) list.toArray(new String[list.size()]);
     return null;
   }
+
   /**
    * Add property to the Accounts custom property HashMap
    * @param String theName
@@ -75,6 +86,7 @@ public class Account extends UiClass implements IAccount {
 
     list.add(theValue);
   }
+
   /**
    * Find an Account by uid
    * @param String uid
@@ -89,7 +101,7 @@ public class Account extends UiClass implements IAccount {
     if (suPerson1 == null)
       throw new UnrecoverableException("Cannot create account", "User uid='$uid' not found in LDAP.")
 
-    return new Account(suPerson1)
+    return createFromDn(suPerson1.getDn())
   }
 
   @Override
