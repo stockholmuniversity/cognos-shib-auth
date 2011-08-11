@@ -41,15 +41,7 @@ public class Cache {
   }
 
   public void set(String key, final Object o) {
-    try {
-      MemcachedClient mc = getCache();
-      if(mc.isAlive())
-        mc.set(namespace + key, ttl, o)
-      else
-        LOG.log(Level.SEVERE, "Memcached client not alive: " + mc.toString())
-    } catch (Exception e) {
-      LOG.log(Level.SEVERE, "Error while setting object to cache using key '$key' and ttl '$ttl': " + e.getMessage())
-    }
+    set(namespace + key, ttl, o)
   }
 
   public void set(String key, int ttl, final Object o) {
