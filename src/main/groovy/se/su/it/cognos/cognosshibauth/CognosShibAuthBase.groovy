@@ -77,21 +77,13 @@ public class CognosShibAuthBase extends CognosShibAuthNamespace implements IName
 
       def key = "${objectID?.replaceAll(/ /, "")}-${searchType}-${filter?.getSearchFilterType()}"
 
-      ArrayList ret = Cache.getInstance().get(key);
-      if(ret != null){
-        Iterator iter = ret.iterator();
-        while(iter.hasNext()){
-          result.addObject(iter.next());
-        }
-      }
-      else{
-        ret = new ArrayList();
+      List<IBaseClass> ret = Cache.getInstance().get(key, {
+        List<IBaseClass> list = new ArrayList<IBaseClass>();
         switch (searchType) {
           case ISearchStep.SearchAxis.Self :
             if (objectID == null) {
               if (filter == null || true) {
-                result.addObject(this);
-                ret.add(this);
+                list.add(this);
               }
               if (searchType == ISearchStep.SearchAxis.Self) {
                 return result;
@@ -101,46 +93,39 @@ public class CognosShibAuthBase extends CognosShibAuthNamespace implements IName
               String dn = camIdToName(objectID);
               if (dn != null && !dn.trim().empty) {
                 Account account = Account.createFromDn(dn);
-                ret.add(account);
-                result.addObject(account);
+                list.add(account);
               }
             }
             else if (isRole(objectID)) {
               Role role = new Role(camIdToName(objectID));
-              ret.add(role);
-              result.addObject(role);
+              list.add(role);
             }
             else if (isGroup(objectID)) {
               Group group = new Group(camIdToName(objectID));
-              ret.add(group);
-              result.addObject(group);
+              list.add(group);
             }
             else if(isFolder(objectID)) {
-              ret.add(folders.get(objectID));
-              result.addObject(folders.get(objectID));
+              list.add(folders.get(objectID));
             }
             break;
           case ISearchStep.SearchAxis.Child :
             if(objectID == null) {
               for(NamespaceFolder folder : folders.values()) {
                 if(folder.getAncestors().length <= 0){
-                  ret.add(folder);
-                  result.addObject(folder);
+                  list.add(folder);
                 }
               }
             }
             else if(isFolder(objectID) && folders.containsKey(objectID)) {
               NamespaceFolder folder = folders.get(objectID);
               for(IUiClass child : folder.getChildren()){
-                ret.add(child);
-                result.addObject(child);
+                list.add(child);
               }
             }
             else if(isRole(objectID)) {
               Role role = new Role(camIdToName(objectID));
               for(IBaseClass member : role.getMembers()) {
-                ret.add(member);
-                result.addObject(member);
+                list.add(member);
               }
             }
             break;
@@ -150,17 +135,16 @@ public class CognosShibAuthBase extends CognosShibAuthNamespace implements IName
           default :
             break;
         }
-        Cache.instance.set(key, ret);
-      }
+      })
 
+      ret?.each { result.addObject(it) }
     }
     catch (Exception e) {
       //Fetch anything and do nothing (no stack traces in the gui for now)
       LOG.log(Level.SEVERE, "Failed while parsing search query: " + e.getMessage());
       e.printStackTrace();
     }
-    return result;
-
+    return result
   }
 
   /**

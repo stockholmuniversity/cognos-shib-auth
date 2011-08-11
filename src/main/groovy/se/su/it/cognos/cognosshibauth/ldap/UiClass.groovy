@@ -6,6 +6,7 @@ import java.util.logging.Level
 import java.util.logging.Logger
 import se.su.it.cognos.cognosshibauth.config.ConfigHandler
 import se.su.it.cognos.cognosshibauth.CognosShibAuthNamespace
+import se.su.it.cognos.cognosshibauth.memcached.Cache
 
 public class UiClass implements IUiClass, Serializable {
 

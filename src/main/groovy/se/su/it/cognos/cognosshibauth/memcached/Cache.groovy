@@ -58,7 +58,7 @@ public class Cache {
 
   public Object get(String key) {
     try {
-      MemcachedClient mc = getCache();
+      MemcachedClient mc = getCache()
       if(mc.isAlive())
         return mc.get(namespace + key)
       else
@@ -67,6 +67,41 @@ public class Cache {
       LOG.log(Level.SEVERE, "Error while getting object from cache for key '$key': " + e.getMessage())
     }
     null
+  }
+
+  public Object get(key, function) {
+    def value = null
+
+    try {
+      MemcachedClient mc = getCache()
+
+      if(!key) {
+        throw new IllegalArgumentException("Missing parameter key")
+      }
+
+      // If running without memcached we fetch the value on each call, very bad.
+      if (!mc.isAlive()) {
+        LOG.warning ("Running app without active memcached, performace will be seriously degraded.")
+        return function()
+      }
+
+      //Get object from cache
+      value = mc?.get(key)
+
+      // Unless alreay found in cache we refresh the value
+      if (value == null) {
+        LOG.finest ("Cache key: $key was not found in the cache, adding $key to cache.")
+        value = function()
+        if (value != null)
+          mc?.set(key, ttl, value)
+      } else {
+        LOG.finest ("Cache key: $key was found in the cache, returning $key value from cache.")
+      }
+    }
+    catch (Exception e) {
+      LOG.severe("Error while getting object from cache for key '$key': " + e.getMessage())
+    }
+    value
   }
 
   public Object delete(String key) {
