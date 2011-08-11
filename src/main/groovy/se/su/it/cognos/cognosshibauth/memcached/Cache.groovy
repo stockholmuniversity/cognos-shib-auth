@@ -36,7 +36,9 @@ public class Cache {
 
   public static synchronized Cache getInstance() {
     LOG.log(Level.FINE, "Instance: " + instance)
-    instance ?: new Cache()
+    if (instance == null)
+      instance = new Cache()
+    instance
   }
 
   public void set(String key, final Object o) {
