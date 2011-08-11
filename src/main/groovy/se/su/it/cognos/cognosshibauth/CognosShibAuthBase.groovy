@@ -150,7 +150,7 @@ public class CognosShibAuthBase extends CognosShibAuthNamespace implements IName
           default :
             break;
         }
-        Cache.instance.set(key, 3600, ret);
+        Cache.instance.set(key, ret);
       }
 
     }
