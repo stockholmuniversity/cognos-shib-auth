@@ -78,6 +78,6 @@ class CognosShibAP extends CognosShibAuthBase implements INamespaceAuthenticatio
           throws SystemRecoverableException {
     String[] values = getHeaderValues(iBiBusHeader2, header, required);
 
-    values.empty ? null : values?.first()
+    values?.first()
   }
 }
