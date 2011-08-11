@@ -75,9 +75,7 @@ public class CognosShibAuthBase extends CognosShibAuthNamespace implements IName
       int searchType = steps.first().axis
       ISearchFilter filter = steps[0].getPredicate();
 
-      int filterType = filter == null ? 0 : filter.getSearchFilterType()
-
-      String key = objectID?.replaceAll(/ /, "") + searchType + filterType;
+      def key = "${objectID?.replaceAll(/ /, "")}-${searchType}-${filter?.getSearchFilterType()}"
 
       ArrayList ret = Cache.getInstance().get(key);
       if(ret != null){
@@ -101,9 +99,11 @@ public class CognosShibAuthBase extends CognosShibAuthNamespace implements IName
             }
             else if (isUser(objectID) && filter == null) {
               String dn = camIdToName(objectID);
-              Account account = Account.createFromDn(dn);
-              ret.add(account);
-              result.addObject(account);
+              if (dn != null && !dn.trim().empty) {
+                Account account = Account.createFromDn(dn);
+                ret.add(account);
+                result.addObject(account);
+              }
             }
             else if (isRole(objectID)) {
               Role role = new Role(camIdToName(objectID));
