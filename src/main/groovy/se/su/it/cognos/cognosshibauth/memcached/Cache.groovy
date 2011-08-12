@@ -78,15 +78,13 @@ public class Cache {
   }
 
   public Object get(key, function) {
+    if (!enabled)
+      return function()
+
     def value = null
 
     try {
       MemcachedClient mc = getCache()
-
-      if(!key) {
-        throw new IllegalArgumentException("Missing parameter key")
-      }
-      key = key?.replaceAll(/ /, "")
 
       // If running without memcached we fetch the value on each call, very bad.
       if (!mc.isAlive()) {
@@ -94,15 +92,19 @@ public class Cache {
         return function()
       }
 
+      key = key?.replaceAll(/ /, "")
+      if(!key) {
+        throw new IllegalArgumentException("Missing parameter key")
+      }
+
       //Get object from cache
-      if (enabled)
-        value = mc?.get(key)
+      value = mc?.get(key)
 
       // Unless alreay found in cache we refresh the value
       if (value == null) {
         LOG.finest ("Cache key: $key was not found in the cache, adding $key to cache.")
         value = function()
-        if (enabled && value != null)
+        if (value != null)
           mc?.set(key, ttl, value)
       } else {
         LOG.finest ("Cache key: $key was found in the cache, returning $key value from cache.")
