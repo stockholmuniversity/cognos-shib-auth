@@ -6,6 +6,7 @@ import com.cognos.CAM_AAA.authentication.IBaseClass
 import com.cognos.CAM_AAA.authentication.IGroup
 import se.su.it.cognos.cognosshibauth.ldap.schema.GroupOfUniqueNames
 import se.su.it.cognos.cognosshibauth.CognosShibAuthNamespace
+import se.su.it.cognos.cognosshibauth.memcached.Cache
 
 public class Group extends UiClass implements IGroup {
 
@@ -47,7 +48,8 @@ public class Group extends UiClass implements IGroup {
     def groupOfUniqueNames = GroupOfUniqueNames.findAllByUniqueMember(dn.toString())
 
     groupOfUniqueNames.collect { group ->
-      new Group(group)
+      def key = createObjectId(UiClass.PREFIX_GROUP, group.getDn())
+      Cache.getInstance().get(key, { new Group(group) } )
     }
   }
 
@@ -56,7 +58,8 @@ public class Group extends UiClass implements IGroup {
     List<String> members = groupOfUniqueNames.uniqueMember
 
     members.collect { member ->
-      new Account(member)
+      def key = createObjectId(UiClass.PREFIX_USER, member.getDn())
+      Cache.getInstance().get(key, { new Account(member) } )
     } as IBaseClass[]
   }
 }

@@ -130,7 +130,7 @@ public class UiClass implements IUiClass, Serializable {
     return super.equals(o)
   }
 
-  public static String createObjectId(String prefix, String sufix) {
-    "${CognosShibAuthNamespace.namespaceId}:${prefix}:${sufix}"
+  public static String createObjectId(prefix, suffix) {
+    "${CognosShibAuthNamespace.namespaceId}:${prefix}:${suffix}"
   }
 }

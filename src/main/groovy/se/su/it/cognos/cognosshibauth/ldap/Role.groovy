@@ -5,10 +5,13 @@ import com.cognos.CAM_AAA.authentication.IRole;
 
 import se.su.it.cognos.cognosshibauth.config.ConfigHandler;
 import se.su.it.cognos.cognosshibauth.ldap.schema.SuPerson
-import se.su.it.cognos.cognosshibauth.CognosShibAuthNamespace;
+import se.su.it.cognos.cognosshibauth.CognosShibAuthNamespace
+import se.su.it.cognos.cognosshibauth.memcached.Cache;
 
 public class Role extends UiClass implements IRole {
+
   private static long SerialVersionUID = 6L
+
   public Role(String name) {
     super("${CognosShibAuthNamespace.namespaceId}:${UiClass.PREFIX_ROLE}:${name}")
 
@@ -26,14 +29,19 @@ public class Role extends UiClass implements IRole {
     List<SuPerson> suPersons = SuPerson.findAll(filter: "(eduPersonEntitlement=${gmaiUrn})")
 
     suPersons.collect { suPerson ->
-      new Account(suPerson)
+      def key = createObjectId(UiClass.PREFIX_USER, suPerson.getDn())
+      Cache.getInstance().get(key, { new Account(suPerson) })
     } as IBaseClass[]
   }
 
   static Role createFromUri(String gmaiUri) {
     String roleName = parseRoleFromEntitlementUri(gmaiUri)
 
-    roleName != null ? new Role(roleName) : null
+    if (roleName != null) {
+      def key = createObjectId(UiClass.PREFIX_ROLE, roleName)
+      return Cache.getInstance().get(key, { new Role(roleName) })
+    }
+    null
   }
 
   static List<Role> findAllByFilter(String filter) {
@@ -49,7 +57,9 @@ public class Role extends UiClass implements IRole {
     }
 
     entitlements.collect { entitlement ->
-      new Role(parseRoleFromEntitlementUri(entitlement))
+      def roleName = parseRoleFromEntitlementUri(entitlement)
+      def key = createObjectId(UiClass.PREFIX_ROLE, roleName)
+      Cache.getInstance().get(key, { new Role(roleName) })
     }
   }
 

@@ -7,6 +7,7 @@ import org.apache.commons.configuration.HierarchicalConfiguration
 import se.su.it.cognos.cognosshibauth.ldap.schema.GroupOfUniqueNames
 import se.su.it.cognos.cognosshibauth.ldap.schema.SuPerson
 import se.su.it.cognos.cognosshibauth.CognosShibAuthNamespace
+import se.su.it.cognos.cognosshibauth.memcached.Cache
 
 public class NamespaceFolder extends UiClass implements INamespaceFolder {
 
@@ -87,7 +88,8 @@ public class NamespaceFolder extends UiClass implements INamespaceFolder {
     groupLdapFilters.each { filter ->
       List<GroupOfUniqueNames> groupOfUniqueNamesList = GroupOfUniqueNames.findAll(filter: filter)
       groups.addAll groupOfUniqueNamesList.collect { groupOfUniqueName ->
-        new Group(groupOfUniqueName) //TODO: Don't send null as namespaceId
+        def key = createObjectId(UiClass.PREFIX_GROUP, groupOfUniqueName.getDn())
+        Cache.getInstance().get(key, { new Group(groupOfUniqueName) })
       }
     }
 
@@ -98,7 +100,7 @@ public class NamespaceFolder extends UiClass implements INamespaceFolder {
     def roles = []
 
     roleLdapFilters.each { filter ->
-      List<Role> roleList = Role.findAllByFilter(filter) //TODO: Don't send null as namespaceId
+      List<Role> roleList = Role.findAllByFilter(filter)
       roles.addAll roleList
     }
 
@@ -111,7 +113,8 @@ public class NamespaceFolder extends UiClass implements INamespaceFolder {
     userLdapFilters.each { filter ->
       List<SuPerson> suPersons = SuPerson.findAll(filter: filter)
       users.addAll suPersons.collect { suPerson ->
-        new Account(suPerson)
+        def key = createObjectId(UiClass.PREFIX_USER, suPerson.getDn())
+        Cache.getInstance().get(key, { new Account(suPerson) })
       }
     }
 
