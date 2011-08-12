@@ -3,8 +3,15 @@ package se.su.it.cognos.cognosshibauth.ldap
 import org.junit.Test
 import se.su.it.cognos.cognosshibauth.ldap.schema.SuPerson
 import se.su.it.cognos.cognosshibauth.ldap.schema.GroupOfUniqueNames
+import org.junit.Before
+import se.su.it.cognos.cognosshibauth.memcached.Cache
 
 class GroupTest {
+
+  @Before
+  void before() {
+    Cache.getInstance().disable()
+  }
 
   @Test
   void testFindByMember() {

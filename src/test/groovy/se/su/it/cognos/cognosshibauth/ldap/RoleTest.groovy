@@ -2,6 +2,7 @@ package se.su.it.cognos.cognosshibauth.ldap
 
 import org.junit.Test
 import static junit.framework.Assert.assertEquals
+import se.su.it.cognos.cognosshibauth.ldap.schema.SuPerson
 
 /**
  * User: joakim
