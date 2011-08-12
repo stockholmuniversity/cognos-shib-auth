@@ -27,4 +27,14 @@ public class CacheTest {
     
     assert !(client1 == client2 == client3 == client4)
   }
+
+  @Test
+  void testThatCacheReturnsClosureWhenDisabled() {
+    target.disable()
+    def expected = "foo"
+
+    def ret = target.get("none", { expected })
+    
+    assert expected == ret
+  }
 }
