@@ -75,7 +75,7 @@ public class CognosShibAuthBase extends CognosShibAuthNamespace implements IName
       int searchType = steps.first().axis
       ISearchFilter filter = steps[0].getPredicate();
 
-      def key = "${objectID?.replaceAll(/ /, "")}-${searchType}-${filter?.getSearchFilterType()}"
+      def key = "${objectID}-${searchType}-${filter?.getSearchFilterType()}"
 
       List<IBaseClass> ret = Cache.getInstance().get(key, {
         List<IBaseClass> list = new ArrayList<IBaseClass>();
@@ -135,6 +135,7 @@ public class CognosShibAuthBase extends CognosShibAuthNamespace implements IName
           default :
             break;
         }
+        list
       })
 
       ret?.each { result.addObject(it) }
