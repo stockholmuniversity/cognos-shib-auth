@@ -78,6 +78,7 @@ public class Cache {
       if(!key) {
         throw new IllegalArgumentException("Missing parameter key")
       }
+      key = key?.replaceAll(/ /, "")
 
       // If running without memcached we fetch the value on each call, very bad.
       if (!mc.isAlive()) {
