@@ -20,6 +20,7 @@ public class Cache {
   private static String port = "11211"
 
   private Random random = new Random()
+  private boolean enabled = true
 
   private Cache() {
     try {
@@ -41,10 +42,14 @@ public class Cache {
   }
 
   public void set(String key, final Object o) {
-    set(namespace + key, ttl, o)
+    if (enabled)
+      set(namespace + key, ttl, o)
   }
 
   public void set(String key, int ttl, final Object o) {
+    if (!enabled)
+      return
+
     try {
       MemcachedClient mc = getCache();
       if(mc.isAlive())
@@ -57,6 +62,9 @@ public class Cache {
   }
 
   public Object get(String key) {
+    if (!enabled)
+      return null
+
     try {
       MemcachedClient mc = getCache()
       if(mc.isAlive())
@@ -87,13 +95,14 @@ public class Cache {
       }
 
       //Get object from cache
-      value = mc?.get(key)
+      if (enabled)
+        value = mc?.get(key)
 
       // Unless alreay found in cache we refresh the value
       if (value == null) {
         LOG.finest ("Cache key: $key was not found in the cache, adding $key to cache.")
         value = function()
-        if (value != null)
+        if (enabled && value != null)
           mc?.set(key, ttl, value)
       } else {
         LOG.finest ("Cache key: $key was found in the cache, returning $key value from cache.")
@@ -106,6 +115,9 @@ public class Cache {
   }
 
   public Object delete(String key) {
+    if (!enabled)
+      return
+
     try {
       MemcachedClient mc = getCache();
       if(mc.isAlive())
@@ -126,6 +138,14 @@ public class Cache {
       LOG.log(Level.SEVERE, "Failed to get memcached client: " + e.getMessage())
     }
     c
+  }
+
+  def enable() {
+    enabled = true
+  }
+
+  def disable() {
+    enabled = false
   }
 
   static {
