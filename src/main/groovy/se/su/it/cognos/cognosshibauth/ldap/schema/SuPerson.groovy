@@ -10,6 +10,7 @@ import java.util.logging.Logger
 import java.util.logging.Level
 import se.su.it.cognos.cognosshibauth.config.ConfigHandler
 import static gldapo.filter.FilterUtil.eq
+import se.su.it.cognos.cognosshibauth.memcached.Cache
 
 /**
  * User: joakim
@@ -34,7 +35,11 @@ class SuPerson extends SchemaBase {
   Set<String> eduPersonEntitlement
 
   static SuPerson findByUid(String uid) {
-    return find(filter:"(uid=$uid)")
+    Cache.getInstance().get("GLDAPO-SuPerson:uid=$uid", { find(filter:"(uid=$uid)") })
+  }
+
+  static SuPerson getByDnCached(dn) {
+    Cache.getInstance().get("GLDAPO-SuPerson:$dn", { SuPerson.getByDn(dn) })
   }
 }
 

@@ -10,8 +10,10 @@ import se.su.it.cognos.cognosshibauth.memcached.Cache
 
 public class Group extends UiClass implements IGroup {
 
-  private Logger LOG = Logger.getLogger(Group.class.getName())
   private static long SerialVersionUID = 2L
+
+  private static Logger LOG = Logger.getLogger(Group.class.getName())
+
   GroupOfUniqueNames groupOfUniqueNames
 
   /**
@@ -20,7 +22,7 @@ public class Group extends UiClass implements IGroup {
    * @param String dn
    */
   public Group(String dn) {
-    this(GroupOfUniqueNames.getByDn(dn))
+    this(GroupOfUniqueNames.getByDnCached(dn))
   }
 
   /**

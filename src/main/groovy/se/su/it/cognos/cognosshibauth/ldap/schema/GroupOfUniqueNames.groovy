@@ -2,6 +2,7 @@ package se.su.it.cognos.cognosshibauth.ldap.schema
 
 import gldapo.schema.annotation.GldapoSchemaFilter
 import gldapo.schema.annotation.GldapoNamingAttribute
+import se.su.it.cognos.cognosshibauth.memcached.Cache
 
 /**
  * User: Joakim Lundin <joakim.lundin@it.su.se>
@@ -18,6 +19,10 @@ class GroupOfUniqueNames extends SchemaBase {
   Set<String> uniqueMember
 
   static Collection<GroupOfUniqueNames> findAllByUniqueMember(String memberDn) {
-    return findAll(filter:"(uniqueMember=$memberDn)")
+    Cache.getInstance().get("GLDAPO-GroupOfUniqueNames:member=$memberDn", { findAll(filter:"(uniqueMember=$memberDn)") })
+  }
+
+  static SuPerson getByDnCached(dn) {
+    Cache.getInstance().get("GLDAPO-GroupOfUniqueNames:$dn", { GroupOfUniqueNames.getByDn(dn) })
   }
 }
