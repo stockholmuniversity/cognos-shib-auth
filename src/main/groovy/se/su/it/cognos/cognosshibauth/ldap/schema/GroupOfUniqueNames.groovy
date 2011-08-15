@@ -19,10 +19,6 @@ class GroupOfUniqueNames extends SchemaBase {
   Set<String> uniqueMember
 
   static Collection<GroupOfUniqueNames> findAllByUniqueMember(String memberDn) {
-    Cache.getInstance().get("GLDAPO-GroupOfUniqueNames:member=$memberDn", { findAll(filter:"(uniqueMember=$memberDn)") })
-  }
-
-  static SuPerson getByDnCached(dn) {
-    Cache.getInstance().get("GLDAPO-GroupOfUniqueNames:$dn", { GroupOfUniqueNames.getByDn(dn) })
+    findAll(filter:"(uniqueMember=$memberDn)")
   }
 }
