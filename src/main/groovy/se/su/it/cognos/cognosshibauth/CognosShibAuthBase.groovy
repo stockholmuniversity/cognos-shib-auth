@@ -23,7 +23,8 @@ import java.util.logging.Logger;
 
 
 import static se.su.it.cognos.cognosshibauth.ldap.UiClass.*
-import se.su.it.cognos.cognosshibauth.memcached.Cache;
+import se.su.it.cognos.cognosshibauth.memcached.Cache
+import com.cognos.CAM_AAA.authentication.ISearchStep.SearchAxis;
 
 public class CognosShibAuthBase extends CognosShibAuthNamespace implements INamespaceAuthenticationProviderBase {
 
@@ -78,64 +79,7 @@ public class CognosShibAuthBase extends CognosShibAuthNamespace implements IName
       def key = "${objectID}-${searchType}-${filter?.getSearchFilterType()}"
 
       List<IBaseClass> ret = Cache.getInstance().get(key, {
-        List<IBaseClass> list = new ArrayList<IBaseClass>();
-        switch (searchType) {
-          case ISearchStep.SearchAxis.Self :
-            if (objectID == null) {
-              if (filter == null || true) {
-                list.add(this);
-              }
-              if (searchType == ISearchStep.SearchAxis.Self) {
-                return result;
-              }
-            }
-            else if (isUser(objectID) && filter == null) {
-              String dn = camIdToName(objectID);
-              if (dn != null && !dn.trim().empty) {
-                Account account = Account.createFromDn(dn);
-                list.add(account);
-              }
-            }
-            else if (isRole(objectID)) {
-              Role role = new Role(camIdToName(objectID));
-              list.add(role);
-            }
-            else if (isGroup(objectID)) {
-              Group group = new Group(camIdToName(objectID));
-              list.add(group);
-            }
-            else if(isFolder(objectID)) {
-              list.add(folders.get(objectID));
-            }
-            break;
-          case ISearchStep.SearchAxis.Child :
-            if(objectID == null) {
-              for(NamespaceFolder folder : folders.values()) {
-                if(folder.getAncestors().length <= 0){
-                  list.add(folder);
-                }
-              }
-            }
-            else if(isFolder(objectID) && folders.containsKey(objectID)) {
-              NamespaceFolder folder = folders.get(objectID);
-              for(IUiClass child : folder.getChildren()){
-                list.add(child);
-              }
-            }
-            else if(isRole(objectID)) {
-              Role role = new Role(camIdToName(objectID));
-              for(IBaseClass member : role.getMembers()) {
-                list.add(member);
-              }
-            }
-            break;
-          case ISearchStep.SearchAxis.Descendent :
-            //Involved in text searches.
-            break;
-          default :
-            break;
-        }
-        list
+        getQueryResult(searchType, objectID, filter)
       })
 
       ret?.each { result.addObject(it) }
@@ -146,6 +90,68 @@ public class CognosShibAuthBase extends CognosShibAuthNamespace implements IName
       e.printStackTrace();
     }
     return result
+  }
+
+  def getQueryResult(int searchType, String objectID, ISearchFilter filter) {
+    def list = []
+
+    switch (searchType) {
+      case SearchAxis.Self:
+        if (objectID == null) {
+          if (filter == null || true) {
+            list.add(this);
+          }
+          if (searchType == SearchAxis.Self) {
+            return list;
+          }
+        }
+        else if (isUser(objectID) && filter == null) {
+          String dn = camIdToName(objectID);
+          if (dn != null && !dn.trim().empty) {
+            Account account = Account.createFromDn(dn);
+            list << account
+          }
+        }
+        else if (isRole(objectID)) {
+          Role role = new Role(camIdToName(objectID));
+          list << role
+        }
+        else if (isGroup(objectID)) {
+          Group group = new Group(camIdToName(objectID));
+          list  << group
+        }
+        else if (isFolder(objectID)) {
+          list << folders.get(objectID)
+        }
+        break;
+      case SearchAxis.Child:
+        if (objectID == null) {
+          for (NamespaceFolder folder: folders.values()) {
+            if (folder.getAncestors().length <= 0) {
+              list << folder
+            }
+          }
+        }
+        else if (isFolder(objectID) && folders.containsKey(objectID)) {
+          NamespaceFolder folder = folders.get(objectID);
+          for (IUiClass child: folder.getChildren()) {
+            list << child
+          }
+        }
+        else if (isRole(objectID)) {
+          Role role = new Role(camIdToName(objectID));
+          for (IBaseClass member: role.getMembers()) {
+            list << member
+          }
+        }
+        break;
+      case SearchAxis.Descendent:
+        //Involved in text searches.
+        break;
+      default:
+        break;
+    }
+    list
   }
 
   /**
