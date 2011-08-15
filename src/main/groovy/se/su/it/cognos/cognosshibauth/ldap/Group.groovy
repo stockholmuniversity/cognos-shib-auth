@@ -22,7 +22,7 @@ public class Group extends UiClass implements IGroup {
    * @param String dn
    */
   public Group(String dn) {
-    this(GroupOfUniqueNames.getByDnCached(dn))
+    this(GroupOfUniqueNames.getByDn(dn))
   }
 
   /**

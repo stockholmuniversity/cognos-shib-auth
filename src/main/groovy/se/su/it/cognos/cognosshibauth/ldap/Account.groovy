@@ -46,7 +46,7 @@ public class Account extends UiClass implements IAccount {
  */
   public static Account createFromDn(String dn) {
     String objectId = createObjectId(UiClass.PREFIX_USER, dn)
-    Cache.getInstance().get(objectId, { new Account(SuPerson.getByDnCached(dn)) } )
+    Cache.getInstance().get(objectId, { new Account(SuPerson.getByDn(dn)) } ) as Account
   }
 
   @Override
