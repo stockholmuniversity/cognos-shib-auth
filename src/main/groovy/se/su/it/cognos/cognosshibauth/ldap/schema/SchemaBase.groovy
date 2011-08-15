@@ -27,8 +27,8 @@ class SchemaBase implements Serializable {
       url: url,
       base: baseDn,
       searchControls: [
-        countLimit: 500,
-        timeLimit: 120000,
+        countLimit: countLimit,
+        timeLimit: timeLimit,
         searchScope: "subtree"
       ]
     ]
