@@ -5,8 +5,9 @@ import se.su.it.cognos.cognosshibauth.ldap.schema.SuPerson
 import se.su.it.cognos.cognosshibauth.ldap.schema.GroupOfUniqueNames
 import org.junit.Before
 import se.su.it.cognos.cognosshibauth.memcached.Cache
+import se.su.it.cognos.cognosshibauth.TestBaseClass
 
-class GroupTest {
+class GroupTest extends TestBaseClass {
 
   @Before
   void before() {
@@ -15,13 +16,8 @@ class GroupTest {
 
   @Test
   void testFindByMember() {
-    SuPerson mockSuPerson = new SuPerson()
-    mockSuPerson.metaClass.getDn = { "uid=test1,dc=it,dc=su,dc=se" }
-
     GroupOfUniqueNames mockGroupOfUniqueNames = new GroupOfUniqueNames()
     mockGroupOfUniqueNames.metaClass.getDn = { "cn=group1,dc=it,dc=su,dc=se" }
-
-    Account.metaClass.static.createTestAccount << { new Account(mockSuPerson) }
 
     GroupOfUniqueNames.metaClass.'static'.findAllByUniqueMember = { String memberDn ->
       [mockGroupOfUniqueNames]

@@ -13,7 +13,7 @@ import static org.powermock.api.mockito.PowerMockito.doReturn
 import com.cognos.CAM_AAA.authentication.IBiBusHeader2
 
 @RunWith(org.powermock.modules.junit4.PowerMockRunner.class)
-public class CognosShibAPTest {
+public class CognosShibAPTest extends TestBaseClass {
 
   @Test
   public void testThatInitSetsObjectIdFromNamespaceConfiguration() throws Exception {

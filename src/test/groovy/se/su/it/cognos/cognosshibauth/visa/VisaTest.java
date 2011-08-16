@@ -14,6 +14,7 @@ import org.mockito.Mock;
 
 import static org.mockito.Mockito.*;
 import org.powermock.modules.junit4.PowerMockRunner;
+import se.su.it.cognos.cognosshibauth.TestBaseClass;
 import se.su.it.cognos.cognosshibauth.ldap.Account;
 import se.su.it.cognos.cognosshibauth.config.ConfigHandler;
 import se.su.it.cognos.cognosshibauth.visa.validator.DummyVisaValidator;
@@ -21,8 +22,8 @@ import se.su.it.cognos.cognosshibauth.visa.validator.DummyVisaValidator;
 import java.lang.reflect.Field;
 
 @RunWith(PowerMockRunner.class)
-public class VisaTest {
-/*  @Mock
+public class VisaTest extends TestBaseClass {
+  @Mock
   Account account;
 
   @Test
@@ -39,5 +40,5 @@ public class VisaTest {
     Object obj = field.get(visa);
 
     assertTrue(obj instanceof DummyVisaValidator);
-  } */
+  }
 }

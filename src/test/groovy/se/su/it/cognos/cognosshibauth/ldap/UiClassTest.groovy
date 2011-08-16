@@ -3,13 +3,14 @@ package se.su.it.cognos.cognosshibauth.ldap
 import org.junit.Test
 import static org.junit.Assert.assertTrue
 import static org.junit.Assert.assertFalse
+import se.su.it.cognos.cognosshibauth.TestBaseClass
 
 /**
  * User: joakim
  * Date: 2011-05-11
  * Time: 14:50
  */
-class UiClassTest {
+class UiClassTest extends TestBaseClass {
 
   @Test
   void testIsUserPassesUser() {

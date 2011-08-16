@@ -177,10 +177,37 @@ public class CognosShibAuthBase extends CognosShibAuthNamespace implements IName
         ISearchFilterConditionalExpression item = (ISearchFilterConditionalExpression) iSearchFilter
 
         def list = []
+        def queries = []
+        def closures = []
         item.filters.each { subFilter ->
-          def collection = parseSearchFilter(subFilter)
-          if (collection != null)
-            list.addAll(collection)
+          def ret = parseSearchFilter(subFilter)
+          if (ret != null) {
+            if(ret instanceof GString)
+              queries << ret
+            else if (ret instanceof Collection) {
+              ret.each { itm ->
+                if (itm instanceof Closure)
+                  closures << itm
+                else
+                  list << itm
+              }
+            }
+            else if (ret instanceof Closure)
+              closures << ret
+          }
+        }
+
+        if(item.operator == "or") {
+          return closures
+        }
+        else {
+          closures.each { closure ->
+            queries.each { query ->
+              def entries = closure(query)
+              if (entries != null)
+                list.addAll(entries)
+            }
+          }
         }
         return list
         break;
@@ -208,20 +235,17 @@ public class CognosShibAuthBase extends CognosShibAuthNamespace implements IName
 
         if (item.operator == ISearchFilterRelationExpression.NotEqual)
           not = "!"
-
-        if (attribute == "@objectClass") {
-          return [] //No objectClass searches for now.
-          if(value == "account")
-            value = "suPerson"
-          if(value == "group")
-            value = "groupOfUniqueNames"
-        }
         break;
     }
 
     switch (attribute) {
       case "@objectClass":
-        attribute = "objectClass"
+        return { query ->
+          if(value != null && value == "account")
+            SuPerson.findAll(filter: query)
+          //else if(value != null && value == "group")
+          //  GroupOfUniqueNames.findAll(filter: query)
+        }
         break;
       case "@defaultName":
       case "@userName":
@@ -231,7 +255,7 @@ public class CognosShibAuthBase extends CognosShibAuthNamespace implements IName
         break;
     }
 
-    SuPerson.findAll(filter: "(${not}${attribute}=${value})")
+    "(${not}${attribute}=${value})"
   }
 
   /**

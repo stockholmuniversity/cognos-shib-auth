@@ -2,8 +2,9 @@ package se.su.it.cognos.cognosshibauth.memcached;
 
 import org.junit.Test
 import net.spy.memcached.MemcachedClient
+import se.su.it.cognos.cognosshibauth.TestBaseClass
 
-public class CacheTest {
+public class CacheTest extends TestBaseClass {
 
   Cache target = Cache.getInstance()
 

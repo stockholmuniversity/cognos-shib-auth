@@ -3,13 +3,14 @@ package se.su.it.cognos.cognosshibauth.ldap
 import org.junit.Test
 import static junit.framework.Assert.assertEquals
 import se.su.it.cognos.cognosshibauth.ldap.schema.SuPerson
+import se.su.it.cognos.cognosshibauth.TestBaseClass
 
 /**
  * User: joakim
  * Date: 2011-05-10
  * Time: 09:51
  */
-class RoleTest {
+class RoleTest extends TestBaseClass {
 
   @Test
   void testParseRoleFromEntitlementUri() {

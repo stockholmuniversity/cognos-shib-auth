@@ -8,9 +8,11 @@ package se.su.it.cognos.cognosshibauth.config;
 
 import com.cognos.CAM_AAA.authentication.INamespace;
 import com.cognos.CAM_AAA.authentication.INamespaceConfiguration;
+import com.sun.corba.se.impl.orb.ParserTable;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.modules.junit4.PowerMockRunner;
+import se.su.it.cognos.cognosshibauth.TestBaseClass;
 import se.su.it.cognos.cognosshibauth.config.ConfigHandler;
 
 import java.util.List;
@@ -20,7 +22,7 @@ import static org.mockito.Mockito.*;
 import static org.junit.Assert.*;
 
 @RunWith(PowerMockRunner.class)
-public class ConfigHandlerTest {
+public class ConfigHandlerTest extends TestBaseClass {
 
   @Test
   public void testThatNameReturnsNameForLocale() throws Exception {
