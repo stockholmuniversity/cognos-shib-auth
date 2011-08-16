@@ -52,7 +52,7 @@ public class Cache {
 
     try {
       MemcachedClient mc = getCache();
-      if(mc.isAlive())
+      if(mc.availableServers.size() <= 0)
         mc.set(namespace + key, ttl, o)
       else
         LOG.log(Level.SEVERE, "Memcached client not alive: " + mc.toString())
@@ -67,7 +67,7 @@ public class Cache {
 
     try {
       MemcachedClient mc = getCache()
-      if(mc.isAlive())
+      if(mc.availableServers.size() <= 0)
         return mc.get(namespace + key)
       else
         LOG.log(Level.SEVERE, "Memcached client not alive: " + mc.toString())
@@ -87,7 +87,7 @@ public class Cache {
       MemcachedClient mc = getCache()
 
       // If running without memcached we fetch the value on each call, very bad.
-      if (!mc.isAlive()) {
+      if (mc.availableServers.size() <= 0) {
         LOG.warning ("Running app without active memcached, performace will be seriously degraded.")
         return function()
       }
@@ -122,7 +122,7 @@ public class Cache {
 
     try {
       MemcachedClient mc = getCache();
-      if(mc.isAlive())
+      if(mc.availableServers.size() <= 0)
         return mc.delete(namespace + key)
       else
         LOG.log(Level.SEVERE, "Memcached client not alive: " + mc.toString())
