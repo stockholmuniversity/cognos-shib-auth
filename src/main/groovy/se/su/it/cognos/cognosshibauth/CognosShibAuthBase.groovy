@@ -24,7 +24,11 @@ import java.util.logging.Logger;
 
 import static se.su.it.cognos.cognosshibauth.ldap.UiClass.*
 import se.su.it.cognos.cognosshibauth.memcached.Cache
-import com.cognos.CAM_AAA.authentication.ISearchStep.SearchAxis;
+import com.cognos.CAM_AAA.authentication.ISearchStep.SearchAxis
+import se.su.it.cognos.cognosshibauth.ldap.schema.SchemaBase
+import gldapo.Gldapo
+import se.su.it.cognos.cognosshibauth.ldap.schema.SuPerson
+import se.su.it.cognos.cognosshibauth.ldap.schema.GroupOfUniqueNames;
 
 public class CognosShibAuthBase extends CognosShibAuthNamespace implements INamespaceAuthenticationProviderBase {
 
@@ -78,9 +82,13 @@ public class CognosShibAuthBase extends CognosShibAuthNamespace implements IName
 
       def key = "${objectID}-${searchType}-${filter?.getSearchFilterType()}"
 
-      List<IBaseClass> ret = Cache.getInstance().get(key, {
-        getQueryResult(searchType, objectID, filter)
-      })
+      def closure = { getQueryResult(searchType, objectID, filter) }
+
+      List<IBaseClass> ret = null
+      if(searchType != SearchAxis.Descendent)
+        ret = Cache.getInstance().get(key, closure)
+      else
+        ret = closure()
 
       ret?.each { result.addObject(it) }
     }
@@ -146,12 +154,84 @@ public class CognosShibAuthBase extends CognosShibAuthNamespace implements IName
         }
         break;
       case SearchAxis.Descendent:
-        //Involved in text searches.
+        def schemaBaseClasses = parseSearchFilter(filter)
+        schemaBaseClasses.each { schemaBaseClass ->
+          if (schemaBaseClass instanceof SuPerson)
+            list << new Account(schemaBaseClass)
+          else if(schemaBaseClass instanceof GroupOfUniqueNames)
+            list << new Group(schemaBaseClass)
+        }
         break;
       default:
         break;
     }
     list
+  }
+
+  def parseSearchFilter(ISearchFilter iSearchFilter) {
+
+    def value = "", attribute = "", not = ""
+
+    switch (iSearchFilter.searchFilterType) {
+      case ISearchFilter.ConditionalExpression:
+        ISearchFilterConditionalExpression item = (ISearchFilterConditionalExpression) iSearchFilter
+
+        def list = []
+        item.filters.each { subFilter ->
+          def collection = parseSearchFilter(subFilter)
+          if (collection != null)
+            list.addAll(collection)
+        }
+        return list
+        break;
+
+      case ISearchFilter.FunctionCall:
+        ISearchFilterFunctionCall item = (ISearchFilterFunctionCall) iSearchFilter
+        attribute = item.parameters.first()
+        switch (item.functionName) {
+          case ISearchFilterFunctionCall.Contains:
+            value = "*${item.parameters[1]}*"
+            break;
+          case ISearchFilterFunctionCall.StartsWith:
+            value = "${item.parameters[1]}*"
+            break;
+          case ISearchFilterFunctionCall.EndsWith:
+            value = "*${item.parameters[1]}"
+            break;
+        }
+        break;
+
+      case ISearchFilter.RelationalExpression:
+        ISearchFilterRelationExpression item = (ISearchFilterRelationExpression) iSearchFilter
+        attribute = item.propertyName
+        value = item.constraint
+
+        if (item.operator == ISearchFilterRelationExpression.NotEqual)
+          not = "!"
+
+        if (attribute == "@objectClass") {
+          return [] //No objectClass searches for now.
+          if(value == "account")
+            value = "suPerson"
+          if(value == "group")
+            value = "groupOfUniqueNames"
+        }
+        break;
+    }
+
+    switch (attribute) {
+      case "@objectClass":
+        attribute = "objectClass"
+        break;
+      case "@defaultName":
+      case "@userName":
+      case "@name":
+      default:
+        attribute = "uid"
+        break;
+    }
+
+    SuPerson.findAll(filter: "(${not}${attribute}=${value})")
   }
 
   /**
