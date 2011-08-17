@@ -50,16 +50,4 @@ Test disabled in waiting for this issue to be resolved: https://issues.jboss.org
   }
 */
 
-  @Test
-  void testDn() {
-    Cache.getInstance().enable()
-    SuPerson suPerson1 = SuPerson.findByUid("jolu")
-    def dn1 = suPerson1.getDn()
-    SuPerson suPerson2 = SuPerson.findByUid("jolu")
-    def dn2 = suPerson2.getDn()
-
-    assert dn1 == dn2
-
-    Cache.getInstance().disable()
-  }
 }
