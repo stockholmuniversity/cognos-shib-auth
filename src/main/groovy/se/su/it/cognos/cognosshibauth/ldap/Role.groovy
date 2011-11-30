@@ -69,7 +69,7 @@ public class Role extends UiClass implements IRole {
     String gmaiPrefix = configHandler.getStringEntry("gmai.prefix")
     String gmaiApplication = configHandler.getStringEntry("gmai.application")
 
-    if(entitlement != null && isApplicationRole(entitlement)) {
+    if(entitlement != null && isApplicationRole(entitlement)) { //TODO: Fix this to handle (or ignore) scope.
       String subS = entitlement.substring(("${gmaiPrefix}:${gmaiApplication}:").length())
       subS.indexOf(":")
       return subS
