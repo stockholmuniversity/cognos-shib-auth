@@ -8,6 +8,7 @@ import se.su.it.cognos.cognosshibauth.ldap.schema.SuPerson
 import se.su.it.cognos.cognosshibauth.CognosShibAuthNamespace
 import com.cognos.CAM_AAA.authentication.UnrecoverableException
 import se.su.it.cognos.cognosshibauth.memcached.Cache
+import com.cognos.CAM_AAA.authentication.ISearchFilterRelationExpression
 
 public class Account extends UiClass implements IAccount {
 
@@ -186,5 +187,33 @@ public class Account extends UiClass implements IAccount {
    */
   List<Group> getGroups() {
     Group.findByMember(this)
+  }
+
+  String buildLdapFilter(String attribute, String value, String operator = ISearchFilterRelationExpression.EqualTo) {
+    String filter = ""
+
+    switch(operator) {
+      case ISearchFilterRelationExpression.NotEqual:
+        filter = "(!${attribute}=${value})"
+        break
+      case ISearchFilterRelationExpression.GreaterThan:
+        filter = "(&(${attribute}>=${value})(!${attribute}=${value}))"
+        break
+      case ISearchFilterRelationExpression.GreaterThanOrEqual:
+        filter = "(${attribute}>=${value})"
+        break
+      case ISearchFilterRelationExpression.LessThan:
+        filter = "(&(${attribute}<=${value})(!${attribute}=${value}))"
+        break
+      case ISearchFilterRelationExpression.LessThanOrEqual:
+        filter = "(${attribute}<=${value})"
+        break
+      case ISearchFilterRelationExpression.EqualTo:
+      default:
+        filter = "(${attribute}=${value})"
+        break
+    }
+
+    filter
   }
 }

@@ -66,26 +66,35 @@ public class CognosShibAuthBase extends CognosShibAuthNamespace implements IName
     QueryResult result = new QueryResult();
 
     try {
-      ISearchExpression expression = iQuery.getSearchExpression();
-      String objectID = expression.getObjectID();
-      ISearchStep[] steps = expression.getSteps();
+      ISearchExpression expression = iQuery.searchExpression
+      IQueryOption queryOption = iQuery.queryOption
 
-      //TODO handle hierarchical steps
+      String baseObjectID = expression.objectID // The base for the search expression, null == root of namespace
+      ISearchStep[] steps = expression.steps
+
+      // TODO handle multiple steps:
+      //   IBM Cognos Connection does not use more than one step. Authentication
+      //   providers currently supported by IBM Cognos BI do not support more than one
+      //   step, either. Only some Software Development Kit applications can generate
+      //   queries containing more than one step, therefore a custom authentication provider
+      //   is required to support such queries.
+      //   From "IBM Cognos Custom Authentication Provider Version 10.1.1 Developer Guide"
+
       if (steps.length != 1) {
         throw new UnrecoverableException(
                 "Internal Error",
                 "Invalid search expression. Multiple steps is not supported for this namespace.");
       }
 
-      int searchType = steps.first().axis
-      ISearchFilter filter = steps[0].getPredicate();
+      int searchAxis = steps.first().axis
+      ISearchFilter filter = steps.first().predicate
 
-      def key = "${objectID}-${searchType}-${filter?.getSearchFilterType()}"
+      def key = "${baseObjectID}-${searchAxis}-${filter?.getSearchFilterType()}"
 
-      def closure = { getQueryResult(searchType, objectID, filter) }
+      def closure = { getQueryResult(searchAxis, baseObjectID, filter, queryOption) }
 
       List<IBaseClass> ret = null
-      if(searchType != SearchAxis.Descendent)
+      if(searchAxis != SearchAxis.Descendent)
         ret = Cache.getInstance().get(key, closure)
       else
         ret = closure()
@@ -100,162 +109,258 @@ public class CognosShibAuthBase extends CognosShibAuthNamespace implements IName
     return result
   }
 
-  def getQueryResult(int searchType, String objectID, ISearchFilter filter) {
+  def getQueryResult(int searchAxis, String baseObjectID, ISearchFilter filter, IQueryOption queryOption) {
     def list = []
 
-    switch (searchType) {
+    switch (searchAxis) {
       case SearchAxis.Self:
-        if (objectID == null) {
-          if (filter == null || true) {
-            list.add(this);
-          }
-          if (searchType == SearchAxis.Self) {
-            return list;
-          }
-        }
-        else if (isUser(objectID) && filter == null) {
-          String dn = camIdToName(objectID);
-          if (dn != null && !dn.trim().empty) {
-            Account account = Account.createFromDn(dn);
-            list << account
-          }
-        }
-        else if (isRole(objectID)) {
-          Role role = new Role(camIdToName(objectID));
-          list << role
-        }
-        else if (isGroup(objectID)) {
-          Group group = new Group(camIdToName(objectID));
-          list  << group
-        }
-        else if (isFolder(objectID)) {
-          list << folders.get(objectID)
-        }
+        list << searchAxisSelf(baseObjectID)
         break;
+
       case SearchAxis.Child:
-        if (objectID == null) {
-          for (NamespaceFolder folder: folders.values()) {
-            if (folder.getAncestors().length <= 0) {
-              list << folder
-            }
-          }
-        }
-        else if (isFolder(objectID) && folders.containsKey(objectID)) {
-          NamespaceFolder folder = folders.get(objectID);
-          for (IUiClass child: folder.getChildren()) {
-            list << child
-          }
-        }
-        else if (isRole(objectID)) {
-          Role role = new Role(camIdToName(objectID));
-          for (IBaseClass member: role.getMembers()) {
-            list << member
-          }
-        }
+        list.addAll searchAxisChild(baseObjectID)
         break;
+
       case SearchAxis.Descendent:
-        def schemaBaseClasses = parseSearchFilter(filter)
-        schemaBaseClasses.each { schemaBaseClass ->
-          if (schemaBaseClass instanceof SuPerson)
-            list << new Account(schemaBaseClass)
-          else if(schemaBaseClass instanceof GroupOfUniqueNames)
-            list << new Group(schemaBaseClass)
-        }
-        break;
+        list.addAll searchAxisDescendent(baseObjectID, filter, queryOption)
+        break
+
+      // Not yet implemented
+      case SearchAxis.Ancestor:
+      case SearchAxis.AncestorOrSelf:
+      case SearchAxis.DescendentOrSelf:
+      case SearchAxis.Parent:
+      case SearchAxis.Unknown:
       default:
         break;
     }
+
     list
   }
+  
+  def IBaseClass searchAxisSelf(String baseObjectID) {
+    IBaseClass ret = null
 
-  def parseSearchFilter(ISearchFilter iSearchFilter) {
+    String name = camIdToName(baseObjectID)
 
-    def value = "", attribute = "", not = ""
+    if (baseObjectID == null)
+      ret = this
 
-    switch (iSearchFilter.searchFilterType) {
-      case ISearchFilter.ConditionalExpression:
-        ISearchFilterConditionalExpression item = (ISearchFilterConditionalExpression) iSearchFilter
+    else if (isUser(baseObjectID)) {
+      String dn = name
+      if (dn != null && !dn.trim().empty)
+        ret = Account.createFromDn(dn)
+    }
 
-        def list = []
-        def queries = []
-        def closures = []
-        item.filters.each { subFilter ->
-          def ret = parseSearchFilter(subFilter)
-          if (ret != null) {
-            if(ret instanceof GString)
-              queries << ret
-            else if (ret instanceof Collection) {
-              ret.each { itm ->
-                if (itm instanceof Closure)
-                  closures << itm
-                else
-                  list << itm
-              }
-            }
-            else if (ret instanceof Closure)
-              closures << ret
-          }
+    else if (isGroup(baseObjectID)) {
+      String dn = name
+      if (dn != null && !dn.trim().empty)
+        ret = new Group(dn)
+    }
+
+    else if (isRole(baseObjectID) && Role.exists(name))
+      ret = new Role(name)
+
+    else if (isFolder(baseObjectID))
+      ret = folders.get(baseObjectID)
+
+    ret
+  }
+
+  def List<IBaseClass> searchAxisChild(String baseObjectID) {
+    List<IBaseClass> retList = new ArrayList<IBaseClass>()
+
+    if (baseObjectID == null) // Root base
+      retList.addAll folders?.values()?.findAll { it?.ancestors?.length <= 0 } ?: [] // Add all root folders.
+
+    else if (isFolder(baseObjectID) && folders.containsKey(baseObjectID)) {
+      NamespaceFolder baseFolder = folders.get(baseObjectID)
+
+      retList.addAll baseFolder?.children ?: []
+    }
+
+    else if (isRole(baseObjectID)) {
+      Role baseRole = new Role(camIdToName(baseObjectID))
+
+      retList.addAll baseRole?.members ?: []
+    }
+
+    else if (isGroup(baseObjectID)) {
+      Group baseGroup = new Group(camIdToName(baseObjectID))
+
+      retList.addAll baseGroup?.members ?: []
+    }
+
+    retList
+  }
+
+  def List<IBaseClass> searchAxisDescendent(String baseObjectID, ISearchFilter filter, IQueryOption queryOption) {
+    List<IBaseClass> retList = new ArrayList<IBaseClass>()
+
+    List<String> objectTypes = findFilterObjectTypes(filter)
+
+    objectTypes.each { objectType ->
+
+      def ret = parseSearchFilter(filter, objectType)
+
+      if (ret instanceof Collection) {
+        retList.addAll ret
+      }
+      else if (ret instanceof String) {
+        if (objectType == 'account') {
+          retList.addAll SuPerson.findAll(filter : ret as String).collect { new Account(it) }
         }
-
-        if(item.operator == "or") {
-          return closures
+        else if (objectType == 'group') {
+          retList.addAll GroupOfUniqueNames.findAll(filter : ret as String).collect { new Group(it) }
         }
-        else {
-          closures.each { closure ->
-            queries.each { query ->
-              def entries = closure(query)
-              if (entries != null)
-                list.addAll(entries)
-            }
-          }
-        }
-        return list
-        break;
+      }
+    }
 
-      case ISearchFilter.FunctionCall:
+    retList
+  }
+
+  def parseSearchFilter(ISearchFilter iSearchFilter, String objectType) {
+
+    List<IBaseClass> ret = new ArrayList<IBaseClass>()
+
+    String filter = null
+
+    if (iSearchFilter == ISearchFilter.ConditionalExpression) {
+      ISearchFilterConditionalExpression item = iSearchFilter as ISearchFilterConditionalExpression
+      def filterResults = item.filters.collect { parseSearchFilter(it, objectType) }
+
+      if (filterResults.findAll {it instanceof String}.size() == filterResults.size()) {
+        filter = filterResults.collect { (it as String).empty ? "" : "(${it})" }.join('')
+
+        if (item.operator == ISearchFilterConditionalExpression.ConditionalOr)
+          filter = "(|${filter})"
+        else
+          filter = "(&${filter})"
+      }
+    }
+    else {
+      String attribute = null, value = null, operator = null
+
+      if (iSearchFilter.searchFilterType == ISearchFilter.FunctionCall) {
         ISearchFilterFunctionCall item = (ISearchFilterFunctionCall) iSearchFilter
+
         attribute = item.parameters.first()
+
         switch (item.functionName) {
           case ISearchFilterFunctionCall.Contains:
             value = "*${item.parameters[1]}*"
-            break;
+            break
           case ISearchFilterFunctionCall.StartsWith:
             value = "${item.parameters[1]}*"
-            break;
+            break
           case ISearchFilterFunctionCall.EndsWith:
             value = "*${item.parameters[1]}"
-            break;
+            break
         }
-        break;
-
-      case ISearchFilter.RelationalExpression:
+      }
+      else if (iSearchFilter.searchFilterType == ISearchFilter.RelationalExpression) {
         ISearchFilterRelationExpression item = (ISearchFilterRelationExpression) iSearchFilter
+
         attribute = item.propertyName
         value = item.constraint
+        operator = item.operator
+      }
 
-        if (item.operator == ISearchFilterRelationExpression.NotEqual)
-          not = "!"
-        break;
-    }
-
-    switch (attribute) {
-      case "@objectClass":
-        return { query ->
-          if(value != null && value == "account")
-            SuPerson.findAll(filter: query)
-          //else if(value != null && value == "group")
-          //  GroupOfUniqueNames.findAll(filter: query)
+      if (attribute == "@objectClass")
+        filter = ''
+      else {
+        if (objectType == 'account') {
+          filter = buildLdapFilter(attribute, value, operator)
         }
-        break;
-      case "@defaultName":
-      case "@userName":
-      case "@name":
-      default:
-        attribute = "uid"
-        break;
+        if (objectType == 'group') {
+          filter = buildLdapFilter(attribute, value, operator)
+        }
+        if (objectType == 'role') {
+          ret.addAll Role.findAllByName(value)
+        }
+        if (objectType == 'folder') {
+          ret.addAll folders.values().findAll { it.getName(configHandler.contentLocale) }
+        }
+        if (objectType == 'namespace') {
+          if (value == this.getName(configHandler.contentLocale))
+            ret << this
+        }
+      }
     }
 
-    "(${not}${attribute}=${value})"
+    if (filter)
+      return filter
+
+    ret
+  }
+
+  List<String> findFilterObjectTypes(ISearchFilter searchFilter) {
+    List<String> ret = null
+
+    if (searchFilter.searchFilterType == ISearchFilter.ConditionalExpression) {
+      def filter = searchFilter as ISearchFilterConditionalExpression
+
+      if (filter.operator == ISearchFilterConditionalExpression.ConditionalOr)
+        ret = filter.filters.collect { findFilterObjectTypes(it) }
+    }
+    else
+      ret = [ getFilterObjectType(searchFilter) ]
+
+    ret = ret.unique()
+    ret.removeAll {it == null}
+
+    if (ret.empty)
+      ret = ['account', 'group', 'role', 'folder', 'namespace']
+
+    ret
+  }
+
+  String getFilterObjectType(ISearchFilter searchFilter) {
+    String attribute = "", value = ""
+
+    if (searchFilter.searchFilterType == ISearchFilter.RelationalExpression) {
+      def filter = searchFilter as ISearchFilterRelationExpression
+      attribute = filter.propertyName
+      value = filter.constraint
+    }
+    else if (searchFilter.searchFilterType == ISearchFilter.FunctionCall) {
+      def filter = searchFilter as ISearchFilterFunctionCall
+      attribute = filter.parameters.first()
+      value = filter.parameters[1]
+    }
+
+    if (attribute == "@objectClass" && value == null || attribute != "@objectClass")
+      value = null
+
+    value
+  }
+
+  String buildLdapFilter(String attribute, String value, String operator = ISearchFilterRelationExpression.EqualTo) {
+    String filter = ""
+
+    switch(operator) {
+      case ISearchFilterRelationExpression.NotEqual:
+        filter = "(!${attribute}=${value})"
+        break
+      case ISearchFilterRelationExpression.GreaterThan:
+        filter = "(&(${attribute}>=${value})(!${attribute}=${value}))"
+        break
+      case ISearchFilterRelationExpression.GreaterThanOrEqual:
+        filter = "(${attribute}>=${value})"
+        break
+      case ISearchFilterRelationExpression.LessThan:
+        filter = "(&(${attribute}<=${value})(!${attribute}=${value}))"
+        break
+      case ISearchFilterRelationExpression.LessThanOrEqual:
+        filter = "(${attribute}<=${value})"
+        break
+      case ISearchFilterRelationExpression.EqualTo:
+      default:
+        filter = "(${attribute}=${value})"
+        break
+    }
+
+    filter
   }
 
   /**
@@ -268,34 +373,4 @@ public class CognosShibAuthBase extends CognosShibAuthNamespace implements IName
       folders.put(namespaceFolder.getObjectID(), namespaceFolder);
     }
   }
-
-  public static byte[] toBytes(Object object){
-    java.io.ByteArrayOutputStream baos = new java.io.ByteArrayOutputStream();
-    try{
-      java.io.ObjectOutputStream oos = new java.io.ObjectOutputStream(baos);
-      oos.writeObject(object);
-      oos.flush();
-      oos.close();
-      baos.flush();
-      baos.close();
-    }catch(java.io.IOException ioe){
-    }
-    return baos.toByteArray();
-  }
-
-
-  public static Object toObject(byte[] bytes){
-    Object object = null;
-    try{
-      java.io.ByteArrayInputStream bais = new java.io.ByteArrayInputStream(bytes);
-      java.io.ObjectInputStream ois = new java.io.ObjectInputStream(bais);
-      object = ois.readObject();
-      ois.close();
-      bais.close();
-    }catch(java.io.IOException ioe){
-    }catch(java.lang.ClassNotFoundException cnfe){
-    }
-    return object;
-  }
-
 }

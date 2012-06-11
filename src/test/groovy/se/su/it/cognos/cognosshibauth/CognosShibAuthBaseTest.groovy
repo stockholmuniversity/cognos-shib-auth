@@ -23,8 +23,8 @@ public class CognosShibAuthBaseTest extends TestBaseClass {
 
   @Before
   void setUp() {
-    target.metaClass.publicGetResult = { int searchType, String objectID, ISearchFilter filter ->
-      delegate.getQueryResult(searchType, objectID, filter)
+    target.metaClass.publicGetResult = { int searchType, String objectID, ISearchFilter filter, IQueryOption queryOption ->
+      delegate.getQueryResult(searchType, objectID, filter, queryOption)
     }
     
     super.setUp()
@@ -51,6 +51,7 @@ public class CognosShibAuthBaseTest extends TestBaseClass {
     mockAccount.metaClass.objectID = { "fookaka" }
 
     iQuery.demand.getSearchExpression { iSearchExpression.proxyInstance() }
+    iQuery.demand.getQueryOption { null }
 
     iSearchStep.demand.getAxis(0..2) { ISearchStep.SearchAxis.Self }
 
@@ -68,7 +69,7 @@ public class CognosShibAuthBaseTest extends TestBaseClass {
 
   @Test
   void testGetQueryResultReturnsACollection() {
-    assert target.publicGetResult(0, null, null) instanceof Collection
+    assert target.publicGetResult(0, null, null, null) instanceof Collection
   }
 
   @Test
@@ -86,14 +87,15 @@ public class CognosShibAuthBaseTest extends TestBaseClass {
     functionCall.demand.getParameters(1..3) { ["@defaultName", "jolu"] }
 
     def topFilter = new MockFor(ISearchFilterConditionalExpression.class)
-    topFilter.demand.getSearchFilterType { ISearchFilter.ConditionalExpression }
-    topFilter.demand.getFilters(1..3) {
+    topFilter.demand.getSearchFilterType(0..10) { ISearchFilter.ConditionalExpression }
+    topFilter.demand.getFilters(0..3) {
       [relationExpression.proxyInstance(), functionCall.proxyInstance()]
     }
-    topFilter.demand.getOperator(1..3) { "and" }
+    topFilter.demand.getOperator(0..10) { "and" }
+    topFilter.demand.asType(0..3) { topFilter.proxyInstance() }
 
 
-    def list = target.getQueryResult(SearchAxis.Descendent, "Cognos Shib Authenticator:f:Users", topFilter.proxyInstance())
+    def list = target.getQueryResult(SearchAxis.Descendent, "Cognos Shib Authenticator:f:Users", topFilter.proxyInstance(), null)
 
     assert 1 == list.size()
   }

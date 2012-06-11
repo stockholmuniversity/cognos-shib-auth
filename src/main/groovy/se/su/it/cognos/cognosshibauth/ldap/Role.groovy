@@ -19,12 +19,7 @@ public class Role extends UiClass implements IRole {
   }
 
   public IBaseClass[] getMembers() {
-    ConfigHandler configHandler = ConfigHandler.instance();
-
-    String gmaiPrefix = configHandler.getStringEntry("gmai.prefix");
-    String gmaiApplication = configHandler.getStringEntry("gmai.application");
-
-    String gmaiUrn = "${gmaiPrefix}:${gmaiApplication}:${getName(defaultLocale)}"
+    def gmaiUrn = getGMAIUrn()
 
     List<SuPerson> suPersons = SuPerson.findAll(filter: "(eduPersonEntitlement=${gmaiUrn})")
 
@@ -52,7 +47,8 @@ public class Role extends UiClass implements IRole {
       entitlements.addAll suPerson.eduPersonEntitlement
     }
 
-    entitlements.unique().removeAll { entitlement ->
+    entitlements = entitlements.unique()
+    entitlements.removeAll { entitlement ->
       !isApplicationRole(entitlement)
     }
 
@@ -61,6 +57,32 @@ public class Role extends UiClass implements IRole {
       def key = createObjectId(UiClass.PREFIX_ROLE, roleName)
       Cache.getInstance().get(key, { new Role(roleName) })
     }
+  }
+
+  static List<Role> findAllByName(String name) {
+    List<SuPerson> suPersons = SuPerson.findAll(filter: "eduPersonEntitlement=urn:mace:swami.se:gmai:su-ivs:*")
+
+    List<String> entitlements = new ArrayList<String>()
+    suPersons.each { suPerson ->
+      entitlements.addAll suPerson.eduPersonEntitlement
+    }
+
+    entitlements = entitlements.unique()
+    entitlements.removeAll { entitlement ->
+      !isApplicationRole(entitlement)
+    }
+
+    List<Role> roles = new ArrayList<Role>()
+
+    entitlements.each { entitlement ->
+      def roleName = parseRoleFromEntitlementUri(entitlement)
+      if (name == roleName) {
+        def key = createObjectId(UiClass.PREFIX_ROLE, roleName)
+        roles.add Cache.getInstance().get(key, { new Role(roleName) })
+      }
+    }
+
+    roles
   }
 
   static String parseRoleFromEntitlementUri(String entitlement) {
@@ -84,5 +106,20 @@ public class Role extends UiClass implements IRole {
     String gmaiApplication = configHandler.getStringEntry("gmai.application")
 
     entitlement.startsWith("${gmaiPrefix}:${gmaiApplication}:")
+  }
+
+  static boolean exists(String roleName) {
+    List<Role> roles = findAllByName(roleName)
+
+    roles && roles.size() > 0
+  }
+
+  private String getGMAIUrn() {
+    ConfigHandler configHandler = ConfigHandler.instance();
+
+    String gmaiPrefix = configHandler.getStringEntry("gmai.prefix");
+    String gmaiApplication = configHandler.getStringEntry("gmai.application");
+
+    "${gmaiPrefix}:${gmaiApplication}:${getName(defaultLocale)}"
   }
 }

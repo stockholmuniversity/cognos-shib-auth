@@ -79,6 +79,10 @@ public class UiClass implements IUiClass, Serializable {
     return names.get(theLocale);
   }
 
+  public String getName() {
+    return names.get(defaultLocale);
+  }
+
   public Locale[] getAvailableNameLocales() {
     Set<Locale> keySet = names.keySet();
     return keySet.toArray(new Locale[keySet.size()]);

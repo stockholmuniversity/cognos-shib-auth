@@ -13,7 +13,7 @@ import com.cognos.CAM_AAA.authentication.*
  */
 class CognosShibAP extends CognosShibAuthBase implements INamespaceAuthenticationProvider2 {
 
-  private Logger LOG = Logger.getLogger(CognosShibAP.class.getName());
+  private Logger LOG = Logger.getLogger(CognosShibAP.class.getName())
 
   @Override
   public IVisa logon(IBiBusHeader2 iBiBusHeader2) throws UserRecoverableException, SystemRecoverableException,
@@ -26,11 +26,11 @@ class CognosShibAP extends CognosShibAuthBase implements INamespaceAuthenticatio
     Account account = Account.findByUid(remoteUser)
     visa.init account
 
-    account.getRoles().each { role ->
+    account.roles?.each { role ->
       visa.addRole role
     }
 
-    return visa;
+    visa
   }
 
   /**
