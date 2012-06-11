@@ -1,0 +1,41 @@
+apply plugin: 'java'
+apply plugin: 'groovy'
+apply plugin: 'maven'
+
+version = "1.1.1-SNAPSHOT"
+group = "se.su.it.cognos.cognosshibauth"
+archivesBaseName = "cognos-shib-auth"
+
+repositories {
+  mavenCentral()
+  mavenLocal()
+
+  maven {
+    url "http://maven.it.su.se/it.su.se/maven2"
+    url "http://repository.codehaus.org/"
+    url "http://files.couchbase.com/maven2/"
+  }
+}
+
+dependencies {
+  groovy group: 'org.codehaus.groovy', name: 'groovy-all', version: '1.8.6'
+
+  compile group: 'com.cognos.CAM_AAA', name: 'authentication', version: '10.1.4707.507'
+  compile group: 'commons-configuration', name: 'commons-configuration', version: '1.6'
+  compile group: 'org.codehaus', name: 'gldapo', version: '0.8.5'
+  compile group: 'spy', name: 'spymemcached', version: '2.6'
+
+  testCompile group: 'junit', name: 'junit', version: '4.8.2'
+  testCompile group: 'org.mockito', name: 'mockito-all', version: '1.8.5'
+  testCompile group: 'org.powermock', name: 'powermock-module-junit4', version: '1.4.9'
+  testCompile group: 'org.powermock', name: 'powermock-api-mockito', version: '1.4.9'
+  testCompile group: 'org.spockframework', name: 'spock-core', version: '0.6-groovy-1.8'
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            repository(url: "file://${buildDir}/m2repo")
+        }
+    }
+}
