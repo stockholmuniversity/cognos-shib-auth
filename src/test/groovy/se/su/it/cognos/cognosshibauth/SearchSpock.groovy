@@ -1,7 +1,6 @@
 package se.su.it.cognos.cognosshibauth
 
 import spock.lang.Specification
-import com.cognos.CAM_AAA.authentication.IQueryResult
 import org.junit.runner.RunWith
 import org.spockframework.runtime.Sputnik
 import com.cognos.CAM_AAA.authentication.IQuery
@@ -15,13 +14,7 @@ import se.su.it.cognos.cognosshibauth.ldap.Group
 import se.su.it.cognos.cognosshibauth.ldap.Account
 import se.su.it.cognos.cognosshibauth.ldap.schema.GroupOfUniqueNames
 import se.su.it.cognos.cognosshibauth.ldap.schema.SuPerson
-import com.cognos.CAM_AAA.authentication.IRole
-import com.cognos.CAM_AAA.authentication.IAccount
-import com.cognos.CAM_AAA.authentication.IGroup
-import groovy.mock.interceptor.MockFor
-import groovy.mock.interceptor.StubFor
 import spock.lang.Unroll
-import gldapo.Gldapo
 import gldapo.GldapoSchemaRegistry
 import se.su.it.cognos.cognosshibauth.memcached.Cache
 import com.cognos.CAM_AAA.authentication.ISearchFilterFunctionCall
@@ -40,7 +33,7 @@ class SearchSpock extends Specification {
   GroupOfUniqueNames groupOfUniqueNames = null
 
   @Shared
-  SuPerson suPerson = null
+  def suPerson = null
 
   @Shared
   def mockGroup = null
@@ -49,32 +42,58 @@ class SearchSpock extends Specification {
   def mockAccount = null
 
   @Shared
-  NamespaceFolder mockFolder = new NamespaceFolder(null, "test-folder")
+  NamespaceFolder mockFolder = null
 
   @Shared
-  NamespaceFolder mockSubFolder = new NamespaceFolder(null, "test-folder2")
+  NamespaceFolder mockSubFolder = null
 
   def setup() {
+
+    //Disable Gldapo
     GldapoSchemaRegistry.metaClass.add = { Object registration -> return }
 
+    //Disable cache
+    Cache.instance.disable()
     Cache.metaClass.get = { key, function -> function() }
 
+    mockFolder = new NamespaceFolder(null, "test-folder")
+    mockSubFolder = new NamespaceFolder(null, "test-folder2")
+
+/*
+      suPerson = Mock(SuPerson)
+      suPerson.uid >> "jolu"
+      suPerson.givenName >> "Joakim"
+      suPerson.sn >> "Lundin"
+      suPerson.eduPersonEntitlement >> ['urn:mace:swami.se:gmai:su-ivs:test-role']
+
+      suPerson.getDn() >> "uid=jolu,dc=it,dc=su,dc=se"
+*/
     suPerson = new SuPerson(
             uid: "jolu",
             givenName: 'joakim',
             sn: 'Lundin',
             eduPersonEntitlement: ['urn:mace:swami.se:gmai:su-ivs:test-role']
     )
-    suPerson.metaClass.getDn = { "uid=jolu,dc=it,dc=su,dc=se" }
 
-    suPerson.metaClass.findAll = { map ->
-      map.filter
-    }
+    suPerson.metaClass.getDn = { "uid=jolu,dc=it,dc=su,dc=se" }
 
     def suPersons = [suPerson]
 
     SuPerson.metaClass.static.getByDn = { String dn ->
       suPersons.find { it.getDn() == dn }
+    }
+
+    SuPerson.metaClass.static.findAll = { Map options ->
+      def ret = []
+
+      def matcher = (options.filter =~ /.*\((.*)=(.*)\).*/)
+          if (matcher.matches()) {
+            String attr = matcher[0][1]
+            String val = matcher[0][2]
+            ret = suPersons.findAll { it[attr] == val.replaceAll(/\*/, "") }
+          }
+
+      ret
     }
 
     groupOfUniqueNames = new GroupOfUniqueNames(
@@ -89,6 +108,8 @@ class SearchSpock extends Specification {
     GroupOfUniqueNames.metaClass.static.getByDn = { String dn ->
       groupsOfUniqueNames.find { it.getDn() == dn }
     }
+
+    GroupOfUniqueNames.metaClass.static.findAll = { Map options -> [] }
 
     target.folders.put(mockFolder.objectID, mockFolder)
 
@@ -132,22 +153,17 @@ class SearchSpock extends Specification {
   @Unroll
   def "Search with axis Self for object: #objectId"() {
     setup:
-    ISearchStep[] steps = [ [
-            getAxis: { ISearchStep.SearchAxis.Self },
-            getPredicate: { null }
-    ] as ISearchStep ]
+    ISearchStep searchStep = Mock()
+    searchStep.getAxis() >> ISearchStep.SearchAxis.Self
+    searchStep.getPredicate() >> null
 
-    def searchExpression = [
-            getObjectID: { objectId },
-            getSteps: { steps }
-    ] as ISearchExpression
+    ISearchExpression searchExpression = Mock()
+    searchExpression.getObjectID() >> objectId
+    searchExpression.getSteps() >> [searchStep]
 
-    def queryOption = [:] as IQueryOption
-
-    def query = [
-            getSearchExpression: { searchExpression },
-            getQueryOption: { queryOption }
-    ] as IQuery
+    IQuery query = Mock()
+    query.getSearchExpression() >> searchExpression
+    query.getQueryOption() >> ( [:] as IQueryOption )
 
     when:
     def result = target.search(null, query)
@@ -174,22 +190,17 @@ class SearchSpock extends Specification {
   @Unroll
   def "Search with axis Child for object: #objectId"() {
     setup:
-    ISearchStep[] steps = [ [
-            getAxis: { ISearchStep.SearchAxis.Child },
-            getPredicate: { null }
-    ] as ISearchStep ]
+    ISearchStep searchStep = Mock()
+    searchStep.getAxis() >> ISearchStep.SearchAxis.Child
+    searchStep.getPredicate() >> null
 
-    def searchExpression = [
-            getObjectID: { objectId },
-            getSteps: { steps }
-    ] as ISearchExpression
+    ISearchExpression searchExpression = Mock()
+    searchExpression.getObjectID() >> objectId
+    searchExpression.getSteps() >> [searchStep]
 
-    def queryOption = [:] as IQueryOption
-
-    def query = [
-            getSearchExpression: { searchExpression },
-            getQueryOption: { queryOption }
-    ] as IQuery
+    IQuery query = Mock()
+    query.getSearchExpression() >> searchExpression
+    query.getQueryOption() >> ( [:] as IQueryOption )
 
     when:
     def result = target.search(null, query)
@@ -211,5 +222,46 @@ class SearchSpock extends Specification {
     "null:u:missing-account,dc=it,dc=su,dc=se"       | []
     "null:g:missing-group,dc=it,dc=su,dc=se"         | []
     "null:f:missing-folder"                          | []
+  }
+
+  @Unroll
+  def "Search with axis Descendent and ISearchFilterFunctionCall( #attribute, #value )"() {
+    setup:
+    ISearchFilterFunctionCall searchFilterFunctionCall = Mock()
+    searchFilterFunctionCall.getFunctionName() >> ISearchFilterFunctionCall.Contains
+    searchFilterFunctionCall.getParameters() >> ( [attribute, value] as String[] )
+    searchFilterFunctionCall.getSearchFilterType() >> ISearchFilter.FunctionCall
+
+    ISearchStep searchStep = Mock()
+    searchStep.getAxis() >> ISearchStep.SearchAxis.Descendent
+    searchStep.getPredicate() >> searchFilterFunctionCall
+
+    ISearchExpression searchExpression = Mock()
+    searchExpression.getObjectID() >> objectId
+    searchExpression.getSteps() >> [searchStep]
+
+    IQueryOption queryOption = Mock()
+    queryOption.maxCount >> 100
+    queryOption.skipCount >> 0
+
+    IQuery query = Mock()
+    query.getSearchExpression() >> searchExpression
+    query.getQueryOption() >> ( queryOption )
+
+    when:
+    def result = target.search(null, query)
+
+    then:
+    notThrown(NullPointerException)
+
+    and:
+    (result.objects?.toList() ?: []).containsAll(expected)
+
+    where:
+    objectId | expected        | attribute   | value
+    null     | []              | null        | null
+    null     | [mockAccount]   | '@userName' | 'jolu'
+    null     | []              | '@userName' | null
+    null     | []              | '@userName' | 'nonExisting'
   }
 }

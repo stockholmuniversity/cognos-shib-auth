@@ -31,72 +31,7 @@ public class CognosShibAuthBaseTest extends TestBaseClass {
   }
 
   @Test
-  public void testSearch() throws Exception {
-
-    def iVisa = new MockFor(IVisa.class)
-    def iQuery = new MockFor(IQuery.class)
-
-    def iSearchExpression = new MockFor(ISearchExpression.class)
-    def iSearchStep = new MockFor(ISearchStep.class)
-
-    SuPerson mockSuPerson = new SuPerson()
-    mockSuPerson.metaClass.getDn = { "uid=test1,dc=it,dc=su,dc=se" }
-
-    def mockAccount = new Account(mockSuPerson)
-
-    String objectId = "TEST:u:uid=test,dc=it,dc=su,dc=se"
-    def iSearchSteps = []
-    iSearchSteps[0] = iSearchStep
-
-    mockAccount.metaClass.objectID = { "fookaka" }
-
-    iQuery.demand.getSearchExpression { iSearchExpression.proxyInstance() }
-    iQuery.demand.getQueryOption { null }
-
-    iSearchStep.demand.getAxis(0..2) { ISearchStep.SearchAxis.Self }
-
-    iSearchStep.demand.getPredicate { null }
-
-    iSearchExpression.demand.getObjectID { objectId }
-    iSearchExpression.demand.getSteps { [iSearchStep.proxyInstance()] }
-
-    Account.metaClass.'static'.createFromDn = { String dn -> mockAccount }
-
-    QueryResult result = target.search(iVisa.proxyInstance(), iQuery.proxyInstance())
-
-    assert result.objects.first() instanceof Account
-  }
-
-  @Test
   void testGetQueryResultReturnsACollection() {
     assert target.publicGetResult(0, null, null, null) instanceof Collection
-  }
-
-  @Test
-  void testTextSearch() {
-    def relationExpression = new MockFor(ISearchFilterRelationExpression.class)
-    relationExpression.demand.getSearchFilterType { ISearchFilter.RelationalExpression }
-    relationExpression.demand.getPropertyName { "@objectClass" }
-    relationExpression.demand.getConstraint { "account" }
-    relationExpression.demand.getOperator { "=" }
-
-    def functionCall = new MockFor(ISearchFilterFunctionCall.class)
-    functionCall.demand.getSearchFilterType { ISearchFilter.FunctionCall }
-    functionCall.demand.getParameters(1..3) { ["@defaultName", "jolu"] }
-    functionCall.demand.getFunctionName { ISearchFilterFunctionCall.EndsWith }
-    functionCall.demand.getParameters(1..3) { ["@defaultName", "jolu"] }
-
-    def topFilter = new MockFor(ISearchFilterConditionalExpression.class)
-    topFilter.demand.getSearchFilterType(0..10) { ISearchFilter.ConditionalExpression }
-    topFilter.demand.getFilters(0..3) {
-      [relationExpression.proxyInstance(), functionCall.proxyInstance()]
-    }
-    topFilter.demand.getOperator(0..10) { "and" }
-    topFilter.demand.asType(0..3) { topFilter.proxyInstance() }
-
-
-    def list = target.getQueryResult(SearchAxis.Descendent, "Cognos Shib Authenticator:f:Users", topFilter.proxyInstance(), null)
-
-    assert 1 == list.size()
   }
 }

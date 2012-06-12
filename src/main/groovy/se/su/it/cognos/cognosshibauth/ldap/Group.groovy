@@ -7,6 +7,7 @@ import com.cognos.CAM_AAA.authentication.IGroup
 import se.su.it.cognos.cognosshibauth.ldap.schema.GroupOfUniqueNames
 import se.su.it.cognos.cognosshibauth.CognosShibAuthNamespace
 import se.su.it.cognos.cognosshibauth.memcached.Cache
+import com.cognos.CAM_AAA.authentication.ISearchFilterRelationExpression
 
 public class Group extends UiClass implements IGroup {
 
@@ -22,7 +23,7 @@ public class Group extends UiClass implements IGroup {
    * @param String dn
    */
   public Group(String dn) {
-    this(GroupOfUniqueNames.getByDn(dn))
+    this(GroupOfUniqueNames.getByDn(dn) as GroupOfUniqueNames)
   }
 
   /**
@@ -63,5 +64,38 @@ public class Group extends UiClass implements IGroup {
       def key = createObjectId(UiClass.PREFIX_USER, member.getDn())
       Cache.getInstance().get(key, { new Account(member) } )
     } as IBaseClass[]
+  }
+
+  static String buildLdapFilter(String attribute, String value, String operator = null) {
+    String filter = ""
+
+    switch (attribute) {
+      case '@userName':
+        attribute = 'cn'
+    }
+
+    switch (operator) {
+      case ISearchFilterRelationExpression.NotEqual:
+        filter = "(!${attribute}=${value})"
+        break
+      case ISearchFilterRelationExpression.GreaterThan:
+        filter = "(&(${attribute}>=${value})(!${attribute}=${value}))"
+        break
+      case ISearchFilterRelationExpression.GreaterThanOrEqual:
+        filter = "(${attribute}>=${value})"
+        break
+      case ISearchFilterRelationExpression.LessThan:
+        filter = "(&(${attribute}<=${value})(!${attribute}=${value}))"
+        break
+      case ISearchFilterRelationExpression.LessThanOrEqual:
+        filter = "(${attribute}<=${value})"
+        break
+      case ISearchFilterRelationExpression.EqualTo:
+      default:
+        filter = "(${attribute}=${value})"
+        break
+    }
+
+    filter
   }
 }

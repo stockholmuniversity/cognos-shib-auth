@@ -25,10 +25,11 @@ import java.util.logging.Logger;
 import static se.su.it.cognos.cognosshibauth.ldap.UiClass.*
 import se.su.it.cognos.cognosshibauth.memcached.Cache
 import com.cognos.CAM_AAA.authentication.ISearchStep.SearchAxis
-import se.su.it.cognos.cognosshibauth.ldap.schema.SchemaBase
-import gldapo.Gldapo
+
 import se.su.it.cognos.cognosshibauth.ldap.schema.SuPerson
-import se.su.it.cognos.cognosshibauth.ldap.schema.GroupOfUniqueNames;
+import se.su.it.cognos.cognosshibauth.ldap.schema.GroupOfUniqueNames
+import gldapo.search.SearchControlProvider
+import java.security.MessageDigest;
 
 public class CognosShibAuthBase extends CognosShibAuthNamespace implements INamespaceAuthenticationProviderBase {
 
@@ -122,7 +123,13 @@ public class CognosShibAuthBase extends CognosShibAuthNamespace implements IName
         break;
 
       case SearchAxis.Descendent:
-        list.addAll searchAxisDescendent(baseObjectID, filter, queryOption)
+        String key = "SEARCH_D_${baseObjectID}_${queryOption?.maxCount}_${queryOption?.skipCount}_${filterToString(filter)}"
+
+        MessageDigest md5 = MessageDigest.getInstance("MD5")
+        md5.update(key.bytes)
+        def keyHash = new BigInteger(1, md5.digest()).toString(16)
+
+        Cache.getInstance().get(keyHash, {list.addAll searchAxisDescendent(baseObjectID, filter, queryOption)})
         break
 
       // Not yet implemented
@@ -136,6 +143,26 @@ public class CognosShibAuthBase extends CognosShibAuthNamespace implements IName
     }
 
     list
+  }
+
+  String filterToString(ISearchFilter filter) {
+    String ret = ""
+
+    if (filter instanceof ISearchFilterConditionalExpression) {
+      ret += filter.operator
+      ret += filter.filters?.collect { filterToString(filter) }.join("")
+    }
+    else if (filter instanceof ISearchFilterFunctionCall) {
+      ret += filter.functionName
+      ret += filter.parameters.join("")
+    }
+    else if (filter instanceof ISearchFilterRelationExpression) {
+      ret += filter.constraint
+      ret += filter.operator
+      ret += filter.propertyName
+    }
+
+    ret
   }
   
   def IBaseClass searchAxisSelf(String baseObjectID) {
@@ -204,14 +231,22 @@ public class CognosShibAuthBase extends CognosShibAuthNamespace implements IName
       def ret = parseSearchFilter(filter, objectType)
 
       if (ret instanceof Collection) {
+        long start = queryOption.skipCount ?: 0
+        long stop = start + queryOption.maxCount ?:0
+
+        if (start && stop)
+          ret = ret[start..stop]
+
         retList.addAll ret
       }
       else if (ret instanceof String) {
+        def searchControlProvider = [pageSize: queryOption.maxCount] as SearchControlProvider
+
         if (objectType == 'account') {
-          retList.addAll SuPerson.findAll(filter : ret as String).collect { new Account(it) }
+          retList.addAll SuPerson.findAll(filter : ret as String, controls: searchControlProvider).collect { new Account(it) }
         }
         else if (objectType == 'group') {
-          retList.addAll GroupOfUniqueNames.findAll(filter : ret as String).collect { new Group(it) }
+          retList.addAll GroupOfUniqueNames.findAll(filter : ret as String, controls: searchControlProvider).collect { new Group(it) }
         }
       }
     }
@@ -270,10 +305,10 @@ public class CognosShibAuthBase extends CognosShibAuthNamespace implements IName
         filter = ''
       else {
         if (objectType == 'account') {
-          filter = buildLdapFilter(attribute, value, operator)
+          filter = Account.buildLdapFilter(attribute, value, operator)
         }
         if (objectType == 'group') {
-          filter = buildLdapFilter(attribute, value, operator)
+          filter = Group.buildLdapFilter(attribute, value, operator)
         }
         if (objectType == 'role') {
           ret.addAll Role.findAllByName(value)
@@ -333,34 +368,6 @@ public class CognosShibAuthBase extends CognosShibAuthNamespace implements IName
       value = null
 
     value
-  }
-
-  String buildLdapFilter(String attribute, String value, String operator = ISearchFilterRelationExpression.EqualTo) {
-    String filter = ""
-
-    switch(operator) {
-      case ISearchFilterRelationExpression.NotEqual:
-        filter = "(!${attribute}=${value})"
-        break
-      case ISearchFilterRelationExpression.GreaterThan:
-        filter = "(&(${attribute}>=${value})(!${attribute}=${value}))"
-        break
-      case ISearchFilterRelationExpression.GreaterThanOrEqual:
-        filter = "(${attribute}>=${value})"
-        break
-      case ISearchFilterRelationExpression.LessThan:
-        filter = "(&(${attribute}<=${value})(!${attribute}=${value}))"
-        break
-      case ISearchFilterRelationExpression.LessThanOrEqual:
-        filter = "(${attribute}<=${value})"
-        break
-      case ISearchFilterRelationExpression.EqualTo:
-      default:
-        filter = "(${attribute}=${value})"
-        break
-    }
-
-    filter
   }
 
   /**

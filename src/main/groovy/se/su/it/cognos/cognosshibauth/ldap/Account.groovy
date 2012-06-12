@@ -189,10 +189,15 @@ public class Account extends UiClass implements IAccount {
     Group.findByMember(this)
   }
 
-  String buildLdapFilter(String attribute, String value, String operator = ISearchFilterRelationExpression.EqualTo) {
+  static String buildLdapFilter(String attribute, String value, String operator = null) {
     String filter = ""
 
-    switch(operator) {
+    switch (attribute) {
+      case '@userName':
+        attribute = 'uid'
+    }
+
+    switch (operator) {
       case ISearchFilterRelationExpression.NotEqual:
         filter = "(!${attribute}=${value})"
         break
