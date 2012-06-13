@@ -6,7 +6,10 @@ import se.su.it.cognos.cognosshibauth.config.ConfigHandler;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.logging.Logger
+import se.su.it.cognos.cognosshibauth.ldap.Account
+import se.su.it.cognos.cognosshibauth.adapters.TrustedCredential
+import se.su.it.cognos.cognosshibauth.adapters.Credential;
 
 public class Visa implements IVisa {
 
@@ -71,19 +74,50 @@ public class Visa implements IVisa {
   }
 
   @Override
-  public ITrustedCredential generateTrustedCredential(IBiBusHeader theAuthRequest)
-          throws UnrecoverableException {
-    //TODO: Implement something smart
-    LOG.log(Level.FINEST, "Generating trusted credentials.");
-    return null;
+  ITrustedCredential generateTrustedCredential(IBiBusHeader theAuthRequest) throws UnrecoverableException {
+    LOG.log(Level.FINEST, "Generating trusted credentials.")
+
+    String incommingUsername = theAuthRequest.getTrustedEnvVarValue('username')
+
+    if (!incommingUsername)
+      incommingUsername = theAuthRequest.getEnvVarValue('username')
+
+    if (!incommingUsername)
+      incommingUsername = theAuthRequest.getCredentialValue('username')
+
+    if (!incommingUsername) {
+      LOG.severe "Header 'username' required but not found, throwing SystemRecoverableException"
+
+      throw new SystemRecoverableException("Missing required header 'username'.", 'username')
+    }
+
+    if (! this.valid || !incommingUsername || incommingUsername.empty || incommingUsername != account?.userName) {
+      LOG.severe "Header 'username' required but not found, throwing SystemRecoverableException"
+
+      throw new UnrecoverableException(
+              "Could not generate credentials for the user '${account?.userName}'.",
+              "Visa contains invalid credentials.")
+    }
+
+    TrustedCredential trustedCredential = new TrustedCredential()
+    trustedCredential.addCredentialValue('username', account?.userName)
+    trustedCredential
   }
 
   @Override
-  public ICredential generateCredential(IBiBusHeader theAuthRequest)
-          throws UnrecoverableException {
-    //TODO: Implement something smart
-    LOG.log(Level.FINEST, "Generating credentials.");
-    return null;
+  ICredential generateCredential(IBiBusHeader theAuthRequest) throws UnrecoverableException {
+
+    LOG.finest "Generating credentials for ${account?.userName}."
+
+    if (! this.valid) {
+      throw new UnrecoverableException(
+              "Could not generate credentials for the user '${account?.userName}'.",
+              "Visa contains invalid credentials.")
+    }
+
+    Credential credential = new Credential()
+    credential.addCredentialValue('username', account?.userName)
+    credential
   }
 
   @Override
