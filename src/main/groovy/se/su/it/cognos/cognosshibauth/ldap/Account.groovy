@@ -5,7 +5,7 @@ import java.util.logging.Logger
 import com.cognos.CAM_AAA.authentication.IAccount
 
 import se.su.it.cognos.cognosshibauth.ldap.schema.SuPerson
-import se.su.it.cognos.cognosshibauth.CognosShibAuthNamespace
+
 import com.cognos.CAM_AAA.authentication.UnrecoverableException
 import se.su.it.cognos.cognosshibauth.memcached.Cache
 import com.cognos.CAM_AAA.authentication.ISearchFilterRelationExpression
@@ -194,8 +194,22 @@ public class Account extends UiClass implements IAccount {
 
     switch (attribute) {
       case '@userName':
-        attribute = 'uid'
+      case '@defaultName':
+        filter = createFilterPart('uid', value, operator)
+        break
+      case '@defaultDescription':
+        String part1 = createFilterPart('displayName', value, operator)
+        String part2 = createFilterPart('mailLocalAddress', value, operator)
+        filter = "(|(${part1})(${part2}))"
+        break
     }
+
+    filter
+  }
+
+  private static String createFilterPart(String attribute, String value, String operator = null) {
+
+    String filter = ""
 
     switch (operator) {
       case ISearchFilterRelationExpression.NotEqual:

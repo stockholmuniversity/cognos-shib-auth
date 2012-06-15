@@ -115,7 +115,7 @@ public class UiClass implements IUiClass, Serializable {
   }
 
   private static boolean isType(String objectId, String type) {
-    objectId ==~ /.*$type:.*/
+    objectId ==~ /.*:$type:.*/
   }
 
   public static String camIdToName(String camId) {

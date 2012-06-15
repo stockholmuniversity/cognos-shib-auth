@@ -3,8 +3,8 @@ apply plugin: 'groovy'
 apply plugin: 'maven'
 
 version = "1.1.1-SNAPSHOT"
-group = "se.su.it.cognos.cognosshibauth"
-archivesBaseName = "cognos-shib-auth"
+group = "se.su.it.cognos"
+archivesBaseName = "cognosshibauth"
 
 repositories {
   mavenCentral()
@@ -17,10 +17,21 @@ repositories {
   }
 }
 
+
+configurations {
+    provided
+    testCompile.extendsFrom provided
+    compile.transitive = true
+}
+
+// Added the provided dependency to compile classpath
+sourceSets.main.compileClasspath += configurations.provided
+
 dependencies {
   groovy group: 'org.codehaus.groovy', name: 'groovy-all', version: '1.8.6'
 
-  compile group: 'com.cognos.CAM_AAA', name: 'authentication', version: '10.1.4707.507'
+  provided group: 'com.cognos.CAM_AAA', name: 'authentication', version: '10.1.4707.507'
+
   compile group: 'commons-configuration', name: 'commons-configuration', version: '1.6'
   compile group: 'org.codehaus', name: 'gldapo', version: '0.8.5'
   compile group: 'spy', name: 'spymemcached', version: '2.6'
@@ -36,7 +47,7 @@ dependencies {
 uploadArchives {
     repositories {
         mavenDeployer {
-            repository(url: "file://${buildDir}/m2repo")
+            repository(url: "file:///afs/su.se/services/maven/it.su.se/maven2/")
         }
     }
 }

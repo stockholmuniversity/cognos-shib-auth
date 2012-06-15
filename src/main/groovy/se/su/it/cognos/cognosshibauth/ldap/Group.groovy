@@ -71,7 +71,12 @@ public class Group extends UiClass implements IGroup {
 
     switch (attribute) {
       case '@userName':
+      case '@defaultName':
         attribute = 'cn'
+        break
+      case '@defaultDescription':
+        attribute = 'description'
+        break
     }
 
     switch (operator) {
