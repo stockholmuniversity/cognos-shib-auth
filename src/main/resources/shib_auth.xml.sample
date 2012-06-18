@@ -92,6 +92,15 @@
       </children>
     </folder>
     <folder>
+      <name>Groups</name>
+      <description>Groups folder</description>
+      <children>
+        <roles>
+          <ldap_filter>(&(objectClass=groupOfUniqueNames)(cn=it-team-utveckling))</ldap_filter>
+        </roles>
+      </children>
+    </folder>
+    <folder>
       <name>Roles</name>
       <description>Roles folder</description>
       <children>
