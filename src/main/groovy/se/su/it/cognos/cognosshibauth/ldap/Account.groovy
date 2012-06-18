@@ -200,7 +200,7 @@ public class Account extends UiClass implements IAccount {
       case '@defaultDescription':
         String part1 = createFilterPart('displayName', value, operator)
         String part2 = createFilterPart('mailLocalAddress', value, operator)
-        filter = "(|(${part1})(${part2}))"
+        filter = "(|${part1}${part2})"
         break
     }
 
