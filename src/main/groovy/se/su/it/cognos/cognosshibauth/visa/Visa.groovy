@@ -75,23 +75,10 @@ public class Visa implements IVisa {
 
   @Override
   ITrustedCredential generateTrustedCredential(IBiBusHeader theAuthRequest) throws UnrecoverableException {
-    LOG.log(Level.FINEST, "Generating trusted credentials.")
+    LOG.finest "Generating trusted credentials."
 
-    def authUser = theAuthRequest.getTrustedEnvVarValue('username')?.first()
-
-    if (!authUser)
-      authUser = theAuthRequest.getEnvVarValue('username')?.first()
-
-    if (!authUser)
-      authUser = theAuthRequest.getCredentialValue('username')?.first()
-
-    if (!authUser) {
-      LOG.severe "Header 'username' required but not found, throwing SystemRecoverableException"
-
-      throw new SystemRecoverableException("Missing required header 'username'.", 'username')
-    }
-    else if ( !this.valid || authUser != account?.userName) {
-      LOG.severe "Visa not valid for ${account?.userName} or incomming username (${authUser}) don't match visa user."
+    if ( !this.valid ) {
+      LOG.severe "Visa not valid for ${account?.userName}."
 
       throw new UnrecoverableException(
               "Could not generate credentials for the user '${account?.userName}'.",
