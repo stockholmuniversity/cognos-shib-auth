@@ -71,7 +71,7 @@ class QueryUtil {
     ret
   }
 
-  def List<IBaseClass> searchAxisChild(String baseObjectID) {
+  def List<IBaseClass> searchAxisChild(String baseObjectID, IQueryOption queryOption) {
     List<IBaseClass> retList = new ArrayList<IBaseClass>()
 
     if (baseObjectID == null) // Root base
@@ -94,6 +94,12 @@ class QueryUtil {
 
       retList.addAll baseGroup?.members ?: []
     }
+
+    long start = queryOption.skipCount ?: 0
+    long stop = start + queryOption.maxCount ?:0
+
+    if (start && stop)
+      retList = retList[start..stop]
 
     retList
   }
@@ -140,13 +146,27 @@ class QueryUtil {
     if (iSearchFilter instanceof ISearchFilterConditionalExpression) {
       def filterResults = iSearchFilter.filters.collect { parseSearchFilter(it, objectType) }
 
-      if (filterResults.findAll {it instanceof String}.size() == filterResults.size()) {
-        filter = filterResults.collect { (it as String).empty ? "" : "(${it})" }.join('')
+      if (filterResults.findAll {it instanceof String}.size() == filterResults.size()) { // All strings (probably ldap filters)
+        filter = filterResults.collect { filterPart ->
+          if (filterPart) {
+            (filterPart as String).startsWith('(') ? "(${filterPart})" : filterPart
+          }
+          else
+            ""
+        }.join('')
 
-        if (iSearchFilter.operator == ISearchFilterConditionalExpression.ConditionalOr)
-          filter = "(|${filter})"
-        else
-          filter = "(&${filter})"
+        if (filter && filterResults.findAll {it}.size() > 1) { //Apply conditional expression if more than one filter part.
+          if (iSearchFilter.operator == ISearchFilterConditionalExpression.ConditionalOr)
+            filter = "(|${filter})"
+          else
+            filter = "(&${filter})"
+        }
+      }
+      else {
+        filterResults.each { filterResult ->
+          if (filterResult instanceof Collection)
+            ret.addAll filterResult
+        }
       }
     }
     else {
@@ -187,16 +207,16 @@ class QueryUtil {
           ret.addAll Role.findAllByName(value)
         }
         if (objectType == 'folder') {
-          ret.addAll folders.values().findAll { it.getName(configHandler.contentLocale) }
+          ret.addAll folders.values().findAll { it.getName(configHandler.contentLocale) == value }
         }
         if (objectType == 'namespace') {
           if (value == namespace.getName(configHandler.contentLocale))
-            ret << this
+            ret << namespace
         }
       }
     }
 
-    if (filter)
+    if (filter != null)
       return filter
 
     ret

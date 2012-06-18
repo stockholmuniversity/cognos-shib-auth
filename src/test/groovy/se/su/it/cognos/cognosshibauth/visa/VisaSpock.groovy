@@ -92,25 +92,6 @@ public class VisaSpock extends Specification {
     thrown(UnrecoverableException)
   }
 
-  def "Test generateTrustedCredentials throws exception for no username"() {
-    setup:
-    Visa target = new Visa(null)
-
-    IAccount account = [ getUserName: { 'jolu' } ] as IAccount
-    VisaValidator visaValidator = [ isValid: { false }] as VisaValidator
-
-    Visa.metaClass.setProperty(Visa, target, 'visaValidator', visaValidator, false, true)
-    Visa.metaClass.setProperty(Visa, target, 'account', account, false, true)
-
-    IBiBusHeader iBiBusHeader = Mock()
-
-    when:
-    target.generateTrustedCredential(iBiBusHeader)
-
-    then:
-    thrown(SystemRecoverableException)
-  }
-
   def "Test generateTrustedCredentials throws exception for username != account.userName"() {
     setup:
     Visa target = new Visa(null)

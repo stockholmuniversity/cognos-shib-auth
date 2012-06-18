@@ -60,7 +60,7 @@ public class Role extends UiClass implements IRole {
   }
 
   static List<Role> findAllByName(String name) {
-    List<SuPerson> suPersons = SuPerson.findAll(filter: "eduPersonEntitlement=urn:mace:swami.se:gmai:su-ivs:*")
+    List<SuPerson> suPersons = SuPerson.findAll(filter: "(eduPersonEntitlement=urn:mace:swami.se:gmai:su-ivs:*)")
 
     List<String> entitlements = new ArrayList<String>()
     suPersons.each { suPerson ->

@@ -86,7 +86,7 @@ public class CognosShibAuthBase extends CognosShibAuthNamespace implements IName
       int searchAxis = steps.first().axis
       ISearchFilter filter = steps.first().predicate
 
-      def key = "${baseObjectID}-${searchAxis}-${filter?.getSearchFilterType()}"
+      def key = "${baseObjectID}-${searchAxis}-${filter?.getSearchFilterType()}-${queryOption.skipCount}-${queryOption.maxCount}"
 
       def closure = { getQueryResult(searchAxis, baseObjectID, filter, queryOption) }
 
@@ -117,7 +117,7 @@ public class CognosShibAuthBase extends CognosShibAuthNamespace implements IName
         break;
 
       case SearchAxis.Child:
-        list.addAll queryUtil.searchAxisChild(baseObjectID)
+        list.addAll queryUtil.searchAxisChild(baseObjectID, queryOption)
         break;
 
       case SearchAxis.Descendent:

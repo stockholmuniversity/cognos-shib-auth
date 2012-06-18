@@ -139,6 +139,11 @@ class SearchSpock extends Specification {
     }
   }
 
+  def cleanup() {
+    SuPerson.metaClass = null
+    Group.metaClass = null
+  }
+
   def "Test for basic error handling when searching with null"() {
     when:
     def result = target.search(null, null)
@@ -161,9 +166,13 @@ class SearchSpock extends Specification {
     searchExpression.getObjectID() >> objectId
     searchExpression.getSteps() >> [searchStep]
 
+    IQueryOption queryOption = Mock()
+    queryOption.maxCount >> 100
+    queryOption.skipCount >> 0
+
     IQuery query = Mock()
     query.getSearchExpression() >> searchExpression
-    query.getQueryOption() >> ( [:] as IQueryOption )
+    query.getQueryOption() >> ( queryOption )
 
     when:
     def result = target.search(null, query)
@@ -198,9 +207,13 @@ class SearchSpock extends Specification {
     searchExpression.getObjectID() >> objectId
     searchExpression.getSteps() >> [searchStep]
 
+    IQueryOption queryOption = Mock()
+    queryOption.maxCount >> 100
+    queryOption.skipCount >> 0
+
     IQuery query = Mock()
     query.getSearchExpression() >> searchExpression
-    query.getQueryOption() >> ( [:] as IQueryOption )
+    query.getQueryOption() >> ( queryOption )
 
     when:
     def result = target.search(null, query)
