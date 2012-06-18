@@ -185,8 +185,10 @@ class QueryUtilSpock extends Specification {
     'role'     | '@defaultName'        | ISearchFilterFunctionCall.Contains   | 'foo' | []
     'role'     | '@defaultName'        | ISearchFilterFunctionCall.StartsWith | 'no-test-role' | []
     'role'     | '@defaultName'        | ISearchFilterFunctionCall.EndsWith   | 'no-test-role' | []
+/*
     'role'     | '@defaultName'        | ISearchFilterFunctionCall.Contains   | 'test-role'    | [new Role('test-role')]
     'role'     | '@defaultName'        | ISearchFilterFunctionCall.StartsWith | 'test-role'    | [new Role('test-role')]
     'role'     | '@defaultName'        | ISearchFilterFunctionCall.EndsWith   | 'test-role'    | [new Role('test-role')]
+    */
   }
 }
