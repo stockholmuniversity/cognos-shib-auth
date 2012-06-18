@@ -58,11 +58,21 @@ public class Group extends UiClass implements IGroup {
 
   @Override
   public IBaseClass[] getMembers() {
-    List<String> members = groupOfUniqueNames.uniqueMember
+    Set<String> members = groupOfUniqueNames.uniqueMember
 
     members.collect { member ->
-      def key = createObjectId(UiClass.PREFIX_USER, member.getDn())
-      Cache.getInstance().get(key, { new Account(member) } )
+      IBaseClass result = null
+
+      if (member.startsWith('cn')) { //Probably a Group
+        def key = createObjectId(UiClass.PREFIX_GROUP, member)
+        result = Cache.getInstance().get(key, { new Group(member) } )
+      }
+      else if (member.startsWith('uid')) {//Probably a User
+        def key = createObjectId(UiClass.PREFIX_USER, member)
+        result = Cache.getInstance().get(key, { Account.createFromDn(member) } )
+      }
+
+      result
     } as IBaseClass[]
   }
 
@@ -79,26 +89,28 @@ public class Group extends UiClass implements IGroup {
         break
     }
 
-    switch (operator) {
-      case ISearchFilterRelationExpression.NotEqual:
-        filter = "(!${attribute}=${value})"
-        break
-      case ISearchFilterRelationExpression.GreaterThan:
-        filter = "(&(${attribute}>=${value})(!${attribute}=${value}))"
-        break
-      case ISearchFilterRelationExpression.GreaterThanOrEqual:
-        filter = "(${attribute}>=${value})"
-        break
-      case ISearchFilterRelationExpression.LessThan:
-        filter = "(&(${attribute}<=${value})(!${attribute}=${value}))"
-        break
-      case ISearchFilterRelationExpression.LessThanOrEqual:
-        filter = "(${attribute}<=${value})"
-        break
-      case ISearchFilterRelationExpression.EqualTo:
-      default:
-        filter = "(${attribute}=${value})"
-        break
+    if (attribute && value) {
+      switch (operator) {
+        case ISearchFilterRelationExpression.NotEqual:
+          filter = "(!${attribute}=${value})"
+          break
+        case ISearchFilterRelationExpression.GreaterThan:
+          filter = "(&(${attribute}>=${value})(!${attribute}=${value}))"
+          break
+        case ISearchFilterRelationExpression.GreaterThanOrEqual:
+          filter = "(${attribute}>=${value})"
+          break
+        case ISearchFilterRelationExpression.LessThan:
+          filter = "(&(${attribute}<=${value})(!${attribute}=${value}))"
+          break
+        case ISearchFilterRelationExpression.LessThanOrEqual:
+          filter = "(${attribute}<=${value})"
+          break
+        case ISearchFilterRelationExpression.EqualTo:
+        default:
+          filter = "(${attribute}=${value})"
+          break
+      }
     }
 
     filter
