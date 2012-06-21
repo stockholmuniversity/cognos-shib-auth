@@ -39,7 +39,7 @@ class FilterUtil {
 
     ret.removeAll {it == null}
 
-    if (ret.empty)
+    if (ret.empty && searchFilter instanceof ISearchFilterConditionalExpression)
       ret = ['account', 'group', 'role', 'folder', 'namespace']
 
     ret?.unique()
