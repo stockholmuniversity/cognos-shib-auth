@@ -13,7 +13,7 @@
     <conf>file:src/test/resources/gldapo-conf.groovy</conf>
   </gldapo>
   <ldap>
-    <url>ldap://sukat-ldap.it.su.se</url>
+    <url>ldap://ldap.su.se</url>
     <base_dn>dc=su\,dc=se</base_dn>
     <count_limit>500</count_limit>
     <time_limit>120000</time_limit>
