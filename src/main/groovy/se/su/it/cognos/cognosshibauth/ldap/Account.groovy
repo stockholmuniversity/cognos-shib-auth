@@ -186,7 +186,9 @@ public class Account extends UiClass implements IAccount {
    * @return list of groups for this account
    */
   List<Group> getGroups() {
-    Group.findByMember(this)
+    suPerson?.memberOf?.collect {
+      new Group(it)
+    } ?: []
   }
 
   static String buildLdapFilter(String attribute, String value, String operator = null) {
@@ -198,7 +200,7 @@ public class Account extends UiClass implements IAccount {
         filter = createFilterPart('uid', value, operator)
         break
       case '@defaultDescription':
-        String part1 = createFilterPart('displayName', value, operator)
+        String part1 = createFilterPart('cn', value, operator)
         String part2 = createFilterPart('mailLocalAddress', value, operator)
         filter = "(|${part1}${part2})"
         break
