@@ -26,8 +26,14 @@ class CognosShibAP extends CognosShibAuthBase implements INamespaceAuthenticatio
     Account account = Account.findByUid(remoteUser)
     visa.init account
 
+    // Add users roles to visa.
     account.roles?.each { role ->
       visa.addRole role
+    }
+
+    // Add users groups to visa.
+    account.groups?.each { group ->
+      visa.addGroup group
     }
 
     visa
