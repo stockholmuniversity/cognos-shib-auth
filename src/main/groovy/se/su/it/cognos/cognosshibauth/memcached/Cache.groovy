@@ -6,6 +6,7 @@ import java.util.logging.Logger
 import java.util.logging.Level
 import se.su.it.cognos.cognosshibauth.config.ConfigHandler
 import net.spy.memcached.DefaultConnectionFactory
+import java.security.MessageDigest
 
 public class Cache {
 
@@ -148,6 +149,12 @@ public class Cache {
 
   def disable() {
     enabled = false
+  }
+
+  static String md5Sum(String key) {
+    MessageDigest md5 = MessageDigest.getInstance("MD5")
+    md5.update(key.bytes)
+    new BigInteger(1, md5.digest()).toString(16)
   }
 
   static {
