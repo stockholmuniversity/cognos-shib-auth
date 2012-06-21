@@ -26,8 +26,16 @@ import se.su.it.cognos.cognosshibauth.ldap.schema.GroupOfUniqueNames
 import com.cognos.CAM_AAA.authentication.ISearchFilterConditionalExpression
 import com.cognos.CAM_AAA.authentication.ISearchFilterFunctionCall
 import com.cognos.CAM_AAA.authentication.ISearchFilterRelationExpression
-import se.su.it.cognos.cognosshibauth.config.ConfigHandler;
-
+import se.su.it.cognos.cognosshibauth.config.ConfigHandler
+import org.springframework.ldap.control.PagedResultsRequestControl
+import gldapo.search.SearchOptionParser
+import gldapo.GldapoDirectory
+import org.springframework.ldap.core.ContextMapper
+import gldapo.schema.GldapoContextMapper
+import org.springframework.ldap.core.ContextMapperCallbackHandler
+import org.springframework.ldap.LimitExceededException
+import se.su.it.cognos.cognosshibauth.visa.Visa
+import se.su.it.cognos.cognosshibauth.memcached.Cache
 
 class QueryUtil {
 
@@ -95,13 +103,7 @@ class QueryUtil {
       retList.addAll baseGroup?.members ?: []
     }
 
-    long start = queryOption.skipCount ?: 0
-    long stop = start + queryOption.maxCount ?:0
-
-    if (start && stop)
-      retList = retList[start..stop]
-
-    retList
+    getPageOfResult(retList, queryOption.skipCount, queryOption.maxCount)
   }
 
   def List<IBaseClass> searchAxisDescendent(String baseObjectID, ISearchFilter filter, IQueryOption queryOption) {
@@ -113,29 +115,77 @@ class QueryUtil {
 
       def ret = parseSearchFilter(filter, objectType)
 
-      if (ret instanceof Collection) {
-        long start = queryOption.skipCount ?: 0
-        long stop = start + queryOption.maxCount ?:0
+      if (ret == Collection)
+        retList = ret
 
-        if (start && stop)
-          ret = ret[start..stop]
-
-        retList.addAll ret
-      }
-      else if (ret instanceof String) {
-        def searchControlProvider = [pageSize: queryOption.maxCount] as SearchControlProvider
+      if (ret instanceof String) {
+        def countLimit = configHandler.getIntEntry("ldap.count_limit", 500)
 
         if (objectType == 'account') {
-          retList.addAll SuPerson.findAll(filter : ret as String, controls: searchControlProvider).collect { new Account(it) }
+          def cacheRet = Cache.instance.get("LDAP_${ret}") {
+            SuPerson.findAll(filter : ret as String, pageSize: countLimit)?.collect {
+              new Account(it)
+            }
+          }
+
+          if (cacheRet instanceof Collection)
+            cacheRet.each { retList << it }
         }
         else if (objectType == 'group') {
-          retList.addAll GroupOfUniqueNames.findAll(filter : ret as String, controls: searchControlProvider).collect { new Group(it) }
+          def cacheRet = Cache.instance.get("LDAP_${ret}") {
+            GroupOfUniqueNames.findAll(filter: ret as String, pageSize: countLimit)?.collect {
+              new Group(it)
+            }
+          }
+
+          if (cacheRet instanceof Collection)
+            cacheRet.each { retList << it}
         }
       }
     }
 
-    retList
+    getPageOfResult(retList, queryOption.skipCount, queryOption.maxCount)
   }
+
+  List getPageOfResult(List searchResult, long skipCount = 0, long maxCount = 0) {
+    long start = skipCount ?: 0
+    long stop = start + maxCount -1 ?:0
+
+    if (stop > searchResult.size() -1)
+      stop = searchResult.size() -1
+
+    if (searchResult)
+      searchResult[start..stop]
+    else
+      searchResult
+  }
+
+/* This code is kept to start building real paging from.
+
+  HashMap pagedSearch(Class schema, HashMap options, Integer pageSize, Integer pageNumber) {
+    SearchOptionParser parser = new SearchOptionParser(schema, options)
+    GldapoDirectory directory = parser.directory as GldapoDirectory
+
+    ContextMapper mapper = new GldapoContextMapper(schemaRegistration: schema.schemaRegistration, directory: directory)
+    ContextMapperCallbackHandler handler = new ContextMapperCallbackHandler(mapper)
+
+    javax.naming.directory.SearchControls jndiControls = parser.controls as javax.naming.directory.SearchControls
+    jndiControls.returningAttributes = schema.schemaRegistration.attributeMappings*.value.attributeName
+
+
+    try {
+      PagedResultsRequestControl requestControl = new PagedResultsRequestControl(pageSize)
+
+      directory.template.search(parser.base, parser.filter, jndiControls, handler, requestControl)
+    } catch (LimitExceededException e) {
+        // If the number of entries has hit the specified count limit OR
+        // The server is unwilling to send more entries we will get here.
+        // It's not really an error condition hence we just return what we found.
+    }
+
+   [requestControl: requestControl, handler: handler]
+  }
+*/
 
   def parseSearchFilter(ISearchFilter iSearchFilter, String objectType) {
 

@@ -81,12 +81,12 @@ class QueryUtilSpock extends Specification {
     'account'   | '@userName'           | ISearchFilterRelationExpression.GreaterThanOrEqual | 'foo'          | "(uid>=foo)"
     'account'   | '@userName'           | ISearchFilterRelationExpression.LessThanOrEqual    | 'foo'          | "(uid<=foo)"
 
-    'account'   | '@defaultDescription' | ISearchFilterRelationExpression.EqualTo            | 'foo'          | "(|(displayName=foo)(mailLocalAddress=foo))"
-    'account'   | '@defaultDescription' | ISearchFilterRelationExpression.NotEqual           | 'foo'          | "(|(!displayName=foo)(!mailLocalAddress=foo))"
-    'account'   | '@defaultDescription' | ISearchFilterRelationExpression.GreaterThan        | 'foo'          | "(|(&(displayName>=foo)(!displayName=foo))(&(mailLocalAddress>=foo)(!mailLocalAddress=foo)))"
-    'account'   | '@defaultDescription' | ISearchFilterRelationExpression.LessThan           | 'foo'          | "(|(&(displayName<=foo)(!displayName=foo))(&(mailLocalAddress<=foo)(!mailLocalAddress=foo)))"
-    'account'   | '@defaultDescription' | ISearchFilterRelationExpression.GreaterThanOrEqual | 'foo'          | "(|(displayName>=foo)(mailLocalAddress>=foo))"
-    'account'   | '@defaultDescription' | ISearchFilterRelationExpression.LessThanOrEqual    | 'foo'          | "(|(displayName<=foo)(mailLocalAddress<=foo))"
+    'account'   | '@defaultDescription' | ISearchFilterRelationExpression.EqualTo            | 'foo'          | "(|(cn=foo)(mailLocalAddress=foo))"
+    'account'   | '@defaultDescription' | ISearchFilterRelationExpression.NotEqual           | 'foo'          | "(|(!cn=foo)(!mailLocalAddress=foo))"
+    'account'   | '@defaultDescription' | ISearchFilterRelationExpression.GreaterThan        | 'foo'          | "(|(&(cn>=foo)(!cn=foo))(&(mailLocalAddress>=foo)(!mailLocalAddress=foo)))"
+    'account'   | '@defaultDescription' | ISearchFilterRelationExpression.LessThan           | 'foo'          | "(|(&(cn<=foo)(!cn=foo))(&(mailLocalAddress<=foo)(!mailLocalAddress=foo)))"
+    'account'   | '@defaultDescription' | ISearchFilterRelationExpression.GreaterThanOrEqual | 'foo'          | "(|(cn>=foo)(mailLocalAddress>=foo))"
+    'account'   | '@defaultDescription' | ISearchFilterRelationExpression.LessThanOrEqual    | 'foo'          | "(|(cn<=foo)(mailLocalAddress<=foo))"
 
     'group'     | null                  | null                                               | null           | ""
 
@@ -166,9 +166,9 @@ class QueryUtilSpock extends Specification {
     'account'  | '@userName'           | ISearchFilterFunctionCall.Contains   | 'foo' | "(uid=*foo*)"
     'account'  | '@userName'           | ISearchFilterFunctionCall.StartsWith | 'foo' | "(uid=foo*)"
     'account'  | '@userName'           | ISearchFilterFunctionCall.EndsWith   | 'foo' | "(uid=*foo)"
-    'account'  | '@defaultDescription' | ISearchFilterFunctionCall.Contains   | 'foo' | "(|(displayName=*foo*)(mailLocalAddress=*foo*))"
-    'account'  | '@defaultDescription' | ISearchFilterFunctionCall.StartsWith | 'foo' | "(|(displayName=foo*)(mailLocalAddress=foo*))"
-    'account'  | '@defaultDescription' | ISearchFilterFunctionCall.EndsWith   | 'foo' | "(|(displayName=*foo)(mailLocalAddress=*foo))"
+    'account'  | '@defaultDescription' | ISearchFilterFunctionCall.Contains   | 'foo' | "(|(cn=*foo*)(mailLocalAddress=*foo*))"
+    'account'  | '@defaultDescription' | ISearchFilterFunctionCall.StartsWith | 'foo' | "(|(cn=foo*)(mailLocalAddress=foo*))"
+    'account'  | '@defaultDescription' | ISearchFilterFunctionCall.EndsWith   | 'foo' | "(|(cn=*foo)(mailLocalAddress=*foo))"
 
     'group'    | null                  | null                                 | null  | ""
     'group'    | '@defaultName'        | ISearchFilterFunctionCall.Contains   | 'foo' | "(cn=*foo*)"
@@ -190,5 +190,30 @@ class QueryUtilSpock extends Specification {
     'role'     | '@defaultName'        | ISearchFilterFunctionCall.StartsWith | 'test-role'    | [new Role('test-role')]
     'role'     | '@defaultName'        | ISearchFilterFunctionCall.EndsWith   | 'test-role'    | [new Role('test-role')]
     */
+  }
+
+  @Unroll
+  def "Test that the paging returns #expected results for skip=#skip and max=#max for a list of size #list.size()"() {
+    setup:
+    QueryUtil queryUtil = new QueryUtil(null, null)
+
+    when:
+    List result = queryUtil.getPageOfResult(list, skip, max)
+
+    then:
+    result.size() == expected
+
+    where:
+    list                 | skip | max | expected
+    []                   | 0    | 0   | 0
+    ['a']                | 0    | 0   | 1
+    ['a', 'b']           | 0    | 0   | 2
+    ['a', 'b']           | 0    | 1   | 1
+    ['a', 'b']           | 0    | 3   | 2
+    ['a', 'b', 'c', 'd'] | 1    | 3   | 3
+    ['a', 'b', 'c', 'd'] | 1    | 2   | 2
+    ['a', 'b', 'c', 'd'] | 1    | 1   | 1
+    ['a', 'b', 'c', 'd'] | 1    | 10  | 3
+    ['a', 'b', 'c', 'd'] | 0    | 10  | 4
   }
 }
