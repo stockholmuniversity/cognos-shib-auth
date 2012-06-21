@@ -4,6 +4,8 @@ import gldapo.schema.annotation.GldapoNamingAttribute
 import gldapo.schema.annotation.GldapoSynonymFor
 import gldapo.Gldapo
 import gldapo.entry.GldapoEntry
+import gldapo.GldapoDirectory
+import gldapo.schema.GldapoSchemaClassInjecto
 import gldapo.schema.annotation.GldapoSchemaFilter
 import static java.lang.ClassLoader.getSystemClassLoader
 import java.util.logging.Logger
@@ -20,7 +22,9 @@ import org.springframework.ldap.core.DistinguishedName
  */
 
 @GldapoSchemaFilter("(objectClass=suPerson)")
-class SuPerson extends SchemaBase {
+class SuPerson extends SchemaBase implements Serializable {
+
+  private static final long serialVersionUID = 3780390928840396076L ;
 
   @GldapoNamingAttribute
   String uid
@@ -34,9 +38,18 @@ class SuPerson extends SchemaBase {
   String pagerPhone
   String registeredAddress
   Set<String> eduPersonEntitlement
+  Set<String> memberOf
 
   static SuPerson findByUid(String uid) {
     find(filter:"(uid=$uid)")
+  }
+
+  private void writeObject(ObjectOutputStream s) {
+    s.defaultWriteObject()
+  }
+
+  private void readObject(ObjectInputStream s) {
+    s.defaultReadObject()
   }
 }
 
