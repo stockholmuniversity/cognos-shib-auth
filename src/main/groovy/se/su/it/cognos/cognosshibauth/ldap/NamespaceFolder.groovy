@@ -86,7 +86,9 @@ public class NamespaceFolder extends UiClass implements INamespaceFolder {
   public List<IUiClass> loadLdapGroups() {
     def groups = []
     groupLdapFilters.each { filter ->
-      List<GroupOfUniqueNames> groupOfUniqueNamesList = GroupOfUniqueNames.findAll(filter: filter)
+      def countLimit = configHandler.getIntEntry("ldap.count_limit", 500)
+
+      List<GroupOfUniqueNames> groupOfUniqueNamesList = GroupOfUniqueNames.findAll(filter: filter, pageSize: countLimit)
       groups.addAll groupOfUniqueNamesList.collect { groupOfUniqueName ->
         def key = createObjectId(UiClass.PREFIX_GROUP, groupOfUniqueName.getDn())
         Cache.getInstance().get(key, { new Group(groupOfUniqueName) })
@@ -111,7 +113,9 @@ public class NamespaceFolder extends UiClass implements INamespaceFolder {
     def users = []
 
     userLdapFilters.each { filter ->
-      List<SuPerson> suPersons = SuPerson.findAll(filter: filter)
+      def countLimit = configHandler.getIntEntry("ldap.count_limit", 500)
+
+      List<SuPerson> suPersons = SuPerson.findAll(filter: filter, pageSearch: countLimit)
       users.addAll suPersons.collect { suPerson ->
         def key = createObjectId(UiClass.PREFIX_USER, suPerson.getDn())
         Cache.getInstance().get(key, { new Account(suPerson) })
