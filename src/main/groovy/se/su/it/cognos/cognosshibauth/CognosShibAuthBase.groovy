@@ -23,10 +23,6 @@ import static se.su.it.cognos.cognosshibauth.ldap.UiClass.*
 import se.su.it.cognos.cognosshibauth.memcached.Cache
 import com.cognos.CAM_AAA.authentication.ISearchStep.SearchAxis
 
-import java.security.MessageDigest
-
-import static se.su.it.cognos.cognosshibauth.query.FilterUtil.filterToString
-
 public class CognosShibAuthBase extends CognosShibAuthNamespace implements INamespaceAuthenticationProviderBase {
 
   private Logger LOG = Logger.getLogger(CognosShibAuthBase.class.getName());
@@ -121,13 +117,9 @@ public class CognosShibAuthBase extends CognosShibAuthNamespace implements IName
         break;
 
       case SearchAxis.Descendent:
-        String key = "SEARCH_D_${baseObjectID}_${queryOption?.maxCount}_${queryOption?.skipCount}_${filterToString(filter)}"
+        def ret = queryUtil.searchAxisDescendent(baseObjectID, filter, queryOption)
 
-        MessageDigest md5 = MessageDigest.getInstance("MD5")
-        md5.update(key.bytes)
-        def keyHash = new BigInteger(1, md5.digest()).toString(16)
-
-        Cache.getInstance().get(keyHash, {list.addAll queryUtil.searchAxisDescendent(baseObjectID, filter, queryOption)})
+        ret?.each { list << it }
         break
 
       // Not yet implemented
