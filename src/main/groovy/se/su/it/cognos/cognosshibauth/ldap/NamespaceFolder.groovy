@@ -11,7 +11,7 @@ import se.su.it.cognos.cognosshibauth.memcached.Cache
 
 public class NamespaceFolder extends UiClass implements INamespaceFolder {
 
-  private Logger LOG = Logger.getLogger(NamespaceFolder.class.getName())
+  private static Logger LOG = Logger.getLogger(NamespaceFolder.class.getName())
   private static long SerialVersionUID = 4L
 
   List<UiClass> folders = []
