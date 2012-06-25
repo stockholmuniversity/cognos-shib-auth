@@ -22,6 +22,9 @@ import java.util.logging.Logger;
 import se.su.it.cognos.cognosshibauth.memcached.Cache
 import com.cognos.CAM_AAA.authentication.ISearchStep.SearchAxis
 
+import static se.su.it.cognos.cognosshibauth.memcached.Cache.md5Sum
+import se.su.it.cognos.cognosshibauth.query.FilterUtil
+
 public class CognosShibAuthBase extends CognosShibAuthNamespace implements INamespaceAuthenticationProviderBase {
 
   private Logger LOG = Logger.getLogger(CognosShibAuthBase.class.getName());
@@ -81,15 +84,13 @@ public class CognosShibAuthBase extends CognosShibAuthNamespace implements IName
       int searchAxis = steps.first().axis
       ISearchFilter filter = steps.first().predicate
 
-      def key = "${baseObjectID}-${searchAxis}-${filter?.getSearchFilterType()}-${queryOption.skipCount}-${queryOption.maxCount}"
+      def filterString = FilterUtil.filterToString(filter)
 
-      def closure = { getQueryResult(searchAxis, baseObjectID, filter, queryOption) }
+      def key = md5Sum("${baseObjectID}-${searchAxis}-${filterString}-${queryOption.skipCount}-${queryOption.maxCount}")
 
-      List<IBaseClass> ret = null
-      if(searchAxis != SearchAxis.Descendent)
-        ret = Cache.getInstance().get(key, closure)
-      else
-        ret = closure()
+      List<IBaseClass> ret = Cache.getInstance().get(key,{
+        getQueryResult(searchAxis, baseObjectID, filter, queryOption)
+      })
 
       ret?.each { result.addObject(it) }
     }
@@ -110,7 +111,7 @@ public class CognosShibAuthBase extends CognosShibAuthNamespace implements IName
    * @param queryOption query options.
    * @return a list of objects matching the supplied axis and filter.
    */
-  private List<IBaseClass> getQueryResult(int searchAxis, String baseObjectID, ISearchFilter filter, IQueryOption queryOption) {
+  List<IBaseClass> getQueryResult(int searchAxis, String baseObjectID, ISearchFilter filter, IQueryOption queryOption) {
     def list = []
 
     QueryUtil queryUtil = new QueryUtil(this, folders)
