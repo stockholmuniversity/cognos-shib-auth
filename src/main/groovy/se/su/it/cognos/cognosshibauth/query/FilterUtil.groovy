@@ -12,16 +12,16 @@ class FilterUtil {
 
     if (filter instanceof ISearchFilterConditionalExpression) {
       ret += filter.operator
-      ret += filter.filters?.collect { filterToString(it) }.join("")
+      ret += '(' + filter.filters?.collect { filterToString(it) }.join("") + ')'
     }
     else if (filter instanceof ISearchFilterFunctionCall) {
       ret += filter.functionName
       ret += filter.parameters.join("")
     }
     else if (filter instanceof ISearchFilterRelationExpression) {
-      ret += filter.constraint
-      ret += filter.operator
       ret += filter.propertyName
+      ret += filter.operator
+      ret += filter.constraint
     }
 
     ret
