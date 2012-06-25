@@ -20,21 +20,12 @@ import com.cognos.CAM_AAA.authentication.ISearchFilter
 import com.cognos.CAM_AAA.authentication.IQueryOption
 
 import static se.su.it.cognos.cognosshibauth.query.FilterUtil.findFilterObjectTypes
-import gldapo.search.SearchControlProvider
 import se.su.it.cognos.cognosshibauth.ldap.schema.SuPerson
 import se.su.it.cognos.cognosshibauth.ldap.schema.GroupOfUniqueNames
 import com.cognos.CAM_AAA.authentication.ISearchFilterConditionalExpression
 import com.cognos.CAM_AAA.authentication.ISearchFilterFunctionCall
 import com.cognos.CAM_AAA.authentication.ISearchFilterRelationExpression
 import se.su.it.cognos.cognosshibauth.config.ConfigHandler
-import org.springframework.ldap.control.PagedResultsRequestControl
-import gldapo.search.SearchOptionParser
-import gldapo.GldapoDirectory
-import org.springframework.ldap.core.ContextMapper
-import gldapo.schema.GldapoContextMapper
-import org.springframework.ldap.core.ContextMapperCallbackHandler
-import org.springframework.ldap.LimitExceededException
-import se.su.it.cognos.cognosshibauth.visa.Visa
 import se.su.it.cognos.cognosshibauth.memcached.Cache
 
 class QueryUtil {
