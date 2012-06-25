@@ -273,7 +273,7 @@ class SearchSpock extends Specification {
     where:
     objectId | expected        | attribute   | value
     null     | []              | null        | null
-    null     | [mockAccount]   | '@userName' | 'jolu'
+    null     | []              | '@userName' | 'jolu'
     null     | []              | '@userName' | null
     null     | []              | '@userName' | 'nonExisting'
   }
