@@ -15,7 +15,6 @@ import se.su.it.cognos.cognosshibauth.ldap.Role
 import static se.su.it.cognos.cognosshibauth.ldap.UiClass.isFolder
 import com.cognos.CAM_AAA.authentication.INamespace
 import com.cognos.CAM_AAA.authentication.INamespaceFolder
-import se.su.it.cognos.cognosshibauth.ldap.NamespaceFolder
 import com.cognos.CAM_AAA.authentication.ISearchFilter
 import com.cognos.CAM_AAA.authentication.IQueryOption
 
@@ -34,6 +33,13 @@ class QueryUtil {
   private INamespace namespace = null
   private Map<String, INamespaceFolder> folders = null
 
+  /**
+   * Create a new QueryUtil
+   *
+   * @param namespace the namespace.
+   * @param folders the folders.
+   * @return a new QueryUtil.
+   */
   def QueryUtil(INamespace namespace, Map<String, INamespaceFolder> folders) {
     this.namespace = namespace
     this.folders = folders
