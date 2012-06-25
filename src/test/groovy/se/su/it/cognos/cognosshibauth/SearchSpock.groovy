@@ -238,7 +238,7 @@ class SearchSpock extends Specification {
   }
 
   @Unroll
-  def "Search with axis Descendent and ISearchFilterFunctionCall( #attribute, #value )"() {
+  def "Search with axis Descendant and ISearchFilterFunctionCall( #attribute, #value )"() {
     setup:
     ISearchFilterFunctionCall searchFilterFunctionCall = Mock()
     searchFilterFunctionCall.getFunctionName() >> ISearchFilterFunctionCall.Contains

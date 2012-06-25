@@ -47,7 +47,7 @@ class QueryUtil {
    * @param baseObjectID the CAM-ID of the object to return.
    * @return a IBaseClass of the supplied object, or null if not found.
    */
-  def IBaseClass searchAxisSelf(String baseObjectID) {
+  IBaseClass searchAxisSelf(String baseObjectID) {
     IBaseClass ret = null
 
     String name = camIdToName(baseObjectID)
@@ -76,34 +76,58 @@ class QueryUtil {
     ret
   }
 
-  def List<IBaseClass> searchAxisChild(String baseObjectID, IQueryOption queryOption) {
+  /**
+   * Get search results for search axis 'Child'.
+   *
+   * @param baseObjectID the CAM-ID of the parent.
+   * @param queryOption query options.
+   * @return a list of IBaseClass.
+   */
+  List<IBaseClass> searchAxisChild(String baseObjectID, IQueryOption queryOption) {
     List<IBaseClass> retList = new ArrayList<IBaseClass>()
 
-    if (baseObjectID == null) // Root base
-      retList.addAll folders?.values()?.findAll { it?.ancestors?.length <= 0 } ?: [] // Add all root folders.
+    if (baseObjectID == null) { // Namespace base
+      def rootFolders = folders?.values()?.findAll {
+        it?.ancestors?.length <= 0 // Find all folders with 0 or less parents (the root folders)
+      }
+
+      rootFolders?.each {
+        retList << it
+      }
+    }
 
     else if (isFolder(baseObjectID) && folders.containsKey(baseObjectID)) {
-      NamespaceFolder baseFolder = folders.get(baseObjectID)
-
-      retList.addAll baseFolder?.children ?: []
+      folders[baseObjectID]?.children?.each {
+        retList << it
+      }
     }
 
     else if (isRole(baseObjectID)) {
-      Role baseRole = new Role(camIdToName(baseObjectID))
-
-      retList.addAll baseRole?.members ?: []
+      def role = new Role(camIdToName(baseObjectID))
+      role.members?.each {
+        retList << it
+      }
     }
 
     else if (isGroup(baseObjectID)) {
-      Group baseGroup = new Group(camIdToName(baseObjectID))
-
-      retList.addAll baseGroup?.members ?: []
+      def group = new Group(camIdToName(baseObjectID))
+      group.members?.each {
+        retList << it
+      }
     }
 
     getPageOfResult(retList, queryOption.skipCount, queryOption.maxCount)
   }
 
-  def List<IBaseClass> searchAxisDescendent(String baseObjectID, ISearchFilter filter, IQueryOption queryOption) {
+  /**
+   * Get search results for search axis 'Descendant'.
+   *
+   * @param baseObjectID the CAM-ID of search base.
+   * @param filter the search filter.
+   * @param queryOption query options.
+   * @return a list of IBaseClass.
+   */
+  List<IBaseClass> searchAxisDescendant(String baseObjectID, ISearchFilter filter, IQueryOption queryOption) {
     List<IBaseClass> retList = new ArrayList<IBaseClass>()
 
     List<String> objectTypes = findFilterObjectTypes(filter)
@@ -144,7 +168,15 @@ class QueryUtil {
     getPageOfResult(retList, queryOption.skipCount, queryOption.maxCount)
   }
 
-  List getPageOfResult(List searchResult, long skipCount = 0, long maxCount = 0) {
+  /**
+   * Get a specific page from a search result.
+   *
+   * @param searchResult the full search result list.
+   * @param skipCount the start in the full list.
+   * @param maxCount number of objects to return.
+   * @return a new list of search results.
+   */
+  List<IBaseClass> getPageOfResult(List<IBaseClass> searchResult, long skipCount = 0, long maxCount = 0) {
     long start = skipCount ?: 0
     long stop = start + maxCount -1 ?:0
 
@@ -184,6 +216,13 @@ class QueryUtil {
   }
 */
 
+  /**
+   * Parse a searchFilter and do the actual search per object type.
+   *
+   * @param iSearchFilter the search filter.
+   * @param objectType the object type to search for.
+   * @return a list of IBaseClass or a LDAP filter. (YES, this is FUGLY!)
+   */
   def parseSearchFilter(ISearchFilter iSearchFilter, String objectType) {
 
     List<IBaseClass> ret = new ArrayList<IBaseClass>()

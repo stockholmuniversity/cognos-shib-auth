@@ -19,7 +19,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
-import static se.su.it.cognos.cognosshibauth.ldap.UiClass.*
 import se.su.it.cognos.cognosshibauth.memcached.Cache
 import com.cognos.CAM_AAA.authentication.ISearchStep.SearchAxis
 
@@ -126,7 +125,7 @@ public class CognosShibAuthBase extends CognosShibAuthNamespace implements IName
         break;
 
       case SearchAxis.Descendent:
-        def ret = queryUtil.searchAxisDescendent(baseObjectID, filter, queryOption)
+        def ret = queryUtil.searchAxisDescendant(baseObjectID, filter, queryOption)
 
         ret?.each { list << it }
         break
