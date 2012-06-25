@@ -102,7 +102,16 @@ public class CognosShibAuthBase extends CognosShibAuthNamespace implements IName
     return result
   }
 
-  def getQueryResult(int searchAxis, String baseObjectID, ISearchFilter filter, IQueryOption queryOption) {
+  /**
+   * Fetches the query results based on the search axis.
+   *
+   * @param searchAxis the search axis.
+   * @param baseObjectID CAM-ID of the base for the search.
+   * @param filter the search filter.
+   * @param queryOption query options.
+   * @return a list of objects matching the supplied axis and filter.
+   */
+  private List<IBaseClass> getQueryResult(int searchAxis, String baseObjectID, ISearchFilter filter, IQueryOption queryOption) {
     def list = []
 
     QueryUtil queryUtil = new QueryUtil(this, folders)

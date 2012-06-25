@@ -41,6 +41,12 @@ class QueryUtil {
     this.configHandler = ConfigHandler.instance()
   }
 
+  /**
+   * Get search result from search axis 'Self'.
+   *
+   * @param baseObjectID the CAM-ID of the object to return.
+   * @return a IBaseClass of the supplied object, or null if not found.
+   */
   def IBaseClass searchAxisSelf(String baseObjectID) {
     IBaseClass ret = null
 
