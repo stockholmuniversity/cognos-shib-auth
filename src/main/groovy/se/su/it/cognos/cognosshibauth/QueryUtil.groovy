@@ -254,14 +254,41 @@ class QueryUtil {
           filter = Group.buildLdapFilter(attribute, value, operator)
         }
         if (objectType == 'role') {
-          ret.addAll Role.findAllByName(value)
+          Role.findAllByName(value)?.each {
+            ret << it
+          }
         }
         if (objectType == 'folder') {
-          ret.addAll folders.values().findAll { it.getName(configHandler.contentLocale) == value }
+          switch (attribute) {
+            case '@userName':
+            case '@defaultName':
+              folders?.values()?.findAll { folder ->
+                folder.getName(configHandler.contentLocale) == value
+              }?.each {
+                ret << it
+              }
+              break
+            case '@defaultDescription':
+              folders?.values()?.findAll { folder ->
+                folder.getDescription(configHandler.contentLocale) == value
+              }?.each {
+                ret << it
+              }
+              break
+          }
         }
         if (objectType == 'namespace') {
-          if (value == namespace.getName(configHandler.contentLocale))
-            ret << namespace
+          switch (attribute) {
+            case '@userName':
+            case '@defaultName':
+              if (value == namespace?.getName(configHandler.contentLocale))
+                ret << namespace
+              break
+            case '@defaultDescription':
+              if (value == namespace?.getDescription(configHandler.contentLocale))
+                ret << namespace
+              break
+          }
         }
       }
     }
