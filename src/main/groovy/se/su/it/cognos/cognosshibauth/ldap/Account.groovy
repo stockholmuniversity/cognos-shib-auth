@@ -9,6 +9,7 @@ import se.su.it.cognos.cognosshibauth.ldap.schema.SuPerson
 import com.cognos.CAM_AAA.authentication.UnrecoverableException
 import se.su.it.cognos.cognosshibauth.memcached.Cache
 import com.cognos.CAM_AAA.authentication.ISearchFilterRelationExpression
+import javax.security.auth.login.FailedLoginException
 
 public class Account extends UiClass implements IAccount {
 
@@ -186,9 +187,17 @@ public class Account extends UiClass implements IAccount {
    * @return list of groups for this account
    */
   List<Group> getGroups() {
-    suPerson?.memberOf?.collect {
-      new Group(it)
+    def groups = suPerson?.memberOf?.collect {
+      try {
+        new Group(it)
+      } catch(Exception e) {
+        LOG.warning("Failed to add group with dn ${it} to user ${objectID}.")
+      }
     } ?: []
+
+    groups?.removeAll { it == null }
+
+    groups
   }
 
   static String buildLdapFilter(String attribute, String value, String operator = null) {

@@ -8,6 +8,7 @@ import se.su.it.cognos.cognosshibauth.ldap.schema.GroupOfUniqueNames
 import se.su.it.cognos.cognosshibauth.CognosShibAuthNamespace
 import se.su.it.cognos.cognosshibauth.memcached.Cache
 import com.cognos.CAM_AAA.authentication.ISearchFilterRelationExpression
+import javax.naming.directory.InvalidAttributesException
 
 public class Group extends UiClass implements IGroup {
 

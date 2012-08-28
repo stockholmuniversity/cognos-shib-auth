@@ -28,4 +28,17 @@ class GroupTest extends TestBaseClass {
 
     assert groups.contains(new Group(mockGroupOfUniqueNames))
   }
+
+  @Test
+  void testCreateGroup() {
+    GroupOfUniqueNames mockGroupOfUniqueNames = new GroupOfUniqueNames()
+    mockGroupOfUniqueNames.metaClass.getDn = { "cn=group1,dc=it,dc=su,dc=se" }
+
+    assert new Group(mockGroupOfUniqueNames).objectID == "TestId:g:cn=group1,dc=it,dc=su,dc=se"
+  }
+
+  @Test(expected = NullPointerException.class)
+  void testCreateGroupWithNull() {
+    new Group(null as GroupOfUniqueNames)
+  }
 }
