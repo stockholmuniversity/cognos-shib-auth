@@ -29,15 +29,9 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-buildscript {
-  repositories { mavenCentral() }
-  dependencies { classpath 'org.ajoberstar:gradle-git:0.1.0' }
-}
-
 apply plugin: 'java'
 apply plugin: 'groovy'
 apply plugin: 'maven'
-apply plugin: 'git'
 
 version = "1.5.1"
 group = "se.su.it.cognos"
@@ -89,10 +83,6 @@ uploadArchives {
 }
 
 jar {
-  //GIT integration testing:
-  //def git = git.open('file://./')
-  //println(git.class)
-  //git.log().call().next().getFullMessage()
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
 }
 
