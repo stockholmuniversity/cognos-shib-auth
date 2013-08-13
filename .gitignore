@@ -1,4 +1,8 @@
 target
+build
 out
 .idea
 *.iml
+.gradle
+CAM_AAA_CustomIF.jar
+atlassian-ide-plugin.xml
