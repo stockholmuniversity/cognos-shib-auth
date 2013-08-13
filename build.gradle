@@ -32,10 +32,7 @@
 apply plugin: 'java'
 apply plugin: 'groovy'
 apply plugin: 'maven'
-
-version = "1.5.1"
-group = "se.su.it.cognos"
-archivesBaseName = "cognosshibauth"
+apply plugin: 'release'
 
 repositories {
   mavenCentral()
@@ -88,4 +85,19 @@ jar {
 
 task wrapper(type: Wrapper) {
     gradleVersion = '1.7'
+}
+
+/**
+ * Config
+ */
+buildscript {
+  repositories {
+    maven {
+      url = 'http://kellyrob99.github.com/Jenkins-api-tour/repository'
+    }
+    mavenCentral()
+  }
+  dependencies {
+    classpath 'com.github.townsfolk:gradle-release:1.2'
+  }
 }
